@@ -1,4 +1,4 @@
-package com.ht.bean;
+package com.ht.entity;
 /**
  * 
  * @author 退货入库表
@@ -8,7 +8,7 @@ public class Sales_return {
 	private String ID;//主键编号(加密)
 	private String RETREAT_CODE;//退货单号
 	private String OUT_CODE;//出库单号
-	private String ERP_ID;//操作员
+	private String INSPECTOR;//操作员
 	private String WAREHOUSE_OUT_ID;//出库仓库（关联warehouse（仓库表））
 	private String WAREHOUSE_PUT_ID;//入库仓库（关联warehouse（仓库表））
 	private String MAKETIME;//制单时间
@@ -20,12 +20,13 @@ public class Sales_return {
 		
 	}
 
-	public Sales_return(String iD, String rETREAT_CODE, String oUT_CODE, String eRP_ID, String wAREHOUSE_OUT_ID,
+	public Sales_return(String iD, String rETREAT_CODE, String oUT_CODE, String iNSPECTOR, String wAREHOUSE_OUT_ID,
 			String wAREHOUSE_PUT_ID, String mAKETIME, int cOUNT, String nOTE, int sTATE) {
+
 		ID = iD;
 		RETREAT_CODE = rETREAT_CODE;
 		OUT_CODE = oUT_CODE;
-		ERP_ID = eRP_ID;
+		INSPECTOR = iNSPECTOR;
 		WAREHOUSE_OUT_ID = wAREHOUSE_OUT_ID;
 		WAREHOUSE_PUT_ID = wAREHOUSE_PUT_ID;
 		MAKETIME = mAKETIME;
@@ -58,12 +59,12 @@ public class Sales_return {
 		OUT_CODE = oUT_CODE;
 	}
 
-	public String getERP_ID() {
-		return ERP_ID;
+	public String getINSPECTOR() {
+		return INSPECTOR;
 	}
 
-	public void setERP_ID(String eRP_ID) {
-		ERP_ID = eRP_ID;
+	public void setINSPECTOR(String iNSPECTOR) {
+		INSPECTOR = iNSPECTOR;
 	}
 
 	public String getWAREHOUSE_OUT_ID() {
@@ -116,11 +117,10 @@ public class Sales_return {
 
 	@Override
 	public String toString() {
-		return "Sales_return [ID=" + ID + ", RETREAT_CODE=" + RETREAT_CODE + ", OUT_CODE=" + OUT_CODE + ", ERP_ID="
-				+ ERP_ID + ", WAREHOUSE_OUT_ID=" + WAREHOUSE_OUT_ID + ", WAREHOUSE_PUT_ID=" + WAREHOUSE_PUT_ID
+		return "Sales_return [ID=" + ID + ", RETREAT_CODE=" + RETREAT_CODE + ", OUT_CODE=" + OUT_CODE + ", INSPECTOR="
+				+ INSPECTOR + ", WAREHOUSE_OUT_ID=" + WAREHOUSE_OUT_ID + ", WAREHOUSE_PUT_ID=" + WAREHOUSE_PUT_ID
 				+ ", MAKETIME=" + MAKETIME + ", COUNT=" + COUNT + ", NOTE=" + NOTE + ", STATE=" + STATE + "]";
 	}
-	
 	
 	
 }

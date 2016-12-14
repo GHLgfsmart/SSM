@@ -1,10 +1,10 @@
-package com.ht.bean;
+package com.ht.entity;
 /**
  * 
- * @author 产品信息表
+ * @author 物资信息表
  *
  */
-public class Product {
+public class Materials_information {
 	private String ID;//主键编号(加密)
 	private String BIANHAO;//编号（如：CK00001）
 	private String PINYIN;//拼音简码
@@ -15,23 +15,22 @@ public class Product {
 	private String UNIT;//单位(件)
 	private String ENTRY_TIME;//录用时间
 	private String UPDATE_TIME;//最后修改时间
-	private String EMP_ID;//操作员
+	private String OPERATOR;//操作员
 	private String NOTE;//备注
-	private String RETURNFLAG;//是否退货
-	private int RETURN_COUNT;//退货数量
 	private int STATE;//状态（默认0）0未入库，1已入库,2已出库
 	
 	
 	
-	public Product() {
+	public Materials_information() {
 		
 	}
 
 
 
-	public Product(String iD, String bIANHAO, String pINYIN, String bAR_CODE, String nAME,
+	public Materials_information(String iD, String bIANHAO, String pINYIN, String bAR_CODE, String nAME,
 			String sUPPLIER_AND_CUSTOMER_ID, int cOUNT, String uNIT, String eNTRY_TIME, String uPDATE_TIME,
-			String eMP_ID, String nOTE, String rETURNFLAG, int rETURN_COUNT, int sTATE) {
+			String oPERATOR, String nOTE, int sTATE) {
+		super();
 		ID = iD;
 		BIANHAO = bIANHAO;
 		PINYIN = pINYIN;
@@ -42,10 +41,8 @@ public class Product {
 		UNIT = uNIT;
 		ENTRY_TIME = eNTRY_TIME;
 		UPDATE_TIME = uPDATE_TIME;
-		EMP_ID = eMP_ID;
+		OPERATOR = oPERATOR;
 		NOTE = nOTE;
-		RETURNFLAG = rETURNFLAG;
-		RETURN_COUNT = rETURN_COUNT;
 		STATE = sTATE;
 	}
 
@@ -171,14 +168,14 @@ public class Product {
 
 
 
-	public String getEMP_ID() {
-		return EMP_ID;
+	public String getOPERATOR() {
+		return OPERATOR;
 	}
 
 
 
-	public void setEMP_ID(String eMP_ID) {
-		EMP_ID = eMP_ID;
+	public void setOPERATOR(String oPERATOR) {
+		OPERATOR = oPERATOR;
 	}
 
 
@@ -191,30 +188,6 @@ public class Product {
 
 	public void setNOTE(String nOTE) {
 		NOTE = nOTE;
-	}
-
-
-
-	public String getRETURNFLAG() {
-		return RETURNFLAG;
-	}
-
-
-
-	public void setRETURNFLAG(String rETURNFLAG) {
-		RETURNFLAG = rETURNFLAG;
-	}
-
-
-
-	public int getRETURN_COUNT() {
-		return RETURN_COUNT;
-	}
-
-
-
-	public void setRETURN_COUNT(int rETURN_COUNT) {
-		RETURN_COUNT = rETURN_COUNT;
 	}
 
 
@@ -233,13 +206,12 @@ public class Product {
 
 	@Override
 	public String toString() {
-		return "Product [ID=" + ID + ", BIANHAO=" + BIANHAO + ", PINYIN=" + PINYIN + ", BAR_CODE=" + BAR_CODE
-				+ ", NAME=" + NAME + ", SUPPLIER_AND_CUSTOMER_ID=" + SUPPLIER_AND_CUSTOMER_ID + ", COUNT=" + COUNT
-				+ ", UNIT=" + UNIT + ", ENTRY_TIME=" + ENTRY_TIME + ", UPDATE_TIME=" + UPDATE_TIME + ", EMP_ID="
-				+ EMP_ID + ", NOTE=" + NOTE + ", RETURNFLAG=" + RETURNFLAG + ", RETURN_COUNT=" + RETURN_COUNT
-				+ ", STATE=" + STATE + "]";
+		return "Materials_information [ID=" + ID + ", BIANHAO=" + BIANHAO + ", PINYIN=" + PINYIN + ", BAR_CODE="
+				+ BAR_CODE + ", NAME=" + NAME + ", SUPPLIER_AND_CUSTOMER_ID=" + SUPPLIER_AND_CUSTOMER_ID + ", COUNT="
+				+ COUNT + ", UNIT=" + UNIT + ", ENTRY_TIME=" + ENTRY_TIME + ", UPDATE_TIME=" + UPDATE_TIME
+				+ ", OPERATOR=" + OPERATOR + ", NOTE=" + NOTE + ", STATE=" + STATE + "]";
 	}
-	
+
 	
 	
 }

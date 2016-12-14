@@ -1,10 +1,10 @@
-package com.ht.bean;
+package com.ht.entity;
 /**
  * 
  * @author 供应商和客户的分类表
  *
  */
-public class Sacc {
+public class Customer_categories {
 	private String ID;//主键编号(加密)
 	private String NAME;//名称(注意 后面一定要加供应商或者客户)
 	private String MYID;//主编号
@@ -13,13 +13,13 @@ public class Sacc {
 	
 	
 	
-	public Sacc() {
+	public Customer_categories() {
 	
 	}
 
 
 
-	public Sacc(String iD, String nAME, String mYID, String uID, String nOTE) {
+	public Customer_categories(String iD, String nAME, String mYID, String uID, String nOTE) {
 		ID = iD;
 		NAME = nAME;
 		MYID = mYID;

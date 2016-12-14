@@ -1,4 +1,4 @@
-package com.ht.bean;
+package com.ht.entity;
 /**
  * 
  * @author 盘点表
@@ -9,11 +9,11 @@ public class Inventory {
 	private String BIANHAO;//编号(如:CK00001)
 	private String BUSINESS_TIME;//业务日期
 	private String JINGSHUO_EMP_ID;//经手人(关联EMP 加密)
-	private String PRODUCT_ID;//产品（关联product（产品信息表））
+	private String MATERIALS_ID;//产品（关联product（产品信息表））
 	private String WAREHOUSE_ID;//仓库（关联warehouse（仓库表））
 	private int STATE;//审核状态（未审核 0 通过 1 不通过2 默认未审核 0）
-	private String OPERATOR_EMP_ID;//操作员(关联EMP 加密)
-	private String SHENHE_EMP_ID;//审核人（关联EMP 加密）
+	private String INSPECTOR;//操作员
+	private String ADUDITOR;//审核人
 	private String ENTRY_TIME;//录入时间
 	private String UPDATE_TIME;//最后修改时间
 	private String PANDIAN_INST;//盘点说明
@@ -26,18 +26,19 @@ public class Inventory {
 		
 	}
 
-	public Inventory(String iD, String bIANHAO, String bUSINESS_TIME, String jINGSHUO_EMP_ID, String pRODUCT_ID,
-			String wAREHOUSE_ID, int sTATE, String oPERATOR_EMP_ID, String sHENHE_EMP_ID, String eNTRY_TIME,
-			String uPDATE_TIME, String pANDIAN_INST, String zHAIYAO_INST, int pRACTICAL, int mONEY, String nOTE) {
+	public Inventory(String iD, String bIANHAO, String bUSINESS_TIME, String jINGSHUO_EMP_ID, String mATERIALS_ID,
+			String wAREHOUSE_ID, int sTATE, String iNSPECTOR, String aDUDITOR, String eNTRY_TIME, String uPDATE_TIME,
+			String pANDIAN_INST, String zHAIYAO_INST, int pRACTICAL, int mONEY, String nOTE) {
+		
 		ID = iD;
 		BIANHAO = bIANHAO;
 		BUSINESS_TIME = bUSINESS_TIME;
 		JINGSHUO_EMP_ID = jINGSHUO_EMP_ID;
-		PRODUCT_ID = pRODUCT_ID;
+		MATERIALS_ID = mATERIALS_ID;
 		WAREHOUSE_ID = wAREHOUSE_ID;
 		STATE = sTATE;
-		OPERATOR_EMP_ID = oPERATOR_EMP_ID;
-		SHENHE_EMP_ID = sHENHE_EMP_ID;
+		INSPECTOR = iNSPECTOR;
+		ADUDITOR = aDUDITOR;
 		ENTRY_TIME = eNTRY_TIME;
 		UPDATE_TIME = uPDATE_TIME;
 		PANDIAN_INST = pANDIAN_INST;
@@ -79,12 +80,12 @@ public class Inventory {
 		JINGSHUO_EMP_ID = jINGSHUO_EMP_ID;
 	}
 
-	public String getPRODUCT_ID() {
-		return PRODUCT_ID;
+	public String getMATERIALS_ID() {
+		return MATERIALS_ID;
 	}
 
-	public void setPRODUCT_ID(String pRODUCT_ID) {
-		PRODUCT_ID = pRODUCT_ID;
+	public void setMATERIALS_ID(String mATERIALS_ID) {
+		MATERIALS_ID = mATERIALS_ID;
 	}
 
 	public String getWAREHOUSE_ID() {
@@ -103,20 +104,20 @@ public class Inventory {
 		STATE = sTATE;
 	}
 
-	public String getOPERATOR_EMP_ID() {
-		return OPERATOR_EMP_ID;
+	public String getINSPECTOR() {
+		return INSPECTOR;
 	}
 
-	public void setOPERATOR_EMP_ID(String oPERATOR_EMP_ID) {
-		OPERATOR_EMP_ID = oPERATOR_EMP_ID;
+	public void setINSPECTOR(String iNSPECTOR) {
+		INSPECTOR = iNSPECTOR;
 	}
 
-	public String getSHENHE_EMP_ID() {
-		return SHENHE_EMP_ID;
+	public String getADUDITOR() {
+		return ADUDITOR;
 	}
 
-	public void setSHENHE_EMP_ID(String sHENHE_EMP_ID) {
-		SHENHE_EMP_ID = sHENHE_EMP_ID;
+	public void setADUDITOR(String aDUDITOR) {
+		ADUDITOR = aDUDITOR;
 	}
 
 	public String getENTRY_TIME() {
@@ -178,13 +179,13 @@ public class Inventory {
 	@Override
 	public String toString() {
 		return "Inventory [ID=" + ID + ", BIANHAO=" + BIANHAO + ", BUSINESS_TIME=" + BUSINESS_TIME
-				+ ", JINGSHUO_EMP_ID=" + JINGSHUO_EMP_ID + ", PRODUCT_ID=" + PRODUCT_ID + ", WAREHOUSE_ID="
-				+ WAREHOUSE_ID + ", STATE=" + STATE + ", OPERATOR_EMP_ID=" + OPERATOR_EMP_ID + ", SHENHE_EMP_ID="
-				+ SHENHE_EMP_ID + ", ENTRY_TIME=" + ENTRY_TIME + ", UPDATE_TIME=" + UPDATE_TIME + ", PANDIAN_INST="
-				+ PANDIAN_INST + ", ZHAIYAO_INST=" + ZHAIYAO_INST + ", PRACTICAL=" + PRACTICAL + ", MONEY=" + MONEY
-				+ ", NOTE=" + NOTE + "]";
+				+ ", JINGSHUO_EMP_ID=" + JINGSHUO_EMP_ID + ", MATERIALS_ID=" + MATERIALS_ID + ", WAREHOUSE_ID="
+				+ WAREHOUSE_ID + ", STATE=" + STATE + ", INSPECTOR=" + INSPECTOR + ", ADUDITOR=" + ADUDITOR
+				+ ", ENTRY_TIME=" + ENTRY_TIME + ", UPDATE_TIME=" + UPDATE_TIME + ", PANDIAN_INST=" + PANDIAN_INST
+				+ ", ZHAIYAO_INST=" + ZHAIYAO_INST + ", PRACTICAL=" + PRACTICAL + ", MONEY=" + MONEY + ", NOTE=" + NOTE
+				+ "]";
 	}
-	
+
 	
 	
 }

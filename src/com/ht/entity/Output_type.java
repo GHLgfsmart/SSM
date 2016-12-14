@@ -1,19 +1,19 @@
-package com.ht.bean;
+package com.ht.entity;
 /**
  * 
  * @author 出入库类型表
  *
  */
-public class Out_put_type {
+public class Output_type {
 	private String ID;//主键编号(加密)
 	private String NAME;//名称
 	private String NOTE;//备注
 	
-	public Out_put_type() {
+	public Output_type() {
 		
 	}
 
-	public Out_put_type(String iD, String nAME, String nOTE) {
+	public Output_type(String iD, String nAME, String nOTE) {
 		
 		ID = iD;
 		NAME = nAME;
