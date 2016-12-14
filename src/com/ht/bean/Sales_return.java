@@ -1,0 +1,126 @@
+package com.ht.bean;
+/**
+ * 
+ * @author 退货入库表
+ *
+ */
+public class Sales_return {
+	private String ID;//主键编号(加密)
+	private String RETREAT_CODE;//退货单号
+	private String OUT_CODE;//出库单号
+	private String ERP_ID;//操作员
+	private String WAREHOUSE_OUT_ID;//出库仓库（关联warehouse（仓库表））
+	private String WAREHOUSE_PUT_ID;//入库仓库（关联warehouse（仓库表））
+	private String MAKETIME;//制单时间
+	private int COUNT;//数量
+	private String NOTE;//备注
+	private int STATE;//状态（0未处理，1已处理）
+	
+	public Sales_return() {
+		
+	}
+
+	public Sales_return(String iD, String rETREAT_CODE, String oUT_CODE, String eRP_ID, String wAREHOUSE_OUT_ID,
+			String wAREHOUSE_PUT_ID, String mAKETIME, int cOUNT, String nOTE, int sTATE) {
+		ID = iD;
+		RETREAT_CODE = rETREAT_CODE;
+		OUT_CODE = oUT_CODE;
+		ERP_ID = eRP_ID;
+		WAREHOUSE_OUT_ID = wAREHOUSE_OUT_ID;
+		WAREHOUSE_PUT_ID = wAREHOUSE_PUT_ID;
+		MAKETIME = mAKETIME;
+		COUNT = cOUNT;
+		NOTE = nOTE;
+		STATE = sTATE;
+	}
+
+	public String getID() {
+		return ID;
+	}
+
+	public void setID(String iD) {
+		ID = iD;
+	}
+
+	public String getRETREAT_CODE() {
+		return RETREAT_CODE;
+	}
+
+	public void setRETREAT_CODE(String rETREAT_CODE) {
+		RETREAT_CODE = rETREAT_CODE;
+	}
+
+	public String getOUT_CODE() {
+		return OUT_CODE;
+	}
+
+	public void setOUT_CODE(String oUT_CODE) {
+		OUT_CODE = oUT_CODE;
+	}
+
+	public String getERP_ID() {
+		return ERP_ID;
+	}
+
+	public void setERP_ID(String eRP_ID) {
+		ERP_ID = eRP_ID;
+	}
+
+	public String getWAREHOUSE_OUT_ID() {
+		return WAREHOUSE_OUT_ID;
+	}
+
+	public void setWAREHOUSE_OUT_ID(String wAREHOUSE_OUT_ID) {
+		WAREHOUSE_OUT_ID = wAREHOUSE_OUT_ID;
+	}
+
+	public String getWAREHOUSE_PUT_ID() {
+		return WAREHOUSE_PUT_ID;
+	}
+
+	public void setWAREHOUSE_PUT_ID(String wAREHOUSE_PUT_ID) {
+		WAREHOUSE_PUT_ID = wAREHOUSE_PUT_ID;
+	}
+
+	public String getMAKETIME() {
+		return MAKETIME;
+	}
+
+	public void setMAKETIME(String mAKETIME) {
+		MAKETIME = mAKETIME;
+	}
+
+	public int getCOUNT() {
+		return COUNT;
+	}
+
+	public void setCOUNT(int cOUNT) {
+		COUNT = cOUNT;
+	}
+
+	public String getNOTE() {
+		return NOTE;
+	}
+
+	public void setNOTE(String nOTE) {
+		NOTE = nOTE;
+	}
+
+	public int getSTATE() {
+		return STATE;
+	}
+
+	public void setSTATE(int sTATE) {
+		STATE = sTATE;
+	}
+
+	@Override
+	public String toString() {
+		return "Sales_return [ID=" + ID + ", RETREAT_CODE=" + RETREAT_CODE + ", OUT_CODE=" + OUT_CODE + ", ERP_ID="
+				+ ERP_ID + ", WAREHOUSE_OUT_ID=" + WAREHOUSE_OUT_ID + ", WAREHOUSE_PUT_ID=" + WAREHOUSE_PUT_ID
+				+ ", MAKETIME=" + MAKETIME + ", COUNT=" + COUNT + ", NOTE=" + NOTE + ", STATE=" + STATE + "]";
+	}
+	
+	
+	
+}
