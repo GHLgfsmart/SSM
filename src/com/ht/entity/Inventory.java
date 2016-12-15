@@ -19,7 +19,7 @@ public class Inventory {
 	private String PANDIAN_INST;//盘点说明
 	private String ZHAIYAO_INST;//摘要说明(目的、方法、结果(应给出主要数据)及结论四部分,各部分冠以相应的标题)
 	private int PRACTICAL;//实际库存
-	private int MONEY;//损益合计
+	private int DECREASE_COUNT;//损益合计
 	private String NOTE;//备注
 	
 	public Inventory() {
@@ -28,8 +28,7 @@ public class Inventory {
 
 	public Inventory(String iD, String bIANHAO, String bUSINESS_TIME, String jINGSHUO_EMP_ID, String mATERIALS_ID,
 			String wAREHOUSE_ID, int sTATE, String iNSPECTOR, String aDUDITOR, String eNTRY_TIME, String uPDATE_TIME,
-			String pANDIAN_INST, String zHAIYAO_INST, int pRACTICAL, int mONEY, String nOTE) {
-		
+			String pANDIAN_INST, String zHAIYAO_INST, int pRACTICAL, int dECREASE_COUNT, String nOTE) {
 		ID = iD;
 		BIANHAO = bIANHAO;
 		BUSINESS_TIME = bUSINESS_TIME;
@@ -44,7 +43,7 @@ public class Inventory {
 		PANDIAN_INST = pANDIAN_INST;
 		ZHAIYAO_INST = zHAIYAO_INST;
 		PRACTICAL = pRACTICAL;
-		MONEY = mONEY;
+		DECREASE_COUNT = dECREASE_COUNT;
 		NOTE = nOTE;
 	}
 
@@ -160,12 +159,12 @@ public class Inventory {
 		PRACTICAL = pRACTICAL;
 	}
 
-	public int getMONEY() {
-		return MONEY;
+	public int getDECREASE_COUNT() {
+		return DECREASE_COUNT;
 	}
 
-	public void setMONEY(int mONEY) {
-		MONEY = mONEY;
+	public void setDECREASE_COUNT(int dECREASE_COUNT) {
+		DECREASE_COUNT = dECREASE_COUNT;
 	}
 
 	public String getNOTE() {
@@ -182,10 +181,9 @@ public class Inventory {
 				+ ", JINGSHUO_EMP_ID=" + JINGSHUO_EMP_ID + ", MATERIALS_ID=" + MATERIALS_ID + ", WAREHOUSE_ID="
 				+ WAREHOUSE_ID + ", STATE=" + STATE + ", INSPECTOR=" + INSPECTOR + ", ADUDITOR=" + ADUDITOR
 				+ ", ENTRY_TIME=" + ENTRY_TIME + ", UPDATE_TIME=" + UPDATE_TIME + ", PANDIAN_INST=" + PANDIAN_INST
-				+ ", ZHAIYAO_INST=" + ZHAIYAO_INST + ", PRACTICAL=" + PRACTICAL + ", MONEY=" + MONEY + ", NOTE=" + NOTE
-				+ "]";
+				+ ", ZHAIYAO_INST=" + ZHAIYAO_INST + ", PRACTICAL=" + PRACTICAL + ", DECREASE_COUNT=" + DECREASE_COUNT
+				+ ", NOTE=" + NOTE + "]";
 	}
 
-	
 	
 }
