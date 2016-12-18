@@ -7,6 +7,7 @@ package com.ht.entity;
  */
 public class Warehouse {
 	private String ID;//主键编号(加密)
+	private Page page;
 	private String NAME;// 仓库名称
 	private String USER_ID;//仓库管理员（关联 ERP 加密）
 	private String SIZE;// 仓库大小（单位m2）
@@ -23,10 +24,10 @@ public class Warehouse {
 
 	}
 
-	public Warehouse(String iD, String nAME, String uSER_ID, String sIZE, int uPPER_LIMIT, int lOWER_LIMIT,
+	public Warehouse(String iD, Page page, String nAME, String uSER_ID, String sIZE, int uPPER_LIMIT, int lOWER_LIMIT,
 			int pRACTICAl, String aDDRESS, String eNTRY_TIME, String uPDATE_TIME, String nOTE, int sTATE) {
-		super();
 		ID = iD;
+		this.page = page;
 		NAME = nAME;
 		USER_ID = uSER_ID;
 		SIZE = sIZE;
@@ -46,6 +47,14 @@ public class Warehouse {
 
 	public void setID(String iD) {
 		ID = iD;
+	}
+
+	public Page getPage() {
+		return page;
+	}
+
+	public void setPage(Page page) {
+		this.page = page;
 	}
 
 	public String getNAME() {
@@ -138,12 +147,11 @@ public class Warehouse {
 
 	@Override
 	public String toString() {
-		return "Warehouse [ID=" + ID + ", NAME=" + NAME + ", USER_ID=" + USER_ID + ", SIZE=" + SIZE + ", UPPER_LIMIT="
-				+ UPPER_LIMIT + ", LOWER_LIMIT=" + LOWER_LIMIT + ", PRACTICAl=" + PRACTICAl + ", ADDRESS=" + ADDRESS
-				+ ", ENTRY_TIME=" + ENTRY_TIME + ", UPDATE_TIME=" + UPDATE_TIME + ", NOTE=" + NOTE + ", STATE=" + STATE
-				+ "]";
+		return "Warehouse [ID=" + ID + ", page=" + page + ", NAME=" + NAME + ", USER_ID=" + USER_ID + ", SIZE=" + SIZE
+				+ ", UPPER_LIMIT=" + UPPER_LIMIT + ", LOWER_LIMIT=" + LOWER_LIMIT + ", PRACTICAl=" + PRACTICAl
+				+ ", ADDRESS=" + ADDRESS + ", ENTRY_TIME=" + ENTRY_TIME + ", UPDATE_TIME=" + UPDATE_TIME + ", NOTE="
+				+ NOTE + ", STATE=" + STATE + "]";
 	}
-
 	
 	
 }
