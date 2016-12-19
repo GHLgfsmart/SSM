@@ -22,7 +22,7 @@ public class WarningServiceImpl implements WarningService{
 	@Override
 	public List<PageData> listWarning(Page page) throws Exception {
 		
-		return	(List<PageData>) ds.findForList("WarehouseMapper.WarningListPage", page);
+		return	(List<PageData>) ds.findForList("WarningMapper.datalistPage", page);
 	}
 
 }

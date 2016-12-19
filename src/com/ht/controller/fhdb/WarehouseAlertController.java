@@ -16,7 +16,7 @@ import com.ht.util.PageData;
 
 @Controller
 @RequestMapping(value = "/Warehouse")
-public class WarehouseController extends BaseController {
+public class WarehouseAlertController extends BaseController {
 	String menuUrl = "Warehouse/ListWarehouse.do"; // 菜单地址(权限用)
 	
 	@Resource(name="warningServiceImpl")

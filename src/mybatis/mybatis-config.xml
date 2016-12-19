@@ -10,6 +10,7 @@
     </settings>
 
 	<typeAliases>
+		<typeAlias type="com.ht.entity.Warehouse" alias="Warehouse"/>
 		<typeAlias type="com.ht.entity.User" alias="User"/>
 		<typeAlias type="com.ht.entity.Role" alias="Role"/>
 		<typeAlias type="com.ht.entity.Menu" alias="Menu"/>

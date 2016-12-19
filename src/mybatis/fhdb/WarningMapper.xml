@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="WarehouseMapper">
+<mapper namespace="WarningMapper">
 
 	<resultMap type="Warehouse" id="WarehouseResultMap">
 		<id column="ID" property="ID"/>
@@ -16,8 +16,11 @@
 		<result column="NOTE" property="NOTE"/>
 		<result column="STATE" property="STATE"/>
 	</resultMap>
+	<sql id="tableName">
+		warehouse w
+	</sql>
 	
-	<select id="WarningListPage" parameterType="page" resultType="pd">
-		select w.ID,w.NAME,w.SiZE,w.UPPER_LIMIT,w.LOWER_LIMIT,w.PRACTICAl,w.ADDRESS from warehouse w where w.PRACTICAL > w.UPPER_LIMIT or w.PRACTICAL &lt; w.LOWER_LIMIT order by w.ID
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select w.ID,w.NAME,w.SiZE,w.UPPER_LIMIT,w.LOWER_LIMIT,w.PRACTICAl,w.ADDRESS from <include refid="tableName"></include> where w.PRACTICAL > w.UPPER_LIMIT or w.PRACTICAL &lt; w.LOWER_LIMIT order by w.ID
 	</select>
 </mapper>
