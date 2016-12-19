@@ -10,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ht.controller.base.BaseController;
 import com.ht.entity.Page;
-import com.ht.service.fhdb.impl.WarningServiceImpl;
+import com.ht.service.fhdb.impl.WarehouseAlertServiceImpl;
 import com.ht.util.Jurisdiction;
 import com.ht.util.PageData;
 
@@ -20,7 +20,7 @@ public class WarehouseAlertController extends BaseController {
 	String menuUrl = "Warehouse/ListWarehouse.do"; // 菜单地址(权限用)
 	
 	@Resource(name="warningServiceImpl")
-	private WarningServiceImpl warningServiceImpl;
+	private WarehouseAlertServiceImpl warningServiceImpl;
 
 	/**
 	 * 查询所有警报
@@ -37,7 +37,7 @@ public class WarehouseAlertController extends BaseController {
 		page.setPd(pd);
 		List<PageData> warList = warningServiceImpl.listWarning(page);
 		if (warList!=null) {
-			mv.setViewName("warehouse/ListWarehouse");
+			mv.setViewName("WarehouseAlert/ListWarehouse");
 			mv.addObject("warList", warList);
 			mv.addObject("pd", pd);
 			return mv;

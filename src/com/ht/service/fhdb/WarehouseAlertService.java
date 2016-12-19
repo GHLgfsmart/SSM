@@ -9,7 +9,7 @@ import com.ht.util.PageData;
  * @author 仓库警报接口
  *
  */
-public interface WarningService {
+public interface WarehouseAlertService {
 	/**
 	 * 刘杰
 	 * 列出所有警报的仓库列表

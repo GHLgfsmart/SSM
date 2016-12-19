@@ -6,11 +6,11 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import com.ht.dao.DaoSupport;
 import com.ht.entity.Page;
-import com.ht.service.fhdb.WarningService;
+import com.ht.service.fhdb.WarehouseAlertService;
 import com.ht.util.PageData;
 
 @Service("warningServiceImpl")
-public class WarningServiceImpl implements WarningService{
+public class WarehouseAlertServiceImpl implements WarehouseAlertService{
 	@Resource(name = "daoSupport")
 	private DaoSupport ds;
 	
