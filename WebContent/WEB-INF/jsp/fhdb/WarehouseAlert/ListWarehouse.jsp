@@ -32,19 +32,21 @@
 						<div class="col-xs-12">
 						
 						<!-- 检索  -->
-						<form action="user/listUsers.do" method="post" name="userForm" id="userForm">
+						<form action="Warehouse/ListWarehouse.do" method="post" name="alertForm" id="alertForm">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
 									<div class="nav-search">
 									<span class="input-icon">
-										<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords }" placeholder="请输入编号或仓库名" />
+										<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords }" placeholder="请输入关键字" />
 										<i class="ace-icon fa fa-search nav-search-icon"></i>
 									</span>
 									</div>
 								</td>
-								<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
-								<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td>		
+								<c:if test="${QX.cha == 1 }">
+									<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+									<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
+								</c:if>
 							</tr>
 						</table>
 						<!-- 检索  -->
@@ -57,7 +59,8 @@
 									</th>
 									<th class="center">序号</th>
 									<th class="center">编号</th>
-									<th class="center">仓库名</th>
+									<th class="center">仓库名称</th>
+									<th class="center">仓库大小</th>
 									<th class="center">上限</th>
 									<th class="center">下限</th>
 									<th class="center">实际库存</th>
@@ -79,9 +82,10 @@
 											<td class='center' style="width: 60px;">${vs.index+1}</td>
 											<td class="center">${war.ID }</td>
 											<td class="center">${war.NAME }</td>
+											<td class="center">${war.SIZE }</td>
 											<td class="center">${war.UPPER_LIMIT }</td>
 											<td class="center">${war.LOWER_LIMIT}</td>
-											<td class="center">${war.PRACTICAl}</td>
+											<td class="center"><font color="red">${war.PRACTICAl}</font> </td>
 											<td class="center">${war.ADDRESS}</td>
 										</tr>
 									
@@ -98,7 +102,7 @@
 							<div class="page-header position-relative">
 						<table style="width:100%;">
 							<tr>
-								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
+								<td style="vertical-align:top;"><div class="pagination" style="float: left;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 							</tr>
 						</table>
 					</div>
@@ -138,83 +142,14 @@ $(top.hangge());
 //检索
 function searchs(){
 	top.jzts();
-	$("#userForm").submit();
+	$("#alertForm").submit();
 }
-
-$(function() {
-	//日期框
-	$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
-	
-	//下拉框
-	if(!ace.vars['touch']) {
-		$('.chosen-select').chosen({allow_single_deselect:true}); 
-		$(window)
-		.off('resize.chosen')
-		.on('resize.chosen', function() {
-			$('.chosen-select').each(function() {
-				 var $this = $(this);
-				 $this.next().css({'width': $this.parent().width()});
-			});
-		}).trigger('resize.chosen');
-		$(document).on('settings.ace.chosen', function(e, event_name, event_val) {
-			if(event_name != 'sidebar_collapsed') return;
-			$('.chosen-select').each(function() {
-				 var $this = $(this);
-				 $this.next().css({'width': $this.parent().width()});
-			});
-		});
-		$('#chosen-multiple-style .btn').on('click', function(e){
-			var target = $(this).find('input[type=radio]');
-			var which = parseInt(target.val());
-			if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
-			 else $('#form-field-select-4').removeClass('tag-input-style');
-		});
-	}
-
-	
-	//复选框全选控制
-	var active_class = 'active';
-	$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
-		var th_checked = this.checked;//checkbox inside "TH" table header
-		$(this).closest('table').find('tbody > tr').each(function(){
-			var row = this;
-			if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
-			else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
-		});
-	});
-});
 
 //导出excel
 function toExcel(){
 	var keywords = $("#nav-search-input").val();
-	var lastLoginStart = $("#lastLoginStart").val();
-	var lastLoginEnd = $("#lastLoginEnd").val();
-	var ROLE_ID = $("#role_id").val();
-	window.location.href='<%=basePath%>user/excel.do?keywords='+keywords+'&lastLoginStart='+lastLoginStart+'&lastLoginEnd='+lastLoginEnd+'&ROLE_ID='+ROLE_ID;
+	window.location.href="<%=basePath%>Warehouse/ExportData.do?keywords='+keywords+'";
 }
-
-//打开上传excel页面
-function fromExcel(){
-	 top.jzts();
-	 var diag = new top.Dialog();
-	 diag.Drag=true;
-	 diag.Title ="EXCEL 导入到数据库";
-	 diag.URL = '<%=basePath%>user/goUploadExcel.do';
-	 diag.Width = 300;
-	 diag.Height = 150;
-	 diag.CancelEvent = function(){ //关闭事件
-		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-			 if('${page.currentPage}' == '0'){
-				 top.jzts();
-				 setTimeout("self.location.reload()",100);
-			 }else{
-				 nextPage(${page.currentPage});
-			 }
-		}
-		diag.close();
-	 };
-	 diag.show();
-}	
 	
 </script>
 </html>

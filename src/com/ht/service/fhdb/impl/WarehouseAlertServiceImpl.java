@@ -25,4 +25,13 @@ public class WarehouseAlertServiceImpl implements WarehouseAlertService{
 		return	(List<PageData>) ds.findForList("WarningMapper.datalistPage", page);
 	}
 
+	/**
+	 * 导出数据
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PageData> ExportData(PageData pd) throws Exception {
+		return (List<PageData>) ds.findForList("WarningMapper.ExportData", pd);
+	}
+
 }
