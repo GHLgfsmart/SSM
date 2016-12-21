@@ -22,10 +22,10 @@ import com.ht.util.PageData;
 @RequestMapping(value = "/Warehouse")
 public class WarehouseAlertController extends BaseController {
 	String menuUrl = "Warehouse/ListWarehouse.do"; // 菜单地址(权限用)
-	
-	@Resource(name="warningServiceImpl")
-	private WarehouseAlertServiceImpl warningServiceImpl;
 
+	@Resource(name = "warningServiceImpl")
+	private WarehouseAlertServiceImpl warningServiceImpl;
+	
 	/**
 	 * 查询所有警报
 	 * 
@@ -36,36 +36,51 @@ public class WarehouseAlertController extends BaseController {
 	@RequestMapping(value = "/ListWarehouse")
 	public ModelAndView ListWarehouse(Page page) throws Exception {
 		ModelAndView mv = this.getModelAndView();
+		List<PageData> warList = warningServiceImpl.listWarning(page);
+		if (warList.isEmpty()) {
+			mv.setViewName("fhdb/WarehouseAlert/no");
+			return mv;
+		} else {
+			mv.addObject("warList", warList);
+			mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
+			mv.setViewName("fhdb/WarehouseAlert/ListWarehouse");
+			return mv;
+		}
+	}
+	
+	/**
+	 * 模糊查询
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/LikeList")
+	public ModelAndView LikeList(Page page) throws Exception {
+		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		String keywords = pd.getString("keywords");				//关键词检索条件
+		String keywords = pd.getString("keywords");//关键词检索条件
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}
 		page.setPd(pd);
 		List<PageData> warList = warningServiceImpl.listWarning(page);
-		System.out.println("+++++++++++++++++++++++++++++++++++++++数据库返回的数据:"+warList);
-		if (null != warList && !"".equals(warList)) {
 			mv.addObject("warList", warList);
 			mv.addObject("pd", pd);
-			mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+			mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
 			mv.setViewName("fhdb/WarehouseAlert/ListWarehouse");
 			return mv;
-		}else{
-			mv.setViewName("fhdb/WarehouseAlert/no");
-			return mv;
-		}
-	}
+	} 
 	
-
 	/**
 	 * 导出数据
+	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 * @throws Throwable
 	 */
-	@RequestMapping(value="/ExportData")
-	public ModelAndView ExportData() throws Exception{
+	@RequestMapping(value = "/ExportData")
+	public ModelAndView ExportData(Page page) throws Exception {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -74,33 +89,38 @@ public class WarehouseAlertController extends BaseController {
 			if(null != keywords && !"".equals(keywords)){
 				pd.put("keywords", keywords.trim());
 			}
-			Map<String,Object> dataMap = new HashMap<String,Object>();
+			Map<String, Object> dataMap = new HashMap<String, Object>();
 			List<String> titles = new ArrayList<String>();
-			titles.add("编号"); 		//1
-			titles.add("仓库名称");  		//2
-			titles.add("仓库大小");		//3
-			titles.add("上限");			//4
-			titles.add("下限");			//5
-			titles.add("实际库存");			//6
-			titles.add("仓库地址");		//7
+			titles.add("编号"); // 1
+			titles.add("仓库名称"); // 2
+			titles.add("仓库大小"); // 3
+			titles.add("上限"); // 4
+			titles.add("下限"); // 5
+			titles.add("实际库存"); // 6
+			titles.add("仓库地址"); // 7
 			dataMap.put("titles", titles);
-			List<PageData> warList = warningServiceImpl.ExportData(pd);
+			mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
+			page.setPd(pd);
+			List<PageData> warList = warningServiceImpl.listWarning(page);
 			List<PageData> varList = new ArrayList<PageData>();
-			for(int i=0;i<warList.size();i++){
+			for (PageData i : warList) {
 				PageData vpd = new PageData();
-				vpd.put("1", warList.get(i).getString("ID"));		//1
-				vpd.put("2", warList.get(i).getString("NAME"));		//2
-				vpd.put("3", warList.get(i).getString("SIZE"));			//3
-				vpd.put("4", warList.get(i).getString("UPPER_LIMIT"));	//4
-				vpd.put("5", warList.get(i).getString("LOWER_LIMIT"));		//5
-				vpd.put("6", warList.get(i).getString("PRACTICAl"));		//6
-				vpd.put("7", warList.get(i).getString("ADDRESS"));	//7
+				vpd.put("var1", i.getString("ID")); // 1
+				vpd.put("var2", i.getString("NAME")); // 2
+				vpd.put("var3", i.getString("SIZE"));
+				String UPPER_LIMIT = i.get("UPPER_LIMIT") + "";// 3
+				vpd.put("var4", UPPER_LIMIT);// 4
+				String LOWER_LIMIT = i.get("LOWER_LIMIT") + "";
+				vpd.put("var5", LOWER_LIMIT);// 5
+				String PRACTICAl = i.get("PRACTICAl") + "";
+				vpd.put("var6", PRACTICAl);// 6
+				vpd.put("var7", i.getString("ADDRESS")); // 7
 				varList.add(vpd);
 			}
 			dataMap.put("varList", varList);
-			ObjectExcelView erv = new ObjectExcelView();					//执行excel操作
-			mv = new ModelAndView(erv,dataMap);
+			ObjectExcelView erv = new ObjectExcelView(); // 执行excel操作
+			mv = new ModelAndView(erv, dataMap);
 		}
-			return mv;
+		return mv;
 	}
 }

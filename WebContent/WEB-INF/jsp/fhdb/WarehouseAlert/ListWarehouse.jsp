@@ -32,13 +32,13 @@
 						<div class="col-xs-12">
 						
 						<!-- 检索  -->
-						<form action="Warehouse/ListWarehouse.do" method="post" name="alertForm" id="alertForm">
+						<form action="Warehouse/LikeList.do" method="post" name="alertForm" id="alertForm">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
 									<div class="nav-search">
 									<span class="input-icon">
-										<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords }" placeholder="请输入关键字" />
+										<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" name="keywords" value="${pd.keywords}" placeholder="请输入关键字" />
 										<i class="ace-icon fa fa-search nav-search-icon"></i>
 									</span>
 									</div>
@@ -93,7 +93,7 @@
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="10" class="center">没有数据</td>
+										<td colspan="10" class="left"><font size="4" color="red">抱歉您输入的关键字未找到!</font></td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
@@ -148,7 +148,7 @@ function searchs(){
 //导出excel
 function toExcel(){
 	var keywords = $("#nav-search-input").val();
-	window.location.href="<%=basePath%>Warehouse/ExportData.do?keywords='+keywords+'";
+	window.location.href='<%=basePath%>Warehouse/ExportData.do?keywords='+keywords;
 }
 	
 </script>

@@ -18,11 +18,5 @@ public interface WarehouseAlertService {
 	 * @throws Exception
 	 */
 	public List<PageData> listWarning(Page page)throws Exception;
-	/**
-	 * 把数据导出到excel表格
-	 * @param pd
-	 * @return
-	 * @throws Exception
-	 */
-	public List<PageData> ExportData(PageData pd)throws Exception;
+
 }
