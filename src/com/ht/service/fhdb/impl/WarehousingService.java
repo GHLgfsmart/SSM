@@ -41,5 +41,10 @@ public class WarehousingService implements WarehousingManager{
 	public List<Materials_information> findBymaterialAll(Page page) throws Exception {
 		return (List<Materials_information>)dao.findForList("MaterialMapper.datalistPage", page);
 	}
+
+	@Override
+	public PageData findBymaterialId(PageData pd) throws Exception {
+		return (PageData)dao.findForObject("MaterialMapper.materialById", pd);
+	}
 	
 }

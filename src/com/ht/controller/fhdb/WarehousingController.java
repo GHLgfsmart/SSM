@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,18 +25,18 @@ import com.ht.util.PageData;
 @RequestMapping(value="/warehousing")
 public class WarehousingController extends BaseController{
 		
-	String menuUrl = "warehousing/list.do"; //菜单地址(权限用)
+	String menuUrl = "warehousing/materialsList.do"; //菜单地址(权限用)
 	@Resource(name="warehousingService")
 	private WarehousingManager warehousingService;
 	
 	/**
-	 * Mr.Lin
+	 * @author Mr.Lin
 	 * 查询所有物资信息
 	 * @param page
 	 * @return
 	 * @throws Exception 
 	 * */
-	@RequestMapping(value="/list")
+	@RequestMapping(value="/materialsList")
 	private ModelAndView findmaterialsAll(Page page) throws Exception {
 		logBefore(logger, Jurisdiction.getUsername()+"列表Materials");
 		ModelAndView mv = this.getModelAndView();
@@ -57,12 +56,12 @@ public class WarehousingController extends BaseController{
 	}
 	
 	/**
-	 * Mr.Lin
+	 * @author Mr.Lin
 	 * 物资弹出新增界面
 	 * @throws Exception
 	 * @return
 	 */
-	@RequestMapping(value="/warehousingAddPage")
+	@RequestMapping(value="/materialsAddPage")
 	public ModelAndView warehousingAddPage()throws Exception{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
@@ -71,18 +70,18 @@ public class WarehousingController extends BaseController{
 		String dj = "WZ"+sdf.format(new Date());
 		mv.setViewName("fhdb/materials/materialsEdit");
 		mv.addObject("dj", dj);
-		mv.addObject("msg", "warehousingAdd");
+		mv.addObject("msg", "materialsAdd");
 		mv.addObject("pd", pd);
 		return mv;
 	}
 	
 	/**
-	 * Mr.Lin
+	 * @author Mr.Lin
 	 * 物资新增操作
 	 * @throws Exception
 	 * @return
 	 */
-	@RequestMapping(value="/warehousingAdd")
+	@RequestMapping(value="/materialsAdd")
 	public ModelAndView warehousingAdd()throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"物资新增");
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
@@ -90,20 +89,23 @@ public class WarehousingController extends BaseController{
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.put("ID", this.get32UUID());	//主键
-		warehousingService.materialSave(pd);
-		mv.addObject("msg","success");
-		mv.setViewName("fhdb/materials/materialsManage");
+		int result = warehousingService.materialSave(pd);
+		if(result>0) {
+			mv.addObject("msg","success");
+		}else {
+			mv.addObject("msg","fail");
+		}
+		mv.setViewName("save_result");
 		return mv;
 	}
 	
 	/**
-	 * Mr.Lin
+	 * @author Mr.Lin
 	 * 弹出物资选择供应商界面
 	 * @throws Exception 
 	 * */
 	@RequestMapping(value="/testPage")
 	public ModelAndView testPage(Page page) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"列表Materials");
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -115,7 +117,48 @@ public class WarehousingController extends BaseController{
 	}
 	
 	/**
-	 * Mr.Lin
+	 * @author Mr.Lin
+	 * 弹出物资修改界面
+	 * @throws Exception 
+	 * @return
+	 * */
+	@RequestMapping(value="/materialsEditPage")
+	public ModelAndView warehousingEditPage()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd = warehousingService.findBymaterialId(pd);
+		mv.setViewName("fhdb/materials/materialsEdit");
+		mv.addObject("msg", "materialsEdit");
+		mv.addObject("pd", pd);
+		return mv;
+	}
+	
+	/**
+	 * @author Mr.Lin
+	 * 物资修改操作
+	 * @throws Exception
+	 * @return
+	 */
+	@RequestMapping(value="/materialsEdit")
+	public ModelAndView warehousingEdit()throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"物资修改");
+		if(!Jurisdiction.buttonJurisdiction(menuUrl, "edit")){return null;} //校验权限
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		int result = warehousingService.materialUpdate(pd);
+		if(result>0) {
+			mv.addObject("msg","success");
+		}else {
+			mv.addObject("msg","fail");
+		}
+		mv.setViewName("save_result");
+		return mv;
+	}
+	
+	/**
+	 * @author Mr.Lin
 	 * 物资删除操作
 	 * @throws Exception 
 	 * */
@@ -133,5 +176,32 @@ public class WarehousingController extends BaseController{
 		}
 		out.close();
 	}
+	
+	/**
+	 * @author Mr.Lin
+	 * 物资批量删除操作
+	 * @throws Exception 
+	 * */
+	@RequestMapping(value="/materialsBatchDel")
+	public void materialsBatchDel(PrintWriter out) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"物资批量删除");
+		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		String DATA_IDS = pd.getString("DATA_IDS");
+		if(null != DATA_IDS && !"".equals(DATA_IDS)){
+			String ArrayDATA_IDS[] = DATA_IDS.split(",");
+			for(int i=0; i<ArrayDATA_IDS.length; i++) {
+				pd.put("ID", ArrayDATA_IDS[i]);
+				warehousingService.materialDelete(pd);
+			}
+			out.write("success");
+		}else {
+			out.write("fail");
+		}
+		out.close();
+	}
+	
+	
 	
 }

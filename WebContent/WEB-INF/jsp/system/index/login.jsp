@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="static/login/bootstrap-responsive.min.css" />
 <link rel="stylesheet" href="static/login/matrix-login.css" />
 <link href="static/login/font-awesome.css" rel="stylesheet" />
-<script type="text/javascript" src="static/login/js/jquery-1.5.1.min.js"></script>
+<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
  <style type="text/css">
     /*
    body{
@@ -317,12 +317,11 @@
 			}
 		</script>
 	</c:if>
-	<script src="static/login/js/bootstrap.min.js"></script>
-	<script src="static/js/jquery-1.7.2.js"></script>
-	<script src="static/login/js/jquery.easing.1.3.js"></script>
-	<script src="static/login/js/jquery.mobile.customized.min.js"></script>
-	<script src="static/login/js/camera.min.js"></script>
-	<script src="static/login/js/templatemo_script.js"></script>
+	<script type="text/javascript" src="static/login/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="static/login/js/jquery.easing.1.3.js"></script>
+	<script type="text/javascript" src="static/login/js/jquery.mobile.customized.min.js"></script>
+	<script type="text/javascript" src="static/login/js/camera.min.js"></script>
+	<script type="text/javascript" src="static/login/js/templatemo_script.js"></script>
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript" src="static/js/jquery.cookie.js"></script>
 </body>

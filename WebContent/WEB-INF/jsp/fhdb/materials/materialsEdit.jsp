@@ -66,14 +66,14 @@
 			<div class="page-content">
 				<div class="row">
 					<div class="col-xs-12">
-					<c:if test="${msg eq 'warehousingAdd'}">
+					<c:if test="${msg eq 'materialsAdd'}">
 						<legend>新增物资</legend>
 					</c:if>
-					<c:if test="${msg eq 'warehousingEdit'}">
+					<c:if test="${msg eq 'materialsEdit'}">
 						<legend>修改物资</legend>
 					</c:if>
 					<form action="warehousing/${msg }.do" name="Form" id="Form" method="post">
-						<input type="hidden" name="FHBUTTON_ID" id="FHBUTTON_ID" value="${pd.FHBUTTON_ID}"/>
+						<input type="hidden" name="ID" id="ID" value="${pd.ID}"/>
 						<div id="zhongxin" style="padding-top: 13px;">
 						<table id="table_report" class="table table-striped table-bordered table-hover">
 							<tr>
@@ -93,13 +93,13 @@
 								<td style="width:79px;text-align: right;padding-top: 13px;">物资名称:</td>
 								<td><input type="text" name="NAME" id="NAME" value="${pd.NAME}" maxlength="30" placeholder="这里输入物资名称" onchange="javascript:query();" title="物资名称" style="width:98%;"/></td>
 								<td style="width:79px;text-align: right;padding-top: 13px;">拼音简码:</td>
-								<td><input type="text" name="PINYIN" id="PINYIN" value="${pd.BAR_CODE}" maxlength="30" readonly="readonly" style="width:98%;"/></td>
+								<td><input type="text" name="PINYIN" id="PINYIN" value="${pd.PINYIN}" maxlength="30" readonly="readonly" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">供应商:</td>
 								<td>
-									<input type="hidden" name="CUS_ID" />
- 									<input type="text" name="supname" id="supname" value="${pd.supplier.NAME}" maxlength="30" placeholder="这里选择供应商" title="供应商" style="width:80%;"/>
+									<input type="hidden" id="CUS_ID" name="CUS_ID" />
+ 									<input type="text" name="supname" id="supname" value="${pd.SUPNAME}" maxlength="30" readonly placeholder="这里选择供应商" title="供应商" style="width:80%;"/>
 									<button class="btn btn-mini radius" onclick="elect();" type="button">选择</button>
 								</td>
 								<td style="width:79px;text-align: right;padding-top: 13px;">商品数量:</td>
@@ -110,18 +110,18 @@
 								<td><input type="text" name="UNIT" id="UNIT" value="${pd.UNIT}" maxlength="30" placeholder="这里输入单位" title="单位" style="width:98%;"/></td>
 								<td style="width:79px;text-align: right;padding-top: 13px;">录入时间:</td>
 								<td>
-									<input type="text" name="ENTRY_TIME" id="ENTRY_TIME" maxlength="30" title="录入时间" readonly="readonly" style="width:98%;"/>
-									<input type="hidden" name="UPDATE_TIME" id="UPDATE_TIME" />
+									<input type="text" name="ENTRY_TIME" id="ENTRY_TIME" value="${pd.ENTRY_TIME}" maxlength="30" title="录入时间" readonly="readonly" style="width:98%;"/>
+									<input type="hidden" name="UPDATE_TIME" id="UPDATE_TIME" value="${pd.UPDATE_TIME}" />
 								</td>
 							</tr>
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">操作员:</td>
 								<td>
-									<c:if test="${!empty pd.operator}">
-										<input type="text" name="operator" id="operator" value="${pd.operator}" readonly="readonly" maxlength="30" title="操作员" style="width:98%;"/>
+									<c:if test="${!empty pd.OPERATOR}">
+										<input type="text" name="OPERATOR" id="OPERATOR" value="${pd.OPERATOR}" readonly="readonly" maxlength="30" title="操作员" style="width:98%;"/>
 									</c:if>
-									<c:if test="${empty pd.operator}">
-										<input type="text" name="operator" id="operator" value="${sessionUser.USERNAME}" readonly="readonly" maxlength="30" title="操作员" style="width:98%;"/>
+									<c:if test="${empty pd.OPERATOR}">
+										<input type="text" name="OPERATOR" id="OPERATOR" value="${sessionUser.USERNAME}" readonly="readonly" maxlength="30" title="操作员" style="width:98%;"/>
 									</c:if>
 								</td>
 								<td style="width:79px;text-align: right;padding-top: 13px;">状态:</td>
@@ -135,7 +135,7 @@
 								<td style="width:79px;height:80px;text-align: right;padding-top: 13px;">备注:</td>
 								<td colspan="3">
 									<%-- <input type="text" name="NOTE" id="NOTE" value="${pd.NOTE}" maxlength="30" placeholder="这里输入备注" title="备注" style="width:98%;height:100%"/> --%>
-									<textarea name="NOTE" cols="" rows="" style="width:98%;" class="textarea" placeholder="这里输入备注"></textarea>
+									<textarea name="NOTE" cols="" rows="" style="width:98%;" class="textarea" placeholder="这里输入备注">${pd.NOTE}</textarea>
 								</td>
 							</tr>
 							<tr>
@@ -202,20 +202,10 @@
 			return false;
 			}
 
-			var myreg = /^(((13[0-9]{1})|159)+\d{8})$/;
 			if($("#COUNT").val()==""){
 				$("#COUNT").tips({
 					side:3,
 		            msg:'请输入商品数量',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#COUNT").focus();
-			return false;
-			}else if(!myreg.test($("#COUNT").val())) {
-				$("#COUNT").tips({
-					side:3,
-		            msg:'数量格式不正确',
 		            bg:'#AE81FF',
 		            time:2
 		        });
@@ -260,7 +250,8 @@
 		                    location.reload();
 		                }*/
 		                $("#supname").val(supplier);
-		                $("#CUS_ID").val(supid);
+		                //$("#CUS_ID").val(supid);
+		                $("#CUS_ID").val("001");
 		            }
 		        }
 		    );

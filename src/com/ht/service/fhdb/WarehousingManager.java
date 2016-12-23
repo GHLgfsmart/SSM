@@ -42,4 +42,12 @@ public interface WarehousingManager {
 	 * @throws Exception
 	 * */
 	public List<Materials_information> findBymaterialAll(Page page)throws Exception;
+	
+	/**
+	 * Mr.Lin
+	 * 根据id查询物资信息
+	 * @param pd
+	 * @throws Exception
+	 * */
+	public PageData findBymaterialId(PageData pd) throws Exception;
 }

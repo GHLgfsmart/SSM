@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -16,13 +16,12 @@
 <!-- 下拉框 -->
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
 <!-- jsp文件头和头部 -->
-<%@include file="/WEB-INF/jsp/system/index/top.jsp"%>
+<%@ include file="/WEB-INF/jsp/system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
-<!-- <script type="text/javascript" src="static/js/common/jquery-1.7.2.js"></script> -->
 </head>
 <body class="no-skin">
-	
+
 	<div class="main-container" id="main-container">
 		<!-- /section:basics/sidebar -->
 		<div class="main-content">
@@ -32,13 +31,13 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="warehousing/list.do" method="post" name="Form" id="Form">
+						<form action="warehousing/materialsList.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
 									<div class="nav-search">
 										<span class="input-icon">
-											<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
+											<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="keywords" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
@@ -46,7 +45,7 @@
 								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginStart" id="lastLoginStart"  value="${pd.lastLoginStart}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="最近登录开始"/></td>
 								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginEnd" name="lastLoginEnd"  value="${pd.lastLoginEnd}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="最近登录结束"/></td>
 								<td style="vertical-align:top;padding-left:2px;">
-								 	<select class="chosen-select form-control" name="STATE" id="role_id" data-placeholder="请选择状态" style="vertical-align:top;width: 120px;">
+								 	<select class="chosen-select form-control" name="STATE" id="STATE" data-placeholder="请选择状态" style="vertical-align:top;width: 120px;">
 										<option value="0">未入库</option>
 										<option value="1">已入库</option>
 										<option value="2">已出库</option>
@@ -199,12 +198,13 @@
 		</div>
 
 	</div>
-	<!-- /.main-container -->
-	
+
+	<!-- basic scripts -->
 	<!-- 页面底部js¨ -->
 	<%@ include file="/WEB-INF/jsp/system/index/foot.jsp"%>
 	<!-- 删除时确认窗口 -->
 	<script src="static/ace/js/bootbox.js"></script>
+	<!-- ace scripts -->
 	<script src="static/ace/js/ace/ace.js"></script>
 	<!-- 日期框 -->
 	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
@@ -212,7 +212,8 @@
 	<script src="static/ace/js/chosen.jquery.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
-</body>
+	</body>
+
 <script type="text/javascript">
 $(top.hangge());//关闭加载状态	
 //检索
@@ -220,18 +221,6 @@ function tosearch(){
 	top.jzts();
 	$("#Form").submit();
 }
-$(function() {
-	//复选框全选控制
-	var active_class = 'active';
-	$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
-		var th_checked = this.checked;//checkbox inside "TH" table header
-		$(this).closest('table').find('tbody > tr').each(function(){
-			var row = this;
-			if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
-			else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
-		});
-	});
-});
 
 //新增
 function add(){
@@ -239,7 +228,7 @@ function add(){
 	 var diag = new top.Dialog();
 	 diag.Drag=true;
 	 diag.Title ="新增";
-	 diag.URL = '<%=basePath%>warehousing/warehousingAddPage.do';
+	 diag.URL = '<%=basePath%>warehousing/materialsAddPage.do';
 	 diag.Width = 850;
 	 diag.Height = 500;
 	 diag.CancelEvent = function(){ //关闭事件
@@ -280,9 +269,9 @@ function edit(Id){
 	 var diag = new top.Dialog();
 	 diag.Drag=true;
 	 diag.Title ="编辑";
-	 diag.URL = '<%=basePath%>fhbutton/goEdit.do?FHBUTTON_ID='+Id;
-	 diag.Width = 450;
-	 diag.Height = 368;
+	 diag.URL = '<%=basePath%>warehousing/materialsEditPage.do?ID='+Id;
+	 diag.Width = 850;
+	 diag.Height = 500;
 	 diag.CancelEvent = function(){ //关闭事件
 		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 			 nextPage(${page.currentPage});
@@ -291,51 +280,87 @@ function edit(Id){
 	 };
 	 diag.show();
 }
-
 //批量操作
 function makeAll(msg){
-	bootbox.confirm(msg, function(result) {
-		if(result) {
-			var str = '';
-			for(var i=0;i < document.getElementsByName('ids').length;i++){
-			  if(document.getElementsByName('ids')[i].checked){
-			  	if(str=='') str += document.getElementsByName('ids')[i].value;
-			  	else str += ',' + document.getElementsByName('ids')[i].value;
-			  }
-			}
-			if(str==''){
-				bootbox.dialog({
-					message: "<span class='bigger-110'>您没有选择任何内容!</span>",
-					buttons: 			
-					{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+	var str = '';
+	for(var i=0;i < document.getElementsByName('ids').length;i++){
+	  if(document.getElementsByName('ids')[i].checked){
+	  	if(str=='') str += document.getElementsByName('ids')[i].value;
+	  	else str += ',' + document.getElementsByName('ids')[i].value;
+	  }
+	}
+	if(str==''){
+		bootbox.dialog({
+			message: "<span class='bigger-110'>您没有选择任何内容!</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		$("#zcheckbox").tips({
+			side:1,
+          msg:'点这里全选',
+          bg:'#AE81FF',
+          time:8
+      });
+		return;
+	}else {
+		bootbox.confirm(msg, function(result) {
+			if(result) {
+				top.jzts();
+				var url = '<%=basePath%>warehousing/materialsBatchDel.do?DATA_IDS='+str;
+				$.get(url,function(data){
+					if(data == 'success'){
+						alert("成功");
+					}else {
+						alert("失败");
+					}
+					nextPage(${page.currentPage});
 				});
-				$("#zcheckbox").tips({
-					side:1,
-		            msg:'点这里全选',
-		            bg:'#AE81FF',
-		            time:8
-		        });
-				return;
-			}else{
-				if(msg == '确定要删除选中的数据吗?'){
-					top.jzts();
-					$.ajax({
-						type: "POST",
-						url: '<%=basePath%>fhbutton/deleteAll.do?tm='+new Date().getTime(),
-				    	data: {DATA_IDS:str},
-						dataType:'json',
-						//beforeSend: validateData,
-						cache: false,
-						success: function(data){
-							 $.each(data.list, function(i, list){
-									nextPage(${page.currentPage});
-							 });
-						}
-					});
-				}
 			}
-		}
-	});
+		});
+	}
 }
+$(function() {
+	//日期框
+	$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
+	
+	//下拉框
+	if(!ace.vars['touch']) {
+		$('.chosen-select').chosen({allow_single_deselect:true}); 
+		$(window)
+		.off('resize.chosen')
+		.on('resize.chosen', function() {
+			$('.chosen-select').each(function() {
+				 var $this = $(this);
+				 $this.next().css({'width': $this.parent().width()});
+			});
+		}).trigger('resize.chosen');
+		$(document).on('settings.ace.chosen', function(e, event_name, event_val) {
+			if(event_name != 'sidebar_collapsed') return;
+			$('.chosen-select').each(function() {
+				 var $this = $(this);
+				 $this.next().css({'width': $this.parent().width()});
+			});
+		});
+		$('#chosen-multiple-style .btn').on('click', function(e){
+			var target = $(this).find('input[type=radio]');
+			var which = parseInt(target.val());
+			if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
+			 else $('#form-field-select-4').removeClass('tag-input-style');
+		});
+	}
+
+
+	
+	//复选框全选控制
+	var active_class = 'active';
+	$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
+		var th_checked = this.checked;//checkbox inside "TH" table header
+		$(this).closest('table').find('tbody > tr').each(function(){
+			var row = this;
+			if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
+			else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
+		});
+	});
+});
 </script>
 </html>

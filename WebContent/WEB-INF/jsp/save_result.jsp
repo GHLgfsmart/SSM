@@ -22,9 +22,11 @@
 	<script type="text/javascript">
 		var msg = "${msg}";
 		if(msg=="success" || msg==""){
+			alert("成功");
 			document.getElementById('zhongxin').style.display = 'none';
 			top.Dialog.close();
 		}else{
+			alert("失败");
 			top.Dialog.close();
 		}
 	</script>
