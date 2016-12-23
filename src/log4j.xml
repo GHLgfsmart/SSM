@@ -9,8 +9,7 @@
 			<param name="ConversionPattern" value="%d{yyyy HH:mm:ss} %-5p %c - %m%n" />
 		</layout>
 	</appender>
-	
-<!-- 哈哈哈 -->
+
 	<!-- Application Loggers -->
 	<logger name="com.ht">
 		<level value="info" />

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MaterialMapper">
+	
+	<resultMap type="com.ht.entity.Materials_information" id="materialsMap">
+		<id column="ID" property="ID" />
+		<result column="BIANHAO" property="BIANHAO"/>
+		<result column="PINYIN" property="PINYIN"/>
+		<result column="BAR_CODE" property="BAR_CODE"/>
+		<result column="NAME" property="NAME"/>
+		<!-- <result column="CUS_ID" property="CUS_ID"/> -->
+		<result column="COUNT" property="COUNT"/>
+		<result column="UNIT" property="UNIT"/>
+		<result column="ENTRY_TIME" property="ENTRY_TIME"/>
+		<result column="UPDATE_TIME" property="UPDATE_TIME"/>
+		<result column="operator" property="operator"/>
+		<result column="NOTE" property="NOTE"/>
+		<result column="STATE" property="STATE"/>
+		<association property="supplier" javaType="com.ht.entity.Supplier_customer">
+			<id property="ID" column="ID" />
+			<result property="NAME" column="SUPNAME" />
+		</association>
+	</resultMap>
+	
+	<!-- 字段 -->
+	<sql id="field">
+		MI.ID,
+		MI.BIANHAO,
+		MI.PINYIN,
+		MI.BAR_CODE,
+		MI.NAME,
+		MI.COUNT,
+		MI.UNIT,
+		MI.ENTRY_TIME,
+		MI.UPDATE_TIME,
+		MI.OPERATOR,
+		MI.NOTE,
+		MI.STATE,
+		SC.SUPNAME
+	</sql>
+	
+	<sql id="tableName">
+		MATERIALS_INFORMATION
+	</sql>
+	
+	<select id="datalistPage" parameterType="page" resultMap="materialsMap">
+		SELECT 
+			<include refid="field" /> 
+		FROM MATERIALS_INFORMATION MI INNER JOIN SUPPLIER_CUSTOMER SC ON MI.CUS_ID = SC.ID 
+		<where>
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and 
+					(
+						MI.BIANHAO LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 	or 
+					 	MI.NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 	or 
+					 	MI.BAR_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 	or 
+					 	MI.operator LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					)
+			</if>
+		</where>
+	</select>
+	
+	<!-- 删除用户 -->
+	<delete id="materialdel" parameterType="pd" flushCache="false">
+		delete from 
+			<include refid="tableName"></include>
+		where ID = #{ID}
+	</delete>
+	
+	<update id="materialUpdate" parameterType="pd">
+		UPDATE <include refid="tableName"></include> 
+		<set>
+			<if test="BAR_CODE!=null and BAR_CODE!='' ">
+				BAR_CODE=#{BAR_CODE},
+			</if>
+			<if test="NAME!=null and NAME!='' ">
+				NAME=#{NAME},
+			</if>
+			<if test="BAR_CODE!=null and BAR_CODE!='' ">
+				PINYIN=#{PINYIN},
+			</if>
+			<if test="CUS_ID!=null and CUS_ID!='' ">
+				CUS_ID=#{CUS_ID},
+			</if>
+			<if test="COUNT!=null and COUNT!='' ">
+				COUNT=#{COUNT},
+			</if>
+			<if test="UNIT!=null and UNIT!='' ">
+				UNIT=#{UNIT},
+			</if>
+			<if test="UPDATE_TIME!=null and UPDATE_TIME!='' ">
+				UPDATE_TIME=#{UPDATE_TIME},
+			</if>
+			<if test="NOTE!=null and NOTE!='' ">
+				NOTE=#{NOTE},
+			</if>
+			<if test="STATE!=null and STATE!='' ">
+				STATE=#{STATE},
+			</if>
+		</set>
+		where ID=#{ID}
+	</update>
+	
+	<insert id="materialInsert" parameterType="pd">
+		INSERT INTO <include refid="tableName"></include> VALUES(
+			#{ID},
+			#{BIANHAO},
+			#{PINYIN},
+			#{BAR_CODE},
+			#{NAME},
+			#{CUS_ID},
+			#{COUNT},
+			#{UNIT},
+			#{ENTRY_TIME},
+			#{UPDATE_TIME},
+			#{OPERATOR},
+			#{NOTE},
+			#{STATE},
+		)
+	</insert>
+</mapper>

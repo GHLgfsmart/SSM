@@ -18,15 +18,13 @@ public class Materials_information {
 	private String operator;//操作员
 	private String NOTE;//备注
 	private int STATE;//状态（默认0）0未入库，1已入库,2已出库
+	private Page page;
 	
-	
+	private Supplier_customer supplier;
 	
 	public Materials_information() {
 		
 	}
-
-
-
 	public Materials_information(String iD, String bIANHAO, String pINYIN, String bAR_CODE, String nAME, String cUS_ID,
 			int cOUNT, String uNIT, String eNTRY_TIME, String uPDATE_TIME, String operator, String nOTE, int sTATE) {
 		ID = iD;
@@ -200,8 +198,21 @@ public class Materials_information {
 		STATE = sTATE;
 	}
 
+	public Page getPage() {
+		if(page==null)
+			page = new Page();
+		return page;
+	}
+	public void setPage(Page page) {
+		this.page = page;
+	}
 
-
+	public Supplier_customer getSupplier() {
+		return supplier;
+	}
+	public void setSupplier(Supplier_customer supplier) {
+		this.supplier = supplier;
+	}
 	@Override
 	public String toString() {
 		return "Materials_information [ID=" + ID + ", BIANHAO=" + BIANHAO + ", PINYIN=" + PINYIN + ", BAR_CODE="
