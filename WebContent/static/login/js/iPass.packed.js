@@ -5,9 +5,11 @@
             'maskDelay': 500,
             'maskChar': '%u25CF'
         };
+		/*
         if (options) {
-            $.extend(settings, options)
+            $.extend(settings, options);
         }
+		*/
         var checkTimeout = [];
         var maskTimeout = [];
         var regex = new RegExp('[^' + settings['maskChar'] + ']', 'gi');
@@ -23,7 +25,10 @@
                 alert("You must set 'id' and 'name' attributes for elements!");
                 return false
             }
-            $('<input id="' + newId + '" name="' + newName + '" type="text" autocomplete="off" />').insertAfter(obj);
+			
+			$('<input id="' + newId + '" name="' + newName + '" type="text" autocomplete="off" />').insertAfter(obj);
+			
+            
             var newObj = $('#' + newId);
             var newElem = $('#' + newId)[0];
             if (this.accessKey) {
@@ -140,30 +145,20 @@
                 end: 0
             };
             if (input.setSelectionRange) {
-                pos.start = input.selectionStart;
-                pos.end = input.selectionEnd
+                //pos.start = input.selectionStart;
+               // pos.end = input.selectionEnd
             } else if (input.createTextRange) {
                 var bookmark = document.selection.createRange().getBookmark();
                 var selection = input.createTextRange();
                 var before = selection.duplicate();
-                selection.moveToBookmark(bookmark);
-                before.setEndPoint('EndToStart', selection);
+              /*  selection.moveToBookmark(bookmark);
+               before.setEndPoint('EndToStart', selection);
                 pos.start = before.text.length;
-                pos.end = pos.start + selection.text.length
+                pos.end = pos.start + selection.text.length*/
             }
             return pos
         };
-        setCurPos = function(id, pos) {
-            var input = $('#' + id)[0];
-            if (input.setSelectionRange) {
-                input.setSelectionRange(pos.start, pos.end)
-            } else if (input.createTextRange) {
-                var selection = input.createTextRange();
-                selection.collapse(true);
-                selection.moveEnd('character', pos.end);
-                selection.moveStart('character', pos.start);
-                selection.select()
-            }
-        }
+		
+       
     }
 })(jQuery);

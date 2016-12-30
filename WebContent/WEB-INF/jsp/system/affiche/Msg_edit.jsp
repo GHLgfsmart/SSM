@@ -14,6 +14,7 @@
 <base href="<%=basePath%>">
 <!-- 下拉框 -->
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
+<link rel="stylesheet" type="text/css" href="static/ace/css/sweetalert.css">
 <!-- jsp文件头和头部 -->
 <%@ include file="../index/top.jsp"%>
 <style>
@@ -66,6 +67,7 @@
 	</div>
 	<!-- 页面底部js¨ -->
 	<%@ include file="../index/foot.jsp"%>
+	<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
 	<script src='static/affiche/js/autosize.js'></script>
 	<script src="static/ace/js/ace/ace.js"></script>
 	<!-- 下拉框 -->
@@ -101,7 +103,14 @@
 			return false;
 		}
 			$("#msgForm").submit();
-			
+			swal({
+		        title: "系统提示", 
+		        text: "操作成功！", 
+		        type: "success",
+		        timer: 5544400,
+		        showConfirmButton: false,
+		        confirmButtonColor: "#ec6c62"
+		    	});
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();
 	}

@@ -3,6 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://"
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -10,8 +13,8 @@
 <head>
 <title>${pd.SYSNAME}</title>
 <meta charset="UTF-8" />
+<base href="<%=basePath%>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
 <link rel="stylesheet" href="static/login/bootstrap.min.css" />
 <link rel="stylesheet" href="static/login/css/camera.css" />
 <link rel="stylesheet" href="static/login/bootstrap-responsive.min.css" />
@@ -23,14 +26,6 @@
 <script src="static/js/jquery-1.7.2.js"></script>
 <script type="text/javascript" src="static/login/js/iPass.packed.js"></script>
  <style type="text/css">
-  /*   
-   body{
-    -webkit-transform: rotate(-3deg);
-    -moz-transform: rotate(-3deg);
-    -o-transform: rotate(-3deg);
-	padding-top:20px;
-    }
-     */
   </style>
   <script>
 	  	$(document).ready(function(){	
