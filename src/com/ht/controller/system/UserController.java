@@ -82,6 +82,7 @@ public class UserController extends BaseController {
 		List<PageData>	userList = userService.listUsers(page);	//列出用户列表
 		pd.put("ROLE_ID", "1");
 		List<Role> roleList = roleService.listAllRolesByPId(pd);//列出所有系统用户角色
+		System.out.println("=========="+roleList);
 		mv.setViewName("system/user/user_list");
 		mv.addObject("userList", userList);
 		mv.addObject("roleList", roleList);
@@ -251,7 +252,7 @@ public class UserController extends BaseController {
 		List<Role> roleList = roleService.listAllRolesByPId(pd);	//列出所有系统用户角色
 		pd.put("USERNAME", Jurisdiction.getUsername());
 		pd = userService.findByUsername(pd);						//根据用户名读取
-		mv.setViewName("system/user/user_edit");
+		mv.setViewName("system/user/user_editMy");
 		mv.addObject("msg", "editU");
 		mv.addObject("pd", pd);
 		mv.addObject("roleList", roleList);

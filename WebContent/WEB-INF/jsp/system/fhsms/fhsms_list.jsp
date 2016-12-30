@@ -80,7 +80,6 @@
 							<!-- 开始循环 -->	
 							<c:choose>
 								<c:when test="${not empty varList}">
-									<c:if test="${QX.cha == 1 }">
 									<c:forEach items="${varList}" var="var" varStatus="vs">
 										<tr>
 											<td class='center'>
@@ -89,7 +88,7 @@
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
 											<c:if test="${pd.TYPE != '2' }">
 											<td class='center'><a onclick="viewUser('${var.TO_USERNAME}')" style="cursor:pointer;">${var.TO_USERNAME}</a></td>
-											<td class='center'><a onclick="viewUser('${var.FROM_USERNAME}')" style="cursor:pointer;">${var.FROM_USERNAME}</a></td>
+											<td class='center'>${var.FROM_USERNAME}</td>
 											</c:if>
 											<c:if test="${pd.TYPE == '2' }">
 											<td class='center'><a onclick="viewUser('${var.FROM_USERNAME}')" style="cursor:pointer;">${var.FROM_USERNAME}</a></td>
@@ -98,23 +97,16 @@
 											<td class='center'>${var.SEND_TIME}</td>
 											<td class='center' id="STATUS${vs.index+1}"><c:if test="${var.STATUS == '2' }"><span class="label label-important arrowed-in">未读</span></c:if><c:if test="${var.STATUS == '1' }"><span class="label label-success arrowed">已读</span></c:if></td>
 											<td class="center">
-												<c:if test="${QX.edit != 1 && QX.del != 1 }">
-												<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
-												</c:if>
 												<div class="hidden-sm hidden-xs btn-group">
 													<a class="btn btn-xs btn-success" title="查看" onclick="viewx('STATUS${vs.index+1}','${var.STATUS}','${pd.TYPE == '2'?'2':'1' }','${var.FHSMS_ID}','${var.SANME_ID}');">
 														<i class="ace-icon fa fa-search nav-search-icon"></i>
 													</a>
-													<c:if test="${QX.FHSMS == 1 }">
 													<a class="btn btn-xs btn-info" title='发送站内信' onclick="sendFhsms('${var.TO_USERNAME}');">
 														<i class="ace-icon fa fa-envelope-o bigger-120" title="发送站内信"></i>
 													</a>
-													</c:if>
-													<c:if test="${QX.del == 1 }">
 													<a class="btn btn-xs btn-danger" onclick="del('STATUS${vs.index+1}','${var.STATUS}','${pd.TYPE == '2'?'2':'1' }','${var.FHSMS_ID}','${var.SANME_ID}');">
 														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 													</a>
-													</c:if>
 												</div>
 												<div class="hidden-md hidden-lg">
 													<div class="inline pos-rel">
@@ -130,7 +122,6 @@
 																	</span>
 																</a>
 															</li>
-															<c:if test="${QX.FHSMS == 1 }">
 															<li>
 																<a style="cursor:pointer;" onclick="sendFhsms('${var.TO_USERNAME}');" class="tooltip-info" data-rel="tooltip" title="发送站内信">
 																	<span class="blue">
@@ -138,8 +129,6 @@
 																	</span>
 																</a>
 															</li>
-															</c:if>
-															<c:if test="${QX.del == 1 }">
 															<li>
 																<a style="cursor:pointer;" onclick="del('STATUS${vs.index+1}','${var.STATUS}','${pd.TYPE == '2'?'2':'1' }','${var.FHSMS_ID}','${var.SANME_ID}');" class="tooltip-error" data-rel="tooltip" title="删除">
 																	<span class="red">
@@ -147,7 +136,6 @@
 																	</span>
 																</a>
 															</li>
-															</c:if>
 														</ul>
 													</div>
 												</div>
@@ -155,12 +143,6 @@
 										</tr>
 									
 									</c:forEach>
-									</c:if>
-									<c:if test="${QX.cha == 0 }">
-										<tr>
-											<td colspan="100" class="center">您无权查看</td>
-										</tr>
-									</c:if>
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
@@ -174,10 +156,9 @@
 						<table style="width:100%;">
 							<tr>
 								<td style="vertical-align:top;">
-									<c:if test="${QX.FHSMS == 1 }"><a title="批量发送站内信" class="btn btn-mini btn-info" onclick="makeAll('确定要给选中的用户发送站内信吗?');"><i class="ace-icon fa fa-envelope-o bigger-120"></i></a></c:if>
-									<c:if test="${QX.del == 1 }">
+									<a title="批量发送站内信" class="btn btn-mini btn-info" onclick="makeAll('确定要给选中的用户发送站内信吗?');"><i class="ace-icon fa fa-envelope-o bigger-120"></i></a>
+									<a title="选择发送站内信" class="btn btn-mini btn-info" onclick="sendFhsms('')"><i class="ace-icon fa fa-envelope-o bigger-120"></i></a>
 									<a class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
-									</c:if>
 								</td>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 							</tr>
@@ -277,8 +258,8 @@
 			 diag.Drag=true;
 			 diag.Title ="站内信";
 			 diag.URL = '<%=basePath%>fhsms/goAdd.do?username='+username;
-			 diag.Width = 660;
-			 diag.Height = 444;
+			 diag.Width = 850;
+			 diag.Height = 500;
 			 diag.CancelEvent = function(){ //关闭事件
 				 top.jzts();
 				 setTimeout("self.location=self.location",100);
@@ -334,7 +315,16 @@
 					  	else str += ',' + document.getElementsByName('ids')[i].value;
 					  	
 					  	if(username=='') username += document.getElementsByName('ids')[i].id;
-					  	else username += ';' + document.getElementsByName('ids')[i].id;
+					  	else{
+					  		var idss=document.getElementsByName('ids')[i].id; 
+					  		var strs= new Array(); //定义一数组 
+					  		strs=username.split(";"); //字符分割 
+					  		for (j=0;j<strs.length ;j++ ){ 
+					  			if(strs[j]!=idss && i==j+1){
+					  				username += ';'+idss;
+					  			}
+					  		} 
+					  	}
 					  }
 					}
 					if(str==''){

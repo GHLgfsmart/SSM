@@ -17,18 +17,25 @@
 <link rel="stylesheet" href="static/login/bootstrap-responsive.min.css" />
 <link rel="stylesheet" href="static/login/matrix-login.css" />
 <link href="static/login/font-awesome.css" rel="stylesheet" />
-<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<link href="static/login/css/demo.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="static/login/js/jquery-1.5.1.min.js"></script>
+<script src="static/js/jquery-1.7.2.js"></script>
+<script type="text/javascript" src="static/login/js/iPass.packed.js"></script>
  <style type="text/css">
-    /*
+  /*   
    body{
     -webkit-transform: rotate(-3deg);
     -moz-transform: rotate(-3deg);
     -o-transform: rotate(-3deg);
 	padding-top:20px;
     }
-    */
+     */
   </style>
   <script>
+	  	$(document).ready(function(){	
+			$("input[type=password]").iPass();
+		});
   		//window.setTimeout(showfh,3000); 
   		var timer;
 		function showfh(){
@@ -83,7 +90,7 @@
 						<div class="main_input_box">
 							<span class="add-on bg_ly">
 							<i><img height="37" src="static/login/suo.png" /></i>
-							</span><input type="password" name="password" id="password" placeholder="请输入密码" value=""/>
+							</span><input type="password" id="password" name="password" placeholder="请输入密码" value=""/>
 						</div>
 					</div>
 				</div>
@@ -117,7 +124,7 @@
 			</form>
 			<div class="controls">
 				<div class="main_input_box">
-					<font color="white"><span id="nameerr">Copyright © FHqq313596790 2100</span></font>
+					<font color="white"><span id="nameerr">Copyright © qq1375675666 2100</span></font>
 				</div>
 			</div>
 		</div>
@@ -317,11 +324,11 @@
 			}
 		</script>
 	</c:if>
-	<script type="text/javascript" src="static/login/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="static/login/js/jquery.easing.1.3.js"></script>
-	<script type="text/javascript" src="static/login/js/jquery.mobile.customized.min.js"></script>
-	<script type="text/javascript" src="static/login/js/camera.min.js"></script>
-	<script type="text/javascript" src="static/login/js/templatemo_script.js"></script>
+	<script src="static/login/js/bootstrap.min.js"></script>
+	<script src="static/login/js/jquery.easing.1.3.js"></script>
+	<script src="static/login/js/jquery.mobile.customized.min.js"></script>
+	<script src="static/login/js/camera.min.js"></script>
+	<script src="static/login/js/templatemo_script.js"></script>
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript" src="static/js/jquery.cookie.js"></script>
 </body>

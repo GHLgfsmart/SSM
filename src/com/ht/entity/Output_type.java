@@ -6,19 +6,13 @@ package com.ht.entity;
  */
 public class Output_type {
 	private String ID;//主键编号(加密)
-	private String NAME;//名称
+	private String OPTNAME;//名称
 	private String NOTE;//备注
 	
 	public Output_type() {
 		
 	}
 
-	public Output_type(String iD, String nAME, String nOTE) {
-		
-		ID = iD;
-		NAME = nAME;
-		NOTE = nOTE;
-	}
 
 	public String getID() {
 		return ID;
@@ -28,13 +22,16 @@ public class Output_type {
 		ID = iD;
 	}
 
-	public String getNAME() {
-		return NAME;
+
+	public String getOPTNAME() {
+		return OPTNAME;
 	}
 
-	public void setNAME(String nAME) {
-		NAME = nAME;
+
+	public void setOPTNAME(String oPTNAME) {
+		OPTNAME = oPTNAME;
 	}
+
 
 	public String getNOTE() {
 		return NOTE;
@@ -46,7 +43,7 @@ public class Output_type {
 
 	@Override
 	public String toString() {
-		return "Out_put_type [ID=" + ID + ", NAME=" + NAME + ", NOTE=" + NOTE + "]";
+		return "Out_put_type [ID=" + ID + ", NAME=" + OPTNAME + ", NOTE=" + NOTE + "]";
 	}
 	
 	

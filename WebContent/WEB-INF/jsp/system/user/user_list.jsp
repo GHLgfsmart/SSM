@@ -99,7 +99,7 @@
 											<td class="center"><a onclick="viewUser('${user.USERNAME}')" style="cursor:pointer;">${user.USERNAME }</a></td>
 											<td class="center">${user.NAME }</td>
 											<td class="center">${user.ROLE_NAME }</td>
-											<td class="center"><a title="发送电子邮件" style="text-decoration:none;cursor:pointer;" <c:if test="${QX.email == 1 }">onclick="sendEmail('${user.EMAIL }');"</c:if>>${user.EMAIL }&nbsp;<i class="ace-icon fa fa-envelope-o"></i></a></td>
+											<td class="center">${user.EMAIL }&nbsp;<i class="ace-icon fa fa-envelope-o"></i></td>
 											<td class="center">${user.LAST_LOGIN}</td>
 											<td class="center">${user.IP}</td>
 											<td class="center">
@@ -110,11 +110,6 @@
 													<c:if test="${QX.FHSMS == 1 }">
 													<a class="btn btn-xs btn-info" title='发送站内信' onclick="sendFhsms('${user.USERNAME }');">
 														<i class="ace-icon fa fa-envelope-o bigger-120" title="发送站内信"></i>
-													</a>
-													</c:if>
-													<c:if test="${QX.sms == 1 }">
-													<a class="btn btn-xs btn-warning" title='发送短信' onclick="sendSms('${user.PHONE }');">
-														<i class="ace-icon fa fa-envelope-o bigger-120" title="发送短信"></i>
 													</a>
 													</c:if>
 													<c:if test="${QX.edit == 1 }">
@@ -139,15 +134,6 @@
 																<a style="cursor:pointer;" onclick="sendFhsms('${user.USERNAME }');" class="tooltip-info" data-rel="tooltip" title="发送站内信">
 																	<span class="blue">
 																		<i class="ace-icon fa fa-envelope bigger-120"></i>
-																	</span>
-																</a>
-															</li>
-															</c:if>
-															<c:if test="${QX.sms == 1 }">
-															<li>
-																<a style="cursor:pointer;" onclick="sendSms('${user.PHONE }');" class="tooltip-success" data-rel="tooltip" title="发送短信">
-																	<span class="blue">
-																		<i class="ace-icon fa fa-envelope-o bigger-120"></i>
 																	</span>
 																</a>
 															</li>
@@ -197,12 +183,10 @@
 					<table style="width:100%;">
 						<tr>
 							<td style="vertical-align:top;">
-								<c:if test="${QX.add == 1 }">
+								<c:if test="${QX.add == 1}">
 								<a class="btn btn-mini btn-success" onclick="add();">新增</a>
 								</c:if>
 								<c:if test="${QX.FHSMS == 1 }"><a title="批量发送站内信" class="btn btn-mini btn-info" onclick="makeAll('确定要给选中的用户发送站内信吗?');"><i class="ace-icon fa fa-envelope-o bigger-120"></i></a></c:if>
-								<c:if test="${QX.email == 1 }"><a title="批量发送电子邮件" class="btn btn-mini btn-primary" onclick="makeAll('确定要给选中的用户发送邮件吗?');"><i class="ace-icon fa fa-envelope bigger-120"></i></a></c:if>
-								<c:if test="${QX.sms == 1 }"><a title="批量发送短信" class="btn btn-mini btn-warning" onclick="makeAll('确定要给选中的用户发送短信吗?');"><i class="ace-icon fa fa-envelope-o bigger-120"></i></a></c:if>
 								<c:if test="${QX.del == 1 }">
 								<a title="批量删除" class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
 								</c:if>
@@ -262,6 +246,7 @@ function delUser(userId,msg){
 			top.jzts();
 			var url = "<%=basePath%>user/deleteU.do?USER_ID="+userId+"&tm="+new Date().getTime();
 			$.get(url,function(data){
+				alert(data);
 				nextPage(${page.currentPage});
 			});
 		};
@@ -412,8 +397,8 @@ function sendFhsms(username){
 	 diag.Drag=true;
 	 diag.Title ="站内信";
 	 diag.URL = '<%=basePath%>fhsms/goAdd.do?username='+username;
-	 diag.Width = 660;
-	 diag.Height = 444;
+	 diag.Width = 850;
+	 diag.Height = 500;
 	 diag.CancelEvent = function(){ //关闭事件
 		diag.close();
 	 };

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="InventoryMapper">
+	
+		<resultMap type="Inventory" id="inventoryResultMap">
+			<id property="ID" column="ID"/>
+			<result property="BIANHAO" column="BIANHAO"/>
+			<result property="BUSINESS_TIME" column="BUSINESS_TIME"/>
+			<result property="STATE" column="STATE"/>
+			<result property="INSPECTOR" column="INSPECTOR"/>
+			<result property="AUDITOR" column="AUDITOR"/>
+			<result property="JSR" column="JSR"/>
+			<result property="PRO_NAME" column="PRO_NAME"/>
+			<result property="MANY" column="MANY"/>
+			<result property="ENTRY_TIME" column="ENTRY_TIME"/>
+			<result property="UPDATE_TIME" column="UPDATE_TIME"/>
+			<result property="PANDIAN_INST" column="PANDIAN_INST"/>
+			<result property="ZHAIYAO_INST" column="ZHAIYAO_INST"/>
+			<result property="PRACTICAL" column="PRACTICAL"/>
+			<result property="DECREASE_COUNT" column="DECREASE_COUNT"/>
+			<result property="NOTE" column="NOTE"/>
+			<association property="m_Information" javaType="com.ht.entity.Materials_information">
+				<id property="ID" column="ID" />
+				<result property="NAME" column="NAME" />
+			</association>
+		</resultMap>
+		
+		<resultMap type="Inventory" id="inventoryResult">
+			<id property="ID" column="ID"/>
+			<result property="BIANHAO" column="BIANHAO"/>
+			<result property="BUSINESS_TIME" column="BUSINESS_TIME"/>
+			<result property="JINGSHUO_ID" column="JINGSHUO_ID"/>
+			<result property="JSR" column="JSR"/>
+			<result property="MATERIALS_ID" column="MATERIALS_ID"/>
+			<result property="PRO_NAME" column="PRO_NAME"/>
+			<result property="WAREHOUSE_ID" column="WAREHOUSE_ID"/>
+			<result property="STATE" column="STATE"/>
+			<result property="INSPECTOR" column="INSPECTOR"/>
+			<result property="AUDITOR" column="AUDITOR"/>
+			<result property="ENTRY_TIME" column="ENTRY_TIME"/>
+			<result property="UPDATE_TIME" column="UPDATE_TIME"/>
+			<result property="PANDIAN_INST" column="PANDIAN_INST"/>
+			<result property="ZHAIYAO_INST" column="ZHAIYAO_INST"/>
+			<result property="MANY" column="MANY"/>
+			<result property="PRACTICAL" column="PRACTICAL"/>
+			<result property="DECREASE_COUNT" column="DECREASE_COUNT"/>
+			<result property="NOTE" column="NOTE"/>
+			<association property="m_Information" javaType="com.ht.entity.Materials_information">
+				<id property="ID" column="ID" />
+				<result property="NAME" column="NAME" />
+			</association>
+		</resultMap>
+		
+		
+		<!--表名 -->
+	<sql id="tableName">
+		inventory
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		ID,
+		BIANHAO,
+		BUSINESS_TIME,
+		STATE,
+		INSPECTOR,
+		AUDITOR,
+		JSR,
+		PRO_NAME,
+		MANY,
+		ENTRY_TIME,
+		UPDATE_TIME,
+		PANDIAN_INST,
+		ZHAIYAO_INST,
+		PRACTICAL,
+		DECREASE_COUNT,
+		NOTE,
+		JINGSHUO_ID,
+		MATERIALS_ID,
+		WAREHOUSE_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ID},
+		#{BIANHAO},
+		#{BUSINESS_TIME},
+		#{STATE},
+		#{INSPECTOR},
+		#{AUDITOR},
+		#{JSR},
+		#{PRO_NAME},
+		#{MANY},
+		#{ENTRY_TIME},
+		#{UPDATE_TIME},
+		#{PANDIAN_INST},
+		#{ZHAIYAO_INST},
+		#{PRACTICAL},
+		#{DECREASE_COUNT},
+		#{NOTE},
+		#{JINGSHUO_ID},
+		#{MATERIALS_ID},
+		#{WAREHOUSE_ID}
+	</sql>
+	
+	<!-- 新增 -->
+	<insert id="saveU" parameterType="pd" >
+		insert into <include refid="tableName"></include> (
+			<include refid="Field"></include>
+		) values (
+			<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 查询 -->
+	<select id="datalistPage" parameterType="page" resultType="pd" >
+		select  i.ID,
+				i.BIANHAO,
+				i.BUSINESS_TIME,
+				i.STATE,
+				i.INSPECTOR,
+				i.AUDITOR,
+				i.JSR,
+				i.PRO_NAME,
+				i.MANY,
+				i.ENTRY_TIME,
+				i.UPDATE_TIME,
+				i.PANDIAN_INST,
+				i.ZHAIYAO_INST,
+				i.PRACTICAL,
+				i.DECREASE_COUNT,
+				i.NOTE,
+				i.JINGSHUO_ID,
+				i.MATERIALS_ID,
+				i.WAREHOUSE_ID
+		from <include refid="tableName"></include> i
+		<where>
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+		
+				(
+					 i.PRO_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					 i.NOTE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					 or
+					 i.AUDITOR LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+		<if test="pd.STATE != null">
+			and i.STATE LIKE CONCAT(CONCAT('%', #{pd.state}),'%')
+		</if>
+		<if test="pd.lastStart!=null and pd.lastStart!=''">
+			and i.ENTRY_TIME &gt;= #{pd.lastStart} 
+		</if>
+		<if test="pd.lastEnd!=null and pd.lastEnd!=''">
+			and i.ENTRY_TIME &lt;= #{pd.lastEnd} 
+		</if>
+		</where>
+		order by i.ENTRY_TIME desc
+	</select>
+	
+	<!-- 获取总数 -->
+	<select id="getCount" parameterType="String" resultType="pd">
+		select 
+			count(id) inventoryCount
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd" >
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</select>
+	
+	<!-- 修改 -->
+	<update id="editU" parameterType="pd" >
+		update  <include refid="tableName"></include>
+			set PRO_NAME 				= #{PRO_NAME},
+				MANY					= #{MANY},
+				NOTE					= #{NOTE},
+				UPDATE_TIME				= #{UPDATE_TIME},
+				PRACTICAL				= #{PRACTICAL},
+				DECREASE_COUNT			= #{DECREASE_COUNT}
+			where 
+				ID = #{ID}
+	</update>
+	
+	<!-- 修改状态 -->
+	<update id="editState" parameterType="pd" >
+		update  <include refid="tableName"></include>
+			set STATE 				= #{STATE},
+				AUDITOR 			= #{AUDITOR}
+			where 
+				ID = #{ID}
+	</update>
+	
+	<!-- 删除 -->
+	<delete id="deleteU" parameterType="pd" flushCache="false">
+		delete from <include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</delete>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAllU" parameterType="String" >
+		delete from <include refid="tableName"></include>
+		where 
+			ID in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+	</delete>
+	
+	<!-- 判断编号是否存在 -->
+	<select id="findByUN" parameterType="pd" resultType="pd" >
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 
+			BIANHAO = #{BIANHAO}
+	</select>
+	
+	</mapper>

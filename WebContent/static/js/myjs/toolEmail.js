@@ -5,7 +5,6 @@ $(top.hangge());
 
 //发送
 function sendEm(){
-	
 	if($("#TYPE").val()=="1"){
 		$("#CONTENT").val(getContentTxt());
 	}else{
@@ -142,20 +141,3 @@ function saveEmail(){
 	$("#dialog-add").css("display","none");
 }
 
-//ueditor纯文本
-function getContentTxt() {
-    var arr = [];
-    arr.push(UE.getEditor('editor').getContentTxt());
-    return arr.join("");
-}
-//ueditor有标签文本
-function getContent() {
-    var arr = [];
-    arr.push(UE.getEditor('editor').getContent());
-    return arr.join("");
-}
-
-setTimeout("ueditor()",500);
-function ueditor(){
-	var ue = UE.getEditor('editor');
-}

@@ -61,7 +61,7 @@
 							<ul class="dropdown-menu-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close">
 								<li class="dropdown-header">
 									<i class="ace-icon fa fa-bell-o"></i>
-									FH Aadmin 即时通讯
+									物流系统  即时通讯
 								</li>
 							</ul>
 						</li>
@@ -87,7 +87,8 @@
 									<a onclick="editUserH();" style="cursor:pointer;"><i class="ace-icon fa fa-cog"></i>修改资料</a><!-- editUserH()在 WebRoot\static\js\myjs\head.js中 -->
 								</li>
 								<li id="systemset">
-									<a onclick="editSys();" style="cursor:pointer;"><i class="ace-icon fa fa-user"></i>系统设置</a><!-- editSys()在 WebRoot\static\js\myjs\head.js中 -->
+								<!--下面系统设置的方法 editSys(); -->
+									<a onclick="#" style="cursor:pointer;"><i class="ace-icon fa fa-user"></i>系统设置</a><!-- editSys()在 WebRoot\static\js\myjs\head.js中 -->
 								</li>
 								<li class="divider"></li>
 								<li>

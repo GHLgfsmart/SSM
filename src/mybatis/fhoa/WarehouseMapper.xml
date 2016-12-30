@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WarehouseMapper">
+
+	<resultMap type="Warehouse" id="warehouseResult">
+		<id property="ID" column="ID"/>
+		<result property="WARNAME" column="WARNAME"/>
+		<result property="SIZE" column="SIZE"/>
+		<result property="UPPER_LIMIT" column="UPPER_LIMIT"/>
+		<result property="LOWER_LIMIT" column="LOWER_LIMIT"/>
+		<result property="PRACTICAl" column="PRACTICAl"/>
+		<result property="ADDRESS" column="ADDRESS"/>
+		<result property="ENTRY_TIME" column="ENTRY_TIME"/>
+		<result property="UPDATE_TIME" column="UPDATE_TIME"/>
+		<result property="NOTE" column="NOTE"/>
+		<result property="STATE" column="STATE"/>
+		
+		<association property="USER_ID" column="USER_ID" javaType="User">
+				<id column="USER_ID" property="USER_ID"/>
+				<result column="WARNAME" property="WARNAME"/>
+		</association>
+	</resultMap>
+	
+	<resultMap type="Warehouse" id="warehouseResultMap">
+		<id property="ID" column="ID"/>
+		<result property="WARNAME" column="WARNAME"/>
+		<result property="SIZE" column="SIZE"/>
+		<result property="UPPER_LIMIT" column="UPPER_LIMIT"/>
+		<result property="LOWER_LIMIT" column="LOWER_LIMIT"/>
+		<result property="PRACTICAl" column="PRACTICAl"/>
+		<result property="ADDRESS" column="ADDRESS"/>
+		<result property="ENTRY_TIME" column="ENTRY_TIME"/>
+		<result property="UPDATE_TIME" column="UPDATE_TIME"/>
+		<result property="NOTE" column="NOTE"/>
+		<result property="STATE" column="STATE"/>
+	</resultMap>
+
+	<!--表名 -->
+	<sql id="tableName">
+		warehouse
+	</sql>
+	<sql id="roleTableName">
+		SYS_USER
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		WARNAME,
+		USER_ID,
+		SIZE,
+		UPPER_LIMIT,
+		LOWER_LIMIT,
+		PRACTICAL,
+		ADDRESS,
+		ENTRY_TIME,
+		UPDATE_TIME,
+		NOTE,
+		STATE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{WARNAME},
+		#{USER_ID},
+		#{SIZE},
+		#{UPPER_LIMIT},
+		#{LOWER_LIMIT},
+		#{PRACTICAL},
+		#{ADDRESS},
+		#{ENTRY_TIME},
+		#{UPDATE_TIME},
+		#{NOTE},
+		#{STATE}
+	</sql>
+	
+	<select id="barChar" resultMap="warehouseResultMap" >
+		select	WARNAME,
+				SIZE,
+				UPPER_LIMIT,
+				LOWER_LIMIT,
+				PRACTICAL,
+				ADDRESS
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	
+	
+</mapper>

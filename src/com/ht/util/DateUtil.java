@@ -144,7 +144,11 @@ public class DateUtil {
       
         return day;
     }
-    
+    public static String getCurrentDateStr()throws Exception{
+		Date date=new Date();
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddhhmmss");
+		return sdf.format(date);
+	}
     /**
      * 得到n天之后的日期
      * @param days

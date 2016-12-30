@@ -7,7 +7,7 @@ package com.ht.entity;
  */
 public class Warehouse {
 	private String ID;//主键编号(加密)
-	private String NAME;// 仓库名称
+	private String WARNAME;// 仓库名称
 	private String USER_ID;//仓库管理员（关联 ERP 加密）
 	private String SIZE;// 仓库大小（单位m2）
 	private int UPPER_LIMIT;// 仓库上限
@@ -23,10 +23,10 @@ public class Warehouse {
 
 	}
 
-	public Warehouse(String iD, String nAME, String uSER_ID, String sIZE, int uPPER_LIMIT, int lOWER_LIMIT,
+	public Warehouse(String iD, String wARNAME, String uSER_ID, String sIZE, int uPPER_LIMIT, int lOWER_LIMIT,
 			int pRACTICAl, String aDDRESS, String eNTRY_TIME, String uPDATE_TIME, String nOTE, int sTATE) {
 		ID = iD;
-		NAME = nAME;
+		WARNAME = wARNAME;
 		USER_ID = uSER_ID;
 		SIZE = sIZE;
 		UPPER_LIMIT = uPPER_LIMIT;
@@ -47,12 +47,12 @@ public class Warehouse {
 		ID = iD;
 	}
 
-	public String getNAME() {
-		return NAME;
+	public String getWARNAME() {
+		return WARNAME;
 	}
 
-	public void setNAME(String nAME) {
-		NAME = nAME;
+	public void setWARNAME(String wARNAME) {
+		WARNAME = wARNAME;
 	}
 
 	public String getUSER_ID() {
@@ -137,7 +137,7 @@ public class Warehouse {
 
 	@Override
 	public String toString() {
-		return "Warehouse [ID=" + ID + ", NAME=" + NAME + ", USER_ID=" + USER_ID + ", SIZE=" + SIZE + ", UPPER_LIMIT="
+		return "Warehouse [ID=" + ID + ", NAME=" + WARNAME + ", USER_ID=" + USER_ID + ", SIZE=" + SIZE + ", UPPER_LIMIT="
 				+ UPPER_LIMIT + ", LOWER_LIMIT=" + LOWER_LIMIT + ", PRACTICAl=" + PRACTICAl + ", ADDRESS=" + ADDRESS
 				+ ", ENTRY_TIME=" + ENTRY_TIME + ", UPDATE_TIME=" + UPDATE_TIME + ", NOTE=" + NOTE + ", STATE=" + STATE
 				+ "]";

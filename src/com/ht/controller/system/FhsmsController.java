@@ -21,7 +21,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ht.controller.base.BaseController;
 import com.ht.entity.Page;
+import com.ht.entity.Role;
 import com.ht.service.system.FhsmsManager;
+import com.ht.service.system.RoleManager;
+import com.ht.service.system.UserManager;
 import com.ht.util.AppUtil;
 import com.ht.util.DateUtil;
 import com.ht.util.Jurisdiction;
@@ -37,6 +40,10 @@ public class FhsmsController extends BaseController {
 	String menuUrl = "fhsms/list.do"; //菜单地址(权限用)
 	@Resource(name="fhsmsService")
 	private FhsmsManager fhsmsService;
+	@Resource(name="userService")
+	private UserManager userService;
+	@Resource(name="roleService")
+	private RoleManager roleService;
 	
 	/**发送站内信
 	 * @param
@@ -205,5 +212,33 @@ public class FhsmsController extends BaseController {
 	public void initBinder(WebDataBinder binder){
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
+	}
+	@RequestMapping(value="/listUsers")
+	public ModelAndView listUsers(Page page)throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		String keywords = pd.getString("keywords");				//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		String lastLoginStart = pd.getString("lastLoginStart");	//开始时间
+		String lastLoginEnd = pd.getString("lastLoginEnd");		//结束时间
+		if(lastLoginStart != null && !"".equals(lastLoginStart)){
+			pd.put("lastLoginStart", lastLoginStart+" 00:00:00");
+		}
+		if(lastLoginEnd != null && !"".equals(lastLoginEnd)){
+			pd.put("lastLoginEnd", lastLoginEnd+" 00:00:00");
+		} 
+		page.setPd(pd);
+		List<PageData>	userList = userService.listUsers(page);	//列出用户列表
+		pd.put("ROLE_ID", "1");
+		List<Role> roleList = roleService.listAllRolesByPId(pd);//列出所有系统用户角色
+		mv.setViewName("system/fhsms/user_list");
+		mv.addObject("userList", userList);
+		mv.addObject("roleList", roleList);
+		mv.addObject("pd", pd);
+		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		return mv;
 	}
 }

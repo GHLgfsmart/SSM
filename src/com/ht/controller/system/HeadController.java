@@ -140,7 +140,6 @@ public class HeadController extends BaseController {
 		String CONTENT = pd.getString("CONTENT");				//内容
 		String isAll = pd.getString("isAll");					//是否发送给全体成员 yes or no
 		String TYPE = pd.getString("TYPE");						//类型 1：短信接口1   2：短信接口2
-		String fmsg = pd.getString("fmsg");						//判断是系统用户还是会员 "appuser"为会员用户
 		if("yes".endsWith(isAll)){
 			try {
 				List<PageData> userList = new ArrayList<PageData>();
@@ -230,7 +229,6 @@ public class HeadController extends BaseController {
 		String CONTENT = pd.getString("CONTENT");				//内容
 		String TYPE = pd.getString("TYPE");						//类型
 		String isAll = pd.getString("isAll");					//是否发送给全体成员 yes or no
-		String fmsg = pd.getString("fmsg");						//判断是系统用户还是会员 "appuser"为会员用户
 		if(null != strEMAIL && !"".equals(strEMAIL)){
 			String strEM[] = strEMAIL.split(",fh,");
 			if(strEM.length == 4){

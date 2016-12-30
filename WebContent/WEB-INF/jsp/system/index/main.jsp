@@ -12,7 +12,6 @@
 <html lang="en">
 <head>
 <base href="<%=basePath%>">
-
 	<!-- jsp文件头和头部 -->
 	<%@ include file="top.jsp"%>
 	<style type="text/css">

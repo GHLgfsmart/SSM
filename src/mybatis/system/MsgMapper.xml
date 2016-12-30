@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MsgMapper">
+	<!-- <resultMap type="Msg" id="MsgandUserResultMap">
+		<id column=MSGID property="MSGID"/>
+		<result column="MSGTITLE" property="MSGTITLE"/>
+		<result column="MSGCON" property="MSGCON"/>
+		<result column="MSGSTATUS" property="MSGSTATUS"/>
+		<result column="MSGTIME" property="MSGTIME"/>
+		<association property="user" column="USER_ID" javaType="User">
+			<id column="USER_ID" property="USER_ID"/>
+			<result column="USERNAME" property="USERNAME"/>
+			<result column="NAME" property="NAME"/>
+			<result column="EMAIL" property="EMAIL"/>
+			<result column="PHONE" property="PHONE"/>
+		</association>
+	</resultMap>
+	<resultMap type="Msg" id="msgResultMap">
+		<id column=MSGID property="MSGID"/>
+		<result column="MSGTITLE" property="MSGTITLE"/>
+		<result column="MSGCON" property="MSGCON"/>
+		<result column="MSGSTATUS" property="MSGSTATUS"/>
+		<result column="USER_ID" property="USER_ID"/>
+		<result column="MSGTIME" property="MSGTIME"/>
+	</resultMap> -->
+	
+<!-- 	表名 -->
+	<sql id="tableName">
+		sys_msg
+	</sql>
+	<sql id="roleTableName">
+		sys_user
+	</sql>
+	
+<!-- 	字段 -->
+	<sql id="Field">
+		MSGID,
+		MSGTITLE,
+		MSGCON,
+		MSGSTATUS,
+		USER_ID,
+		MSGTIME
+	</sql>
+	
+<!-- 	字段值 -->
+	<sql id="FieldValue">
+		#{MSGID},
+		#{MSGTITLE},
+		#{MSGCON},
+		#{MSGSTATUS},
+		#{USER_ID},
+		#{MSGTIME}
+	</sql>
+	
+<!-- 	新增公告栏 -->
+	<insert id="saveU" parameterType="pd" >
+		insert into <include refid="tableName"></include> (
+			<include refid="Field"></include>
+		) values (
+			<include refid="FieldValue"></include>
+		)
+	</insert>
+	<!-- 通过MSGID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd" >
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>   
+		<where>
+			MSGID = #{MSGID}
+			<if test="msgs!=null and msgs!=''">
+			or
+			MSGTIME=(select max(MSGTIME) from <include refid="tableName"></include>)
+			</if>
+		</where> 
+	</select> 
+	<!-- 用户列表 -->
+	<select id="mlistPage" parameterType="page" resultType="pd" >
+		select  *
+		from <include refid="tableName"></include>
+	</select>
+	<!-- 修改 -->
+	<update id="editU" parameterType="pd" >
+		update  <include refid="tableName"></include>
+			set MSGTITLE 					= #{MSGTITLE},
+				MSGCON 				= #{MSGCON}
+				where MSGID      =#{MSGID}
+	</update>
+	
+	<!-- 删除用-->
+	<delete id="deleteU" parameterType="pd" flushCache="false">
+		delete from <include refid="tableName"></include>
+		where 
+			MSGID = #{MSGID}
+	</delete>
+	<!-- 批量删除 -->
+	<delete id="deleteAllU" parameterType="String" >
+		delete from <include refid="tableName"></include>
+		where 
+			MSGID in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+	</delete>
+</mapper>

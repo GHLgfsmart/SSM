@@ -14,6 +14,11 @@
 		<typeAlias type="com.ht.entity.User" alias="User"/>
 		<typeAlias type="com.ht.entity.Role" alias="Role"/>
 		<typeAlias type="com.ht.entity.Menu" alias="Menu"/>
+		<typeAlias type="com.ht.entity.Msg" alias="Msg"/>
+		<typeAlias type="com.ht.entity.Price_Money" alias="Price_Money"/>
+		<typeAlias type="com.ht.entity.Output_type" alias="Output_type"/>
+		<typeAlias type="com.ht.entity.Output_storage" alias="Output_storage"/>
+		<typeAlias type="com.ht.entity.Inventory" alias="Inventory"/>
 		<typeAlias type="com.ht.entity.Dictionaries" alias="Dictionaries"/>
 		<typeAlias type="com.ht.entity.Department" alias="Department"/>
 		<typeAlias type="com.ht.util.PageData" alias="pd"/>

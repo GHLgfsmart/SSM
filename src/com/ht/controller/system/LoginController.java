@@ -1,6 +1,9 @@
 package com.ht.controller.system;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +11,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.poi.xssf.usermodel.examples.ShiftRows;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -22,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ht.controller.base.BaseController;
 import com.ht.entity.Menu;
+import com.ht.entity.Page;
 import com.ht.entity.Role;
 import com.ht.entity.User;
 import com.ht.service.system.ButtonrightsManager;
@@ -29,6 +34,7 @@ import com.ht.service.system.FhbuttonManager;
 import com.ht.service.system.MenuManager;
 import com.ht.service.system.RoleManager;
 import com.ht.service.system.UserManager;
+import com.ht.service.system.impl.MsgService;
 import com.ht.util.AppUtil;
 import com.ht.util.Const;
 import com.ht.util.DateUtil;
@@ -52,6 +58,8 @@ public class LoginController extends BaseController {
 	private ButtonrightsManager buttonrightsService;
 	@Resource(name="fhbuttonService")
 	private FhbuttonManager fhbuttonService;
+	@Resource(name="msgService")
+	private MsgService msgService;
 	/**访问登录页
 	 * @return
 	 * @throws Exception
@@ -253,7 +261,47 @@ public class LoginController extends BaseController {
 	public ModelAndView defaultPage() throws Exception{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
-		pd.put("userCount", Integer.parseInt(userService.getUserCount("").get("userCount").toString())-1);				//系统用户数
+		pd.put("msgs", "msgs");
+		pd = msgService.findById(pd);	//列出用户列表
+		String shijian=pd.getString("MSGTIME");
+		String shi[]=shijian.split(" ");
+		pd.put("shi1", shi[1]);
+		String shijian1=DateUtil.getTime().toString();
+		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+        Date one;  
+        Date two;  
+        long day = 0;  
+        long hour = 0;  
+        long min = 0;  
+        long sec = 0;  
+        one = df.parse(shijian);  
+        two = df.parse(shijian1);  
+        long time1 = one.getTime();  
+        long time2 = two.getTime();  
+        long diff ;  
+        if(time1<time2) {  
+            diff = time2 - time1;  
+        } else {  
+            diff = time1 - time2;  
+        }  
+        day = diff / (24 * 60 * 60 * 1000);  
+        hour = (diff / (60 * 60 * 1000) - day * 24);  
+        min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);  
+        sec = (diff/1000-day*24*60*60-hour*60*60-min*60);  
+        long[] times = {day, hour, min, sec}; 
+        String shijian3="";
+        for(int i=0 ;i<times.length;i++){
+        	 if(i==0){
+        		 shijian3+=""+times[i]+"天 ";
+        	 }else if(i==1){
+        		 shijian3+=""+times[i]+"时 <br>";
+        	 }else if(i==2){
+        		 shijian3+=""+times[i]+"分 ";
+        	 }else if(i==3){
+        		 shijian3+=""+times[i]+"秒";
+        	 }
+        }
+	    pd.put("shijain3", shijian3);  
 		mv.addObject("pd",pd);
 		mv.setViewName("system/index/default");
 		return mv;
