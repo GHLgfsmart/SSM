@@ -46,7 +46,7 @@
 								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginEnd" name="lastLoginEnd"  value="${pd.lastLoginEnd}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="最近登录结束"/></td>
 								<td style="vertical-align:top;padding-left:2px;">
 								 	<select class="chosen-select form-control" name="STATE" id="STATE" data-placeholder="请选择状态" style="vertical-align:top;width: 120px;">
-										<option value="0">待入库</option>
+										<option value="0">未入库</option>
 										<option value="1">已入库</option>
 										<option value="2">已出库</option>
 								  	</select>
@@ -67,7 +67,7 @@
 									<th class="center" style="width:50px;">序号</th>
 									<th class="center">单据编号</th>
 									<th class="center">条形码</th>
-									<th class="center">物资名称</th>
+									<th class="center">产品名称</th>
 									<th class="center">供应商</th>
 									<th class="center">商品数量</th>
 									<th class="center">单位</th>
@@ -99,7 +99,7 @@
 											<td class='center'>${var.ENTRY_TIME}</td>
 											<td class='center'>${var.UPDATE_TIME}</td>
 											<c:if test="${var.STATE eq 0}">
-												<td class='center'>待入库</td>
+												<td class='center'>未入库</td>
 											</c:if>
 											<c:if test="${var.STATE eq 1}">
 												<td class='center'>已入库</td>
@@ -114,7 +114,7 @@
 												</c:if>
 												<div class="hidden-sm hidden-xs btn-group">
 													<c:if test="${QX.edit == 1 }">
-													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.ID}','${var.STATE}');">
+													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.ID}');">
 														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
 													</a>
 													</c:if>
@@ -133,7 +133,7 @@
 														<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
 															<c:if test="${QX.edit == 1 }">
 															<li>
-																<a style="cursor:pointer;" onclick="edit('${var.ID}','${var.STATE}');" class="tooltip-success" data-rel="tooltip" title="修改">
+																<a style="cursor:pointer;" onclick="edit('${var.ID}');" class="tooltip-success" data-rel="tooltip" title="修改">
 																	<span class="green">
 																		<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
 																	</span>
@@ -264,30 +264,21 @@ function del(Id){
 }
 
 //修改
-function edit(Id,state){
-	if(state!=0) {
-		bootbox.dialog({
-			message: "<span class='bigger-110'>物资正在处理中，不能修改!</span>",
-			buttons: 			
-			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-		});
-		return;
-	}else {
-		 top.jzts();
-		 var diag = new top.Dialog();
-		 diag.Drag=true;
-		 diag.Title ="编辑";
-		 diag.URL = '<%=basePath%>warehousing/materialsEditPage.do?ID='+Id;
-		 diag.Width = 850;
-		 diag.Height = 500;
-		 diag.CancelEvent = function(){ //关闭事件
-			 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-				 nextPage(${page.currentPage});
-			}
-			diag.close();
-		 };
-		 diag.show();
-	}
+function edit(Id){
+	 top.jzts();
+	 var diag = new top.Dialog();
+	 diag.Drag=true;
+	 diag.Title ="编辑";
+	 diag.URL = '<%=basePath%>warehousing/materialsEditPage.do?ID='+Id;
+	 diag.Width = 850;
+	 diag.Height = 500;
+	 diag.CancelEvent = function(){ //关闭事件
+		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
+			 nextPage(${page.currentPage});
+		}
+		diag.close();
+	 };
+	 diag.show();
 }
 //批量操作
 function makeAll(msg){

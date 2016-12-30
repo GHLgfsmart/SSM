@@ -135,7 +135,7 @@
 								<td style="width:79px;height:80px;text-align: right;padding-top: 13px;">备注:</td>
 								<td colspan="3">
 									<%-- <input type="text" name="NOTE" id="NOTE" value="${pd.NOTE}" maxlength="30" placeholder="这里输入备注" title="备注" style="width:98%;height:100%"/> --%>
-									<textarea name="NOTE" cols="" rows="3" style="width:98%;" class="textarea" placeholder="这里输入备注">${pd.NOTE}</textarea>
+									<textarea name="NOTE" cols="" rows="" style="width:98%;" class="textarea" placeholder="这里输入备注">${pd.NOTE}</textarea>
 								</td>
 							</tr>
 							<tr>
@@ -191,14 +191,14 @@
 				$("#NAME").focus();
 			return false;
 			}
-			if($("#supname").val()==""){
-				$("#supname").tips({
+			if($("#TEST").val()==""){
+				$("#TEST").tips({
 					side:3,
 		            msg:'请选择供应商',
 		            bg:'#AE81FF',
 		            time:2
 		        });
-				$("#supname").focus();
+				$("#TEST").focus();
 			return false;
 			}
 

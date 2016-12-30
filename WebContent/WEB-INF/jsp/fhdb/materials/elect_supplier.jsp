@@ -89,7 +89,7 @@
 								<tr>
 									<td style="vertical-align:top;">
 										<a class="btn btn-sm btn-success" onclick="elect('确定要删除选中的数据吗?');">选择</a>
-										<a class="btn btn-sm btn-danger" onclick="window.parent.window.jBox.close();">取消</a>
+										<a class="btn btn-sm btn-danger" onclick="top.Dialog.close();">取消</a>
 									</td>
 									<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 								</tr>
