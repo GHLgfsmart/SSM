@@ -14,15 +14,7 @@
 		<%@ include file="../../system/index/top.jsp"%>
 		<link rel="stylesheet" href="static/js/common/jbox.css" />
 		<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
-		<script type="text/javascript" src="static/js/common/brief_code.js"></script><!-- 引用拼音方法JS -->
 		<script type="text/javascript">
-			//查看拼音首字母缩写
-			function query(){  
-			    var str = document.getElementById("NAME").value.trim();  
-			    if(str == "") return;
-			    var arrRslt = makePy(str);
-				document.getElementById("PINYIN").value=arrRslt;
-			}
 
 			function getNowFormatDate() {
 			    var date = new Date();
@@ -66,11 +58,11 @@
 			<div class="page-content">
 				<div class="row">
 					<div class="col-xs-12">
-					<c:if test="${msg eq 'materialsAdd'}">
-						<legend>新增物资</legend>
+					<c:if test="${msg eq 'output_storageAdd'}">
+						<legend>新增入库单</legend>
 					</c:if>
-					<c:if test="${msg eq 'materialsEdit'}">
-						<legend>修改物资</legend>
+					<c:if test="${msg eq 'output_storageEdit'}">
+						<legend>修改入库单</legend>
 					</c:if>
 					<form action="warehousing/${msg }.do" name="Form" id="Form" method="post">
 						<input type="hidden" name="ID" id="ID" value="${pd.ID}"/>
@@ -86,28 +78,46 @@
 										<input type="text" name="BIANHAO" id="BIANHAO" value="${pd.BIANHAO}" maxlength="30" readonly="readonly" style="width:98%;"/>
 									</c:if>
 								</td>
-								<td style="width:79px;text-align: right;padding-top: 13px;">条形码:</td>
-								<td><input type="text" name="BAR_CODE" id="BAR_CODE" value="${pd.BAR_CODE}" maxlength="30" placeholder="这里输入条形码" title="条形码" style="width:98%;"/></td>
+								<td style="width:79px;text-align: right;padding-top: 13px;">原始单号:</td>
+								<td><input type="text" name="RAW_NUMBER" id="RAW_NUMBER" value="${pd.RAW_NUMBER}" maxlength="30" placeholder="这里输入原始单号" title="原始单号" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:79px;text-align: right;padding-top: 13px;">物资名称:</td>
-								<td><input type="text" name="NAME" id="NAME" value="${pd.NAME}" maxlength="30" placeholder="这里输入物资名称" onchange="javascript:query();" title="物资名称" style="width:98%;"/></td>
-								<td style="width:79px;text-align: right;padding-top: 13px;">拼音简码:</td>
-								<td><input type="text" name="PINYIN" id="PINYIN" value="${pd.PINYIN}" maxlength="30" readonly="readonly" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:79px;text-align: right;padding-top: 13px;">供应商:</td>
+								<td style="width:79px;text-align: right;padding-top: 13px;">物资:</td>
 								<td>
-									<input type="hidden" id="CUS_ID" name="CUS_ID" />
- 									<input type="text" name="supname" id="supname" value="${pd.SUPNAME}" maxlength="30" readonly placeholder="这里选择供应商" title="供应商" style="width:80%;"/>
-									<button class="btn btn-mini radius" onclick="elect();" type="button">选择</button>
+									<input type="hidden" id="MATERIALS_ID" name="MATERIALS_ID" />
+									<input type="text" name="NAME" id="NAME" value="${pd.NAME}" maxlength="30" readonly placeholder="这里选择物资" title="物资" style="width:80%;"/>
+									<button class="btn btn-mini radius" onclick="matelect();" type="button">选择</button>
 								</td>
-								<td style="width:79px;text-align: right;padding-top: 13px;">商品数量:</td>
-								<td><input type="text" name="COUNT" id="COUNT" value="${pd.COUNT}" maxlength="30" placeholder="这里输入商品数量" title="商品数量" style="width:98%;"/></td>
+								<td style="width:79px;text-align: left;padding-top: 13px;">出入库类型:</td>
+								<td>
+									<input type="hidden" id="OUTPUT_TYPE_ID" name="OUTPUT_TYPE_ID" value="001"/>
+									<input type="text" name="OPTNAME" id="OPTNAME" value="${pd.OPTNAME}" maxlength="30" placeholder="这里选择出入库类型" title="出入库类型" style="width:80%;"/>
+									<button class="btn btn-mini radius" onclick="optelect();" type="button">选择</button>
+									<input type="hidden" id="WAREHOUSE_ID" name="WAREHOUSE_ID" value="001"/>
+									<input type="hidden" value="0" id="STATE" name="STATE"/>
+									<input type="hidden" value="1" id="TYPE" name="TYPE"/>
+								</td>
 							</tr>
 							<tr>
-								<td style="width:79px;text-align: right;padding-top: 13px;">单位:</td>
-								<td><input type="text" name="UNIT" id="UNIT" value="${pd.UNIT}" maxlength="30" placeholder="这里输入单位" title="单位" style="width:98%;"/></td>
+								<td style="width:79px;text-align: right;padding-top: 13px;">单据金额:</td>
+								<td>
+ 									<input type="number" name="MONEY" id="MONEY" value="${pd.MONEY}" maxlength="30" placeholder="这里输入单据金额" title="单据金额" style="width:98%;"/>
+								</td>
+								<td style="width:79px;text-align: right;padding-top: 13px;">单据数量:</td>
+								<td><input type="number" name="NUMBER_OF" id="NUMBER_OF" value="${pd.NUMBER_OF}" maxlength="30" placeholder="这里输入单据数量" title="单据数量" style="width:98%;"/></td>
+							</tr>
+							<tr>
+								<td style="width:79px;text-align: right;padding-top: 13px;">操作员:</td>
+								<td>
+									<c:if test="${!empty pd.USER_ID}">
+										<input type="hidden" id="USER_ID" name="USER_ID" value="${pd.USER_ID}"/>
+										<input type="text" name="USERNAME" id="USERNAME" value="${pd.USERNAME}" readonly="readonly" maxlength="30" title="操作员" style="width:98%;"/>
+									</c:if>
+									<c:if test="${empty pd.USER_ID}">
+										<input type="hidden" id="USER_ID" name="USER_ID" value="${sessionUser.USER_ID }"/>
+										<input type="text" name="USERNAME" id="USERNAME" value="${sessionUser.USERNAME}" readonly="readonly" maxlength="30" title="操作员" style="width:98%;"/>
+									</c:if>
+								</td>
 								<td style="width:79px;text-align: right;padding-top: 13px;">录入时间:</td>
 								<td>
 									<input type="text" name="ENTRY_TIME" id="ENTRY_TIME" value="${pd.ENTRY_TIME}" maxlength="30" title="录入时间" readonly="readonly" style="width:98%;"/>
@@ -115,26 +125,8 @@
 								</td>
 							</tr>
 							<tr>
-								<td style="width:79px;text-align: right;padding-top: 13px;">操作员:</td>
-								<td>
-									<c:if test="${!empty pd.OPERATOR}">
-										<input type="text" name="OPERATOR" id="OPERATOR" value="${pd.OPERATOR}" readonly="readonly" maxlength="30" title="操作员" style="width:98%;"/>
-									</c:if>
-									<c:if test="${empty pd.OPERATOR}">
-										<input type="text" name="OPERATOR" id="OPERATOR" value="${sessionUser.USERNAME}" readonly="readonly" maxlength="30" title="操作员" style="width:98%;"/>
-									</c:if>
-								</td>
-								<td style="width:79px;text-align: right;padding-top: 13px;">状态:</td>
-								<td>
-									<select id="STATE" name="STATE">
-										<option value="0" selected>未入库</option>
-									</select>
-								</td>
-							</tr>
-							<tr>
 								<td style="width:79px;height:80px;text-align: right;padding-top: 13px;">备注:</td>
 								<td colspan="3">
-									<%-- <input type="text" name="NOTE" id="NOTE" value="${pd.NOTE}" maxlength="30" placeholder="这里输入备注" title="备注" style="width:98%;height:100%"/> --%>
 									<textarea name="NOTE" cols="" rows="3" style="width:98%;" class="textarea" placeholder="这里输入备注">${pd.NOTE}</textarea>
 								</td>
 							</tr>
@@ -171,57 +163,69 @@
 		//保存
 		function save(){
 			
-			if($("#BAR_CODE").val()==""){
-				$("#BAR_CODE").tips({
+			if($("#RAW_NUMBER").val()==""){
+				$("#RAW_NUMBER").tips({
 					side:3,
-		            msg:'请输入条形码',
+		            msg:'原始单号不能为空',
 		            bg:'#AE81FF',
 		            time:2
 		        });
-				$("#BAR_CODE").focus();
+				$("#RAW_NUMBER").focus();
 			return false;
 			}
 			if($("#NAME").val()==""){
 				$("#NAME").tips({
 					side:3,
-		            msg:'请输入物资名称',
+		            msg:'请选择物资',
 		            bg:'#AE81FF',
 		            time:2
 		        });
 				$("#NAME").focus();
 			return false;
 			}
-			if($("#supname").val()==""){
-				$("#supname").tips({
+			if($("#OPTNAME").val()==""){
+				$("#OPTNAME").tips({
 					side:3,
-		            msg:'请选择供应商',
+		            msg:'请选择出入库类型',
 		            bg:'#AE81FF',
 		            time:2
 		        });
-				$("#supname").focus();
+				$("#OPTNAME").focus();
 			return false;
 			}
 
-			if($("#COUNT").val()==""){
-				$("#COUNT").tips({
+			if($("#MONEY").val()==""){
+				$("#MONEY").tips({
 					side:3,
-		            msg:'请输入商品数量',
+		            msg:'请输入单据金额',
 		            bg:'#AE81FF',
 		            time:2
 		        });
-				$("#COUNT").focus();
+				$("#MONEY").focus();
 			return false;
 			}
-			if($("#UNIT").val()==""){
-				$("#UNIT").tips({
+			var reg = new RegExp("^[0-9]*$");
+			if($("#NUMBER_OF").val()==""){
+				$("#NUMBER_OF").tips({
 					side:3,
-		            msg:'请输入单位',
+		            msg:'请输入单据数量',
 		            bg:'#AE81FF',
 		            time:2
 		        });
-				$("#UNIT").focus();
+				$("#NUMBER_OF").focus();
 			return false;
 			}
+			if(!reg.test($("#NUMBER_OF").val())){
+				$("#NUMBER_OF").tips({
+					side:3,
+		            msg:'数据格式不正确',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#NUMBER_OF").focus();
+			return false;
+			}
+			
 			if($("#NOTE").val()==""){
 				$("#NOTE").tips({
 					side:3,
@@ -237,21 +241,16 @@
 			$("#zhongxin2").show();
 		}
 		/**选择供应商*/
-		var supplier = "";
-		var supid = "";
-		function elect(){
+		var materials = "";
+		var matid = "";
+		function matelect(){
 		    jBox.open(
-		        "iframe:<%=basePath%>warehousing/testPage.do",
+		        "iframe:<%=basePath%>warehousing/electMaterialsPage.do?STATE=0",
 		        "选择", 750, 400,
 		        {buttons: {}, iframeScrolling: 'yes', showClose: true,
 		            closed:function (){
-		                //在弹出窗口页面，如果我们保存了数据，就将父页面里的变量isFreshFlag 值设置为2
-		                /**if(isFreshFlag==2){
-		                    location.reload();
-		                }*/
-		                $("#supname").val(supplier);
-		                //$("#CUS_ID").val(supid);
-		                $("#CUS_ID").val("001");
+		                $("#NAME").val(materials);
+		                $("#MATERIALS_ID").val(matid);
 		            }
 		        }
 		    );

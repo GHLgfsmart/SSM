@@ -9,7 +9,7 @@ public class Checkout {
 	private String ID;// 主键编号(加密)
 	private String SOURCECODE;// 单号
 	private String TIME;// 检测时间
-	private String OUT_PUT_TYPE;// 检测单类型（关联out_put_type（出入库类型表））
+	private String OUTPUT_TYPE_ID;// 检测单类型（关联out_put_type（出入库类型表））
 	private int QUANTITY;// 出入库总数量
 	private int DAMAGEDQTY;// 坏货数量
 	private String DAMAGEDREASON;// 坏货原因
@@ -28,7 +28,7 @@ public class Checkout {
 		ID = iD;
 		SOURCECODE = sOURCECODE;
 		TIME = tIME;
-		OUT_PUT_TYPE = oUT_PUT_TYPE;
+		OUTPUT_TYPE_ID = oUT_PUT_TYPE;
 		QUANTITY = qUANTITY;
 		DAMAGEDQTY = dAMAGEDQTY;
 		DAMAGEDREASON = dAMAGEDREASON;
@@ -72,17 +72,15 @@ public class Checkout {
 	public void setTIME(String tIME) {
 		TIME = tIME;
 	}
-
-
-
-	public String getOUT_PUT_TYPE() {
-		return OUT_PUT_TYPE;
+	
+	public String getOUTPUT_TYPE_ID() {
+		return OUTPUT_TYPE_ID;
 	}
 
 
 
-	public void setOUT_PUT_TYPE(String oUT_PUT_TYPE) {
-		OUT_PUT_TYPE = oUT_PUT_TYPE;
+	public void setOUTPUT_TYPE_ID(String oUTPUT_TYPE_ID) {
+		OUTPUT_TYPE_ID = oUTPUT_TYPE_ID;
 	}
 
 
@@ -161,7 +159,7 @@ public class Checkout {
 
 	@Override
 	public String toString() {
-		return "Checkout [ID=" + ID + ", SOURCECODE=" + SOURCECODE + ", TIME=" + TIME + ", OUT_PUT_TYPE=" + OUT_PUT_TYPE
+		return "Checkout [ID=" + ID + ", SOURCECODE=" + SOURCECODE + ", TIME=" + TIME + ", OUT_PUT_TYPE=" + OUTPUT_TYPE_ID
 				+ ", QUANTITY=" + QUANTITY + ", DAMAGEDQTY=" + DAMAGEDQTY + ", DAMAGEDREASON=" + DAMAGEDREASON
 				+ ", SHORTQTY=" + SHORTQTY + ", SHORTREASON=" + SHORTREASON + ", INSPECTOR=" + INSPECTOR + "]";
 	}
