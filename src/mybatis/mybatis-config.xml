@@ -22,6 +22,10 @@
 		<typeAlias type="com.ht.entity.Dictionaries" alias="Dictionaries"/>
 		<typeAlias type="com.ht.entity.Department" alias="Department"/>
 		<typeAlias type="com.ht.util.PageData" alias="pd"/>
+		<typeAlias type="com.ht.entity.Customer_categories" alias="Customer_categories"/>
+		<typeAlias type="com.ht.entity.Supplier_customer" alias="Supplier_customer"/>
+		
+		
 		<!-- 分页 -->
 		<typeAlias type="com.ht.entity.Page" alias="Page"/>
 	</typeAliases>

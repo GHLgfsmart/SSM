@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CategoriesMapper">
+	<resultMap type="Customer_categories" id="categoriesResultMap">
+		<id column="ID" property="ID"/>
+		<result column="NAME" property="NAME"/>
+		<result column="UID" property="UID"/>
+		<result column="NOTE" property="NOTE"/>
+	</resultMap>
+	
+	<sql id="all">
+		ID,NAME,UID,NOTE
+	</sql>
+	
+	<sql id="allvalue">
+		#{ID},#{NAME},#{UID},#{NOTE}
+	</sql>
+	
+	<insert id="save" parameterType="pd">
+		insert into customer_categories(
+			<include refid="all"></include>
+		) value(
+			<include refid="allvalue"></include>
+		)
+	</insert>
+
+	<delete id="delete" parameterType="pd">
+		delete from customer_categories where ID=#{ID};
+	</delete>
+	
+	<update id="edit" parameterType="pd">
+		update customer_categories set 
+		ID = #{ID},NAME = #{NAME},UID = #{UID},NOTE = #{NOTE},
+	</update>
+	
+	<select id="findByID" parameterType="string" resultType="pd">
+		select <include refid="all"></include> from customer_categories where ID=#{ID}
+	</select>
+	
+	<select id="findSublevel" parameterType="string" resultMap="categoriesResultMap">
+		select <include refid="all"></include> from customer_categories where UID=#{uid} order by NAME
+	</select>
+	
+	<select id="findBy" parameterType="pd" resultMap="categoriesResultMap">
+		select <include refid="all"></include> from customer_categories
+		<where>
+			<if test="NAME!=NULL">
+				and NAME=#{NAME}
+			</if>
+			<if test="NOTE!=NULL">
+				and NOTE=#{NOTE}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findAllName" resultMap="categoriesResultMap">
+		select ID,NAME from customer_categories
+	</select>
+	
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select <include refid="all"></include> from customer_categories
+		<where>
+			<if test="pd.ID != null and pd.ID != ''"><!-- 检索 -->
+				and UID = #{pd.ID}
+			</if>
+			<if test="pd.keywords != null and pd.keywords != ''"><!-- 关键词检索 -->
+				and
+					(
+					 NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					 NOTE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					)
+			</if>
+		</where>
+		order by NAME
+	</select>
+</mapper>

@@ -8,7 +8,7 @@ public class Supplier_customer {
 	private String ID;//主键编号(加密)
 	private String BIANHAO;//编号（如：CK00001）
 	private String PINYIN;//拼音简码
-	private String NAME;//名称
+	private String SUPNAME;//名称
 	private String CATEGORIES_ID;//类别(关联supplier_and_customer_categories 加密)
 	private String CONTACT;//联系人
 	private String USER_ID;//操作员
@@ -24,16 +24,12 @@ public class Supplier_customer {
 	private String EIN;//企业税号
 	private String NOTE;//备注
 	private int STATE;//状态(默认0)
-	
-	
-	
+	private Customer_categories categories;
+	private User user;
 	
 	public Supplier_customer() {
 		
 	}
-
-
-
 
 	public Supplier_customer(String iD, String bIANHAO, String pINYIN, String nAME, String cATEGORIES_ID,
 			String cONTACT, String uSER_ID, String pHONE, String aDDRESS, String eNTRY_TIME, String uPDATE_TIME,
@@ -42,7 +38,7 @@ public class Supplier_customer {
 		ID = iD;
 		BIANHAO = bIANHAO;
 		PINYIN = pINYIN;
-		NAME = nAME;
+		SUPNAME = nAME;
 		CATEGORIES_ID = cATEGORIES_ID;
 		CONTACT = cONTACT;
 		USER_ID = uSER_ID;
@@ -59,15 +55,27 @@ public class Supplier_customer {
 		NOTE = nOTE;
 		STATE = sTATE;
 	}
+	
+	
+	public User getUser() {
+		return user;
+	}
 
+	public void setUser(User user) {
+		this.user = user;
+	}
 
+	public Customer_categories getCategories() {
+		return categories;
+	}
 
+	public void setCategories(Customer_categories categories) {
+		this.categories = categories;
+	}
 
 	public String getID() {
 		return ID;
 	}
-
-
 
 
 	public void setID(String iD) {
@@ -105,15 +113,15 @@ public class Supplier_customer {
 
 
 
-	public String getNAME() {
-		return NAME;
+	public String getSUPNAME() {
+		return SUPNAME;
 	}
 
 
 
 
-	public void setNAME(String nAME) {
-		NAME = nAME;
+	public void setSUPNAME(String nAME) {
+		SUPNAME = nAME;
 	}
 
 
@@ -331,7 +339,7 @@ public class Supplier_customer {
 
 	@Override
 	public String toString() {
-		return "Supplier_customer [ID=" + ID + ", BIANHAO=" + BIANHAO + ", PINYIN=" + PINYIN + ", NAME=" + NAME
+		return "Supplier_customer [ID=" + ID + ", BIANHAO=" + BIANHAO + ", PINYIN=" + PINYIN + ", NAME=" + SUPNAME
 				+ ", CATEGORIES_ID=" + CATEGORIES_ID + ", CONTACT=" + CONTACT + ", USER_ID=" + USER_ID + ", PHONE="
 				+ PHONE + ", ADDRESS=" + ADDRESS + ", ENTRY_TIME=" + ENTRY_TIME + ", UPDATE_TIME=" + UPDATE_TIME
 				+ ", FAX_PHONE=" + FAX_PHONE + ", MAIL=" + MAIL + ", OPEN_ACCOUNT=" + OPEN_ACCOUNT + ", SITE_ADDRESS="

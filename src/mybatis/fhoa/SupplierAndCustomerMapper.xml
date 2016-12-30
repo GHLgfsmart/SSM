@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SupplierAndCustomerMapper">
+	<resultMap type="Supplier_customer" id="supplierAndcustomerResultMap">
+		<id column="ID" property="ID"/>
+		<result column="BIANHAO" property="BIANHAO"/>
+		<result column="PINYIN" property="PINYIN"/>
+		<result column="SUPNAME" property="SUPNAME"/>
+		<result column="CONTACT" property="CONTACT"/>
+		<result column="PHONE" property="PHONE"/>
+		<result column="ADDRESS" property="ADDRESS"/>
+		<result column="ENTRY_TIME" property="ENTRY_TIME"/>
+		<result column="UPDATE_TIME" property="UPDATE_TIME"/>
+		<result column="FAX_PHONE" property="FAX_PHONE"/>
+		<result column="MAIL" property="MAIL"/>
+		<result column="OPEN_ACCOUNT" property="OPEN_ACCOUNT"/>
+		<result column="SITE_ADDRESS" property="SITE_ADDRESS"/>
+		<result column="BANK" property="BANK"/>
+		<result column="EIN" property="EIN"/>
+		<result column="NOTE" property="NOTE"/>
+		<result column="STATE" property="STATE"/>
+	</resultMap>
+		
+	<sql id="field">
+		S.ID,S.PINYIN,S.SUPNAME,S.CATEGORIES_ID,S.CONTACT,S.USER_ID,S.PHONE,S.ADDRESS,S.ENTRY_TIME,S.UPDATE_TIME,
+		S.FAX_PHONE,S.MAIL,S.OPEN_ACCOUNT,S.SITE_ADDRESS,S.BANK,S.EIN,S.NOTE,U.USERNAME,C.NAME,S.STATE
+	</sql>
+	<sql id="fieldE">
+		ID,PINYIN,SUPNAME,CATEGORIES_ID,CONTACT,USER_ID,PHONE,ADDRESS,ENTRY_TIME,UPDATE_TIME,
+		FAX_PHONE,MAIL,OPEN_ACCOUNT,SITE_ADDRESS,BANK,EIN,NOTE
+	</sql>
+	<sql id="values">
+		#{ID},#{PINYIN},#{SUPNAME},#{CATEGORIES_ID},#{CONTACT},#{USER_ID},#{PHONE},#{ADDRESS},#{ENTRY_TIME},
+		#{UPDATE_TIME},#{FAX_PHONE},#{MAIL},#{OPEN_ACCOUNT},#{SITE_ADDRESS},#{BANK},#{EIN},#{NOTE}
+	</sql>
+	
+	<insert id="save" parameterType="pd">
+		insert into supplier_customer(
+			<include refid="fieldE"></include>
+		) value(
+			<include refid="values"></include>
+		)
+	</insert>
+
+	<delete id="delete" parameterType="pd">
+		delete from supplier_customer where ID=#{ID};
+	</delete>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String" >
+		delete from supplier_customer
+		where  ID in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+	</delete>
+	
+	<update id="edit" parameterType="pd">
+		update supplier_customer set SUPNAME = #{SUPNAME},PINYIN = #{PINYIN},CATEGORIES_ID = #{CATEGORIES_ID},CONTACT = #{CONTACT},USER_ID = #{USER_ID},PHONE = #{PHONE},ADDRESS = #{ADDRESS},UPDATE_TIME = #{UPDATE_TIME},FAX_PHONE = #{FAX_PHONE},MAIL = #{MAIL},OPEN_ACCOUNT = #{OPEN_ACCOUNT},SITE_ADDRESS = #{SITE_ADDRESS},BANK = #{BANK},EIN = #{EIN},NOTE = #{NOTE},STATE = #{STATE} where ID=#{ID}
+	</update>
+	
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select <include refid="field"></include>
+			from supplier_customer S inner join SYS_USER U inner join customer_categories C 
+				where S.CATEGORIES_ID=C.ID AND S.USER_ID=U.USER_ID
+			<if test="pd.CATEGORIES_ID != null and pd.CATEGORIES_ID != ''"><!-- 检索 -->
+				and S.CATEGORIES_ID = #{pd.CATEGORIES_ID}
+			</if>
+			<if test="pd.USER_ID != null and pd.USER_ID != ''">
+				and S.USER_ID=#{pd.USER_ID}
+			</if>
+			<if test="pd.STATE != null and pd.STATE != ''">
+				and S.STATE=#{pd.STATE}
+			</if>
+			<if test="pd.keywords != null and pd.keywords != ''"><!-- 关键词检索 -->
+				and
+					(
+					 S.SUPNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					 S.PINYIN LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					 or
+					 S.CONTACT LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					)
+			</if>
+		 order by S.ID DESC
+	</select>
+	
+	<select id="findBy" parameterType="pd" resultType="pd">
+		select <include refid="field"></include> from supplier_customer S inner join SYS_USER U inner join customer_categories C where S.CATEGORIES_ID=C.ID AND S.USER_ID=U.USER_ID
+			<if test="CATEGORIES_ID != null"><!-- 类别 -->
+				and CATEGORIES_ID=#{CATEGORIES_ID}
+			</if>
+			<if test="USER_ID != null">
+				and USER_ID=#{USER_ID}
+			</if>
+			<if test="STATE != NULL">
+				and STATE=#{STATE}
+			</if>
+	</select>
+	<select id="findByID" parameterType="pd" resultType="pd">
+		select <include refid="field"></include> from supplier_customer S inner join SYS_USER U inner join customer_categories C where S.ID=#{ID} AND S.CATEGORIES_ID=C.ID AND S.USER_ID=U.USER_ID
+	</select>
+	
+	<select id="selectAll" parameterType="pd" resultType="pd">
+		select <include refid="field"></include> from supplier_customer S inner join SYS_USER U inner join customer_categories C where S.CATEGORIES_ID=C.ID AND S.USER_ID=U.USER_ID
+	</select>
+</mapper>
