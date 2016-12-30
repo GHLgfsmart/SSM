@@ -23,18 +23,17 @@ public class Output_storage {
 	private String RETURNFLAG;//是否退货
 	private int RETURN_COUNT;//退货数量
 	private String NOTE;//备注
+	private Materials_information materials_information;
+	private Warehouse warehouse;
+	private Output_type output_type;
+	private User user;
 	
 	
 	
-	public Output_storage() {
-		
-	}
-
-
-
 	public Output_storage(String iD, String bIANHAO, String mATERIALS_ID, String wAREHOUSE_ID, String oUT_PUT_TYPE_ID,
 			int sTATE, BigDecimal mONEY, int nUMBER_OF, String uSER_ID, String aUDITOR, String eNTRY_TIME,
-			String uPDATE_TIME, String rAW_NUMBER, String rETURNFLAG, int rETURN_COUNT, String nOTE) {
+			String uPDATE_TIME, String rAW_NUMBER, String rETURNFLAG, int rETURN_COUNT, String nOTE,
+			Materials_information materials_information, Warehouse warehouse, Output_type output_type, User user) {
 		ID = iD;
 		BIANHAO = bIANHAO;
 		MATERIALS_ID = mATERIALS_ID;
@@ -51,9 +50,13 @@ public class Output_storage {
 		RETURNFLAG = rETURNFLAG;
 		RETURN_COUNT = rETURN_COUNT;
 		NOTE = nOTE;
+		this.materials_information = materials_information;
+		this.warehouse = warehouse;
+		this.output_type = output_type;
+		this.user = user;
 	}
 
-
+	
 
 	public String getID() {
 		return ID;
@@ -247,16 +250,64 @@ public class Output_storage {
 
 
 
+	public Materials_information getMaterials_information() {
+		return materials_information;
+	}
+
+
+
+	public void setMaterials_information(Materials_information materials_information) {
+		this.materials_information = materials_information;
+	}
+
+
+
+	public Warehouse getWarehouse() {
+		return warehouse;
+	}
+
+
+
+	public void setWarehouse(Warehouse warehouse) {
+		this.warehouse = warehouse;
+	}
+
+
+
+	public Output_type getOutput_type() {
+		return output_type;
+	}
+
+
+
+	public void setOutput_type(Output_type output_type) {
+		this.output_type = output_type;
+	}
+
+
+
+	public User getUser() {
+		return user;
+	}
+
+
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+
+
 	@Override
 	public String toString() {
 		return "Output_storage [ID=" + ID + ", BIANHAO=" + BIANHAO + ", MATERIALS_ID=" + MATERIALS_ID
 				+ ", WAREHOUSE_ID=" + WAREHOUSE_ID + ", OUT_PUT_TYPE_ID=" + OUT_PUT_TYPE_ID + ", STATE=" + STATE
 				+ ", MONEY=" + MONEY + ", NUMBER_OF=" + NUMBER_OF + ", USER_ID=" + USER_ID + ", AUDITOR=" + AUDITOR
 				+ ", ENTRY_TIME=" + ENTRY_TIME + ", UPDATE_TIME=" + UPDATE_TIME + ", RAW_NUMBER=" + RAW_NUMBER
-				+ ", RETURNFLAG=" + RETURNFLAG + ", RETURN_COUNT=" + RETURN_COUNT + ", NOTE=" + NOTE + "]";
+				+ ", RETURNFLAG=" + RETURNFLAG + ", RETURN_COUNT=" + RETURN_COUNT + ", NOTE=" + NOTE
+				+ ", materials_information=" + materials_information + ", warehouse=" + warehouse + ", output_type="
+				+ output_type + ", user=" + user + "]";
 	}
-
-	
 	
 	
 }

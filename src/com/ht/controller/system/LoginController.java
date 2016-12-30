@@ -97,6 +97,7 @@ public class LoginController extends BaseController {
 				String USERNAME = KEYDATA[0];	//登录过来的用户名
 				String PASSWORD  = KEYDATA[1];	//登录过来的密码
 				pd.put("USERNAME", USERNAME);
+				session.setAttribute("Operator", USERNAME);
 				if(Tools.notEmpty(sessionCode) && sessionCode.equalsIgnoreCase(code)){		//判断登录验证码
 					String passwd = new SimpleHash("SHA-1", USERNAME, PASSWORD).toString();	//密码加密
 					pd.put("PASSWORD", passwd);

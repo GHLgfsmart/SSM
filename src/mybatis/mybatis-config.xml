@@ -10,6 +10,8 @@
     </settings>
 
 	<typeAliases>
+		<typeAlias type="com.ht.entity.Materials_information" alias="Materials_information"/>
+		<typeAlias type="com.ht.entity.Drawing" alias="Drawing"/>
 		<typeAlias type="com.ht.entity.Warehouse" alias="Warehouse"/>
 		<typeAlias type="com.ht.entity.User" alias="User"/>
 		<typeAlias type="com.ht.entity.Role" alias="Role"/>

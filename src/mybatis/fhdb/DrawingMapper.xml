@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="DrawingMapper">
+		<resultMap type="Drawing" id="DrawingResultMap">
+			<id column="ID" property="ID"/>
+			<result column="BIANHAO" property="BIANHAO"/>
+			<result column="JINGSHUO_ID" property="JINGSHUO_ID"/>
+			<result column="DRAWING_INST" property="DRAWING_INST"/>
+			<result column="STATE" property="STATE"/>
+			<result column="MATERIALS_ID" property="MATERIALS_ID"/>
+			<result column="WAREHOUSE_OUT_ID" property="WAREHOUSE_OUT_ID"/>
+			<result column="WAREHOUSE_PUT_ID" property="WAREHOUSE_PUT_ID"/>
+			<result column="INSPECTOR" property="INSPECTOR"/>
+			<result column="AUDITOR" property="AUDITOR"/>
+			<result column="ENTRY_TIME" property="ENTRY_TIME"/>
+			<result column="UPDATE_TIME" property="UPDATE_TIME"/>
+			<result column="MONEY" property="MONEY"/>
+			<result column="NUMBER_OF" property="NUMBER_OF"/>
+			<result column="ZHAIYAO_INST" property="ZHAIYAO_INST"/>
+			<result column="BusinessDate" property="BusinessDate"/>
+			
+			
+			<!-- 经手人(关联sys_user)多对一关系 -->
+			<association property="user" javaType="User">
+				<id column="USER_ID" property="USER_ID"/>
+				<result column="USERNAME" property="USERNAME"/>
+				<result column="PASSWORD" property="PASSWORD"/>
+				<result column="NAME" property="NAME"/>
+				<result column="RIGHTS" property="RIGHTS"/>
+				<result column="LAST_LOGIN" property="LAST_LOGIN"/>
+				<result column="IP" property="IP"/>
+				<result column="STATUS" property="STATUS"/>
+				<result column="SKIN" property="SKIN"/>
+			</association>
+			<!-- 产品（关联materials_information（物资表）） -->
+			<association property="materials_information" javaType="Materials_information">
+				<id column="ID" property="ID"/>
+				<result column="BIANHAO" property="BIANHAO"/>
+				<result column="PINYIN" property="PINYIN"/>
+				<result column="RIGHTS" property="RIGHTS"/>
+				<result column="BAR_CODE" property="BAR_CODE"/>
+				<result column="NAME" property="NAME"/>
+				<result column="COUNT" property="COUNT"/>
+				<result column="UNIT" property="UNIT"/>
+				<result column="ENTRY_TIME" property="ENTRY_TIME"/>
+				<result column="UPDATE_TIME" property="UPDATE_TIME"/>
+				<result column="operator" property="operator"/>
+				<result column="NOTE" property="NOTE"/>
+				<result column="STATE" property="STATE"/>
+			</association>
+			
+			<!-- 调出，调入（关联warehouse（仓库表） -->
+			<association property="warehouse" javaType="Warehouse">
+				<id column="ID" property="ID" />
+				<result column="NAME" property="NAME" />
+				<result column="SIZE" property="SIZE" />
+				<result column="UPPER_LIMIT" property="UPPER_LIMIT" />
+				<result column="LOWER_LIMIT" property="LOWER_LIMIT" />
+				<result column="PRACTICAl" property="PRACTICAl" />
+				<result column="ADDRESS" property="ADDRESS" />
+				<result column="ENTRY_TIME" property="ENTRY_TIME" />
+				<result column="UPDATE_TIME" property="UPDATE_TIME" />
+				<result column="NOTE" property="NOTE" />
+				<result column="STATE" property="STATE" />
+			</association>
+			
+		</resultMap>
+		
+		
+		<!-- 查询经手人  -->
+		<select id="drawinglist" resultType="pd">
+			SELECT u.USER_ID,u.USERNAME FROM SYS_USER u
+		</select>
+		<!-- 查询仓库名 -->
+		 <select id="warlist" resultType="pd">
+			select w.ID,w.NAME from warehouse w
+		</select>
+		
+		<!-- 保存调拨的数据 -->
+		<insert id="DrwingSave" parameterType="pd">
+			insert into drawing(ID,INSPECTOR,BIANHAO,BusinessDate,ENTRY_TIME,JINGSHUO_ID,WAREHOUSE_OUT_ID,WAREHOUSE_PUT_ID,DRAWING_INST,MATERIALS_ID)
+			values(#{ID},#{INSPECTOR},#{BIANHAO},#{BusinessDate},#{ENTRY_TIME},#{JINGSHUO_ID},#{WAREHOUSE_OUT_ID},#{WAREHOUSE_PUT_ID},#{DRAWING_INST},#{MATERIALS_ID})
+		</insert>
+		
+		<!-- 查询调拨单 -->
+		<select id="datalistPage" parameterType="page" resultType="pd">
+			select dr.ID,dr.BusinessDate,dr.BIANHAO,dr.ENTRY_TIME,dr.UPDATE_TIME,dr.DRAWING_INST,dr.INSPECTOR,dr.WAREHOUSE_PUT_ID,dr.WAREHOUSE_OUT_ID,ws.NAME as ru,dr.AUDITOR,dr.STATE,w.NAME as chu,u.USERNAME from drawing dr ,warehouse ws ,warehouse w ,sys_user u  
+			where
+				dr.WAREHOUSE_OUT_ID=w.ID AND dr.JINGSHUO_ID=u.USER_ID and dr.WAREHOUSE_PUT_ID=ws.ID
+				<if test="pd.keywords!= null and pd.keywords != ''"><!-- 根据编号查询 -->
+					and dr.BIANHAO = #{pd.keywords}
+				</if>
+				<if test="pd.lastLoginStart!=null and pd.lastLoginStart!=''"><!-- 根据开始日期查询 -->
+					and dr.BusinessDate &gt;= #{pd.lastLoginStart} 
+				</if>
+				<if test="pd.lastLoginEnd!=null and pd.lastLoginEnd!=''"><!-- 根据结束日期查询 -->
+					and dr.BusinessDate &lt;= #{pd.lastLoginEnd} 
+				</if>
+				<if test="pd.STATE != null and pd.STATE != ''"><!-- 状态检索 -->
+					and dr.STATE=#{pd.STATE} 
+				</if>
+				order by dr.ID DESC
+		</select>
+		
+		<!-- 审核 -->
+		<update id="Audit" parameterType="pd">
+			update drawing SET STATE=#{STATE},AUDITOR=#{AUDITOR},UPDATE_TIME=#{UPDATE_TIME} WHERE ID=#{ID}
+		</update>
+		
+		<!-- 去审 -->
+		<update id="Abolish" parameterType="pd">
+			update drawing SET STATE=#{STATE},UPDATE_TIME=#{UPDATE_TIME} WHERE ID=#{ID}
+		</update>
+			
+		<!-- 删除 -->
+		<delete id="delDraeing" parameterType="String">
+			delete from drawing where ID=#{ID}
+		</delete>
+		
+		<!-- 根据id查询 -->
+		<select id="DraeingById" parameterType="String" resultType="pd">
+			select ID,BusinessDate,DRAWING_INST from drawing WHERE ID=#{ID} 
+		</select>
+		
+		<!-- 修改 -->
+		<update id="updateDraeing" parameterType="pd">
+			update drawing SET BusinessDate=#{BusinessDate},DRAWING_INST=#{DRAWING_INST},UPDATE_TIME=#{UPDATE_TIME} WHERE ID=#{ID}
+		</update>
+	
+		
+	</mapper>

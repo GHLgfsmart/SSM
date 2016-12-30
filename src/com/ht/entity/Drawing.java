@@ -9,8 +9,7 @@ import java.math.BigDecimal;
  */
 public class Drawing {
 	private String ID;//主键编号(加密)
-	private String BIANHAO;//编号（如：CK00001）
-	private String BUSINESS_TIME;//业务日期		
+	private String BIANHAO;//编号（如：CK00001）	
 	private String JINGSHUO_ID;//经手人(关联EMP 加密)		
 	private String DRAWING_INST;//调拔说明		
 	private int STATE;//审核状态（未审核 0 通过 1 不通过2 默认未审核 0）		
@@ -24,18 +23,21 @@ public class Drawing {
 	private BigDecimal MONEY;//单据金额		
 	private int NUMBER_OF;//单据数量		
 	private String ZHAIYAO_INST;//摘要说明(目的、方法、结果(应给出主要数据)及结论四部分,各部分冠以相应的标题)
+	private String BusinessDate;
+	private User user;
+	private Materials_information materials_information;
+	private Warehouse warehouse;
 	
 	public Drawing() {
 	
 	}
 
-	public Drawing(String iD, String bIANHAO, String bUSINESS_TIME, String jINGSHUO_ID, String dRAWING_INST, int sTATE,
-			String mATERIALS_ID, String wAREHOUSE_OUT_ID, String wAREHOUSE_PUT_ID, String iNSPECTOR, String aUDITOR,
-			String eNTRY_TIME, String uPDATE_TIME, BigDecimal mONEY, int nUMBER_OF, String zHAIYAO_INST) {
-		
+	public Drawing(String iD, String bIANHAO, String jINGSHUO_ID, String dRAWING_INST, int sTATE, String mATERIALS_ID,
+			String wAREHOUSE_OUT_ID, String wAREHOUSE_PUT_ID, String iNSPECTOR, String aUDITOR, String eNTRY_TIME,
+			String uPDATE_TIME, BigDecimal mONEY, int nUMBER_OF, String zHAIYAO_INST, String businessDate, User user,
+			Materials_information materials_information, Warehouse warehouse) {
 		ID = iD;
 		BIANHAO = bIANHAO;
-		BUSINESS_TIME = bUSINESS_TIME;
 		JINGSHUO_ID = jINGSHUO_ID;
 		DRAWING_INST = dRAWING_INST;
 		STATE = sTATE;
@@ -49,6 +51,10 @@ public class Drawing {
 		MONEY = mONEY;
 		NUMBER_OF = nUMBER_OF;
 		ZHAIYAO_INST = zHAIYAO_INST;
+		BusinessDate = businessDate;
+		this.user = user;
+		this.materials_information = materials_information;
+		this.warehouse = warehouse;
 	}
 
 	public String getID() {
@@ -65,14 +71,6 @@ public class Drawing {
 
 	public void setBIANHAO(String bIANHAO) {
 		BIANHAO = bIANHAO;
-	}
-
-	public String getBUSINESS_TIME() {
-		return BUSINESS_TIME;
-	}
-
-	public void setBUSINESS_TIME(String bUSINESS_TIME) {
-		BUSINESS_TIME = bUSINESS_TIME;
 	}
 
 	public String getJINGSHUO_ID() {
@@ -179,13 +177,47 @@ public class Drawing {
 		ZHAIYAO_INST = zHAIYAO_INST;
 	}
 
+	public String getBusinessDate() {
+		return BusinessDate;
+	}
+
+	public void setBusinessDate(String businessDate) {
+		BusinessDate = businessDate;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Materials_information getMaterials_information() {
+		return materials_information;
+	}
+
+	public void setMaterials_information(Materials_information materials_information) {
+		this.materials_information = materials_information;
+	}
+
+	public Warehouse getWarehouse() {
+		return warehouse;
+	}
+
+	public void setWarehouse(Warehouse warehouse) {
+		this.warehouse = warehouse;
+	}
+
 	@Override
 	public String toString() {
-		return "Drawing [ID=" + ID + ", BIANHAO=" + BIANHAO + ", BUSINESS_TIME=" + BUSINESS_TIME + ", JINGSHUO_ID="
-				+ JINGSHUO_ID + ", DRAWING_INST=" + DRAWING_INST + ", STATE=" + STATE + ", MATERIALS_ID=" + MATERIALS_ID
-				+ ", WAREHOUSE_OUT_ID=" + WAREHOUSE_OUT_ID + ", WAREHOUSE_PUT_ID=" + WAREHOUSE_PUT_ID + ", INSPECTOR="
-				+ INSPECTOR + ", AUDITOR=" + AUDITOR + ", ENTRY_TIME=" + ENTRY_TIME + ", UPDATE_TIME=" + UPDATE_TIME
-				+ ", MONEY=" + MONEY + ", NUMBER_OF=" + NUMBER_OF + ", ZHAIYAO_INST=" + ZHAIYAO_INST + "]";
+		return "Drawing [ID=" + ID + ", BIANHAO=" + BIANHAO + ", JINGSHUO_ID=" + JINGSHUO_ID + ", DRAWING_INST="
+				+ DRAWING_INST + ", STATE=" + STATE + ", MATERIALS_ID=" + MATERIALS_ID + ", WAREHOUSE_OUT_ID="
+				+ WAREHOUSE_OUT_ID + ", WAREHOUSE_PUT_ID=" + WAREHOUSE_PUT_ID + ", INSPECTOR=" + INSPECTOR
+				+ ", AUDITOR=" + AUDITOR + ", ENTRY_TIME=" + ENTRY_TIME + ", UPDATE_TIME=" + UPDATE_TIME + ", MONEY="
+				+ MONEY + ", NUMBER_OF=" + NUMBER_OF + ", ZHAIYAO_INST=" + ZHAIYAO_INST + ", BusinessDate="
+				+ BusinessDate + ", user=" + user + ", materials_information=" + materials_information + ", warehouse="
+				+ warehouse + "]";
 	}
 	
 	
