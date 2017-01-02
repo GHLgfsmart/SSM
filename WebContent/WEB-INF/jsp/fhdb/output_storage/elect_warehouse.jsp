@@ -16,7 +16,7 @@
 <!-- 下拉框 -->
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
 <!-- jsp文件头和头部 -->
-<%@include file="/WEB-INF/jsp/system/index/top.jsp"%>
+<%@ include file="/WEB-INF/jsp/system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 </head>
@@ -31,17 +31,19 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="warehousing/testPage.do" method="post" name="Form" id="Form">
+						<form action="warehousing/electMaterialsPage.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
 									<div class="nav-search">
 										<span class="input-icon">
-											<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="nav-search-input" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
+											<input type="text" placeholder="这里输入关键词" class="nav-search-input" id="keywords" autocomplete="off" name="keywords" value="${pd.keywords }" placeholder="这里输入关键词"/>
 											<i class="ace-icon fa fa-search nav-search-icon"></i>
 										</span>
 									</div>
 								</td>
+								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginStart" id="lastLoginStart"  value="${pd.lastLoginStart}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="最近登录开始"/></td>
+								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginEnd" name="lastLoginEnd"  value="${pd.lastLoginEnd}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="最近登录结束"/></td>
 								<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
 							</tr>
 						</table>
@@ -56,9 +58,9 @@
 									<th class="center" style="width:50px;">序号</th>
 									<th class="center">单据编号</th>
 									<th class="center">条形码</th>
-									<th class="center">产品名称</th>
+									<th class="center">物资名称</th>
 									<th class="center">供应商</th>
-									<th class="center">供应商</th>
+									<th class="center">商品数量</th>
 								</tr>
 							</thead>
 													
@@ -76,7 +78,7 @@
 											<td class='center'>${var.BAR_CODE}</td>
 											<td class='center'><label><input type='hidden' name='name' value="${var.NAME}" class="ace" /></label>${var.NAME}</td>
 											<td class='center'>${var.supplier.NAME}</td>
-											<td class='center'>${var.supplier.NAME}</td>
+											<td class='center'>${var.COUNT}</td>
 										</tr>
 									
 									</c:forEach>
@@ -109,10 +111,12 @@
 	</div>
 	<!-- /.main-container -->
 	
+	<!-- basic scripts -->
 	<!-- 页面底部js¨ -->
 	<%@ include file="/WEB-INF/jsp/system/index/foot.jsp"%>
 	<!-- 删除时确认窗口 -->
 	<script src="static/ace/js/bootbox.js"></script>
+	<!-- ace scripts -->
 	<script src="static/ace/js/ace/ace.js"></script>
 	<!-- 日期框 -->
 	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
@@ -155,8 +159,8 @@ function elect(msg){
 		});
 		return;
 	}else {
-		window.parent.window.supplier = xname;
-		window.parent.window.supid = xid;
+		window.parent.window.materials = xname;
+		window.parent.window.matid = xid;
 		window.parent.window.jBox.close();
 	}
 }

@@ -64,7 +64,7 @@
 					 	MI.COUNT LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					)
 			</if>
-			<if test="pd.STATE != null and pd.STATE != ''"><!-- 角色检索 -->
+			<if test="pd.STATE != null and pd.STATE != ''"><!-- 状态检索 -->
 				and MI.STATE=#{pd.STATE} 
 			</if>
 			<if test="pd.lastLoginStart!=null and pd.lastLoginStart!=''"><!-- 登录时间检索 -->

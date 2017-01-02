@@ -9,7 +9,7 @@ public class Materials_information {
 	private String BIANHAO;//编号（如：CK00001）
 	private String PINYIN;//拼音简码
 	private String BAR_CODE;//条形码
-	private String NAME;//产品名称
+	private String NAME;//物资名称
 	private String CUS_ID;//关联supplier_and_customer（供应商和客户的信息表）
 	private int COUNT;//商品数量
 	private String UNIT;//单位(件)
@@ -17,7 +17,7 @@ public class Materials_information {
 	private String UPDATE_TIME;//最后修改时间
 	private String operator;//操作员
 	private String NOTE;//备注
-	private int STATE;//状态（默认0）0未入库，1已入库,2已出库
+	private int STATE;//状态（默认0）0待入库，1入库中，2已入库,3已出库
 	private Page page;
 	
 	private Supplier_customer supplier;
