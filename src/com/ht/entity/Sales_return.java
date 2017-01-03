@@ -1,7 +1,7 @@
 package com.ht.entity;
 /**
  * 
- * @author 退货入库表
+ * 退货入库表
  *
  */
 public class Sales_return {
@@ -11,10 +11,11 @@ public class Sales_return {
 	private String INSPECTOR;//操作员
 	private String WAREHOUSE_OUT_ID;//出库仓库（关联warehouse（仓库表））
 	private String WAREHOUSE_PUT_ID;//入库仓库（关联warehouse（仓库表））
+	private String OUTPUT_TYPE_ID;
 	private String MAKETIME;//制单时间
 	private int COUNT;//数量
 	private String NOTE;//备注
-	private int STATE;//状态（0未处理，1已处理）
+	private int STATE;//状态（0待检验，1已检验，2不合格，3审核成功）
 	
 	public Sales_return() {
 		
@@ -113,6 +114,14 @@ public class Sales_return {
 
 	public void setSTATE(int sTATE) {
 		STATE = sTATE;
+	}
+
+	public String getOUTPUT_TYPE_ID() {
+		return OUTPUT_TYPE_ID;
+	}
+
+	public void setOUTPUT_TYPE_ID(String oUTPUT_TYPE_ID) {
+		OUTPUT_TYPE_ID = oUTPUT_TYPE_ID;
 	}
 
 	@Override

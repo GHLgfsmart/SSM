@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="ProductMapper">
+		<resultMap type="Output_storage" id="Output_storageResultMap">
+			<id column="ID" property="ID"/>
+				<result column="BIANHAO" property="BIANHAO"/>
+				<result column="MATERIALS_ID" property="MATERIALS_ID"/>
+				<result column="WAREHOUSE_ID" property="WAREHOUSE_ID"/>
+				<result column="OUTPUT_TYPE_ID" property="OUTPUT_TYPE_ID"/>
+				<result column="STATE" property="STATE"/>
+				<result column="MONEY" property="MONEY"/>
+				<result column="NUMBER_OF" property="NUMBER_OF"/>
+				<result column="AUDITOR" property="AUDITOR"/>
+				<result column="ENTRY_TIME" property="ENTRY_TIME"/>
+				<result column="UPDATE_TIME" property="UPDATE_TIME"/>
+				<result column="raw_number" property="RAW_NUMBER"/>
+				<result column="RETURNFLAG" property="RETURNFLAG"/>
+				<result column="RETURN_COUNT" property="RETURN_COUNT"/>
+				<result column="NOTE" property="NOTE"/>
+			
+			<!-- 物资信息 -->
+				<association property="materials" javaType="Materials_information">
+					<id column="ID" property="ID"/>
+					<result column="BIANHAO" property="BIANHAO"/>
+					<result column="PINYIN" property="PINYIN"/>
+					<result column="BAR_CODE" property="BAR_CODE"/>
+					<result column="NAME" property="NAME"/>
+					<result column="COUNT" property="COUNT"/>
+					<result column="UNIT" property="UNIT"/>
+					<result column="ENTRY_TIME" property="ENTRY_TIME"/>
+					<result column="UPDATE_TIME" property="UPDATE_TIME"/>
+					<result column="operator" property="operator"/>
+					<result column="NOTE" property="NOTE"/>
+					<result column="STATE" property="STATE"/>
+				</association>
+				
+			<!-- 仓库 -->
+				<association property="warehouse" javaType="Warehouse">
+					<id column="ID" property="ID" />
+					<result column="NAME" property="NAME" />
+					<result column="SIZE" property="SIZE" />
+					<result column="UPPER_LIMIT" property="UPPER_LIMIT" />
+					<result column="LOWER_LIMIT" property="LOWER_LIMIT" />
+					<result column="PRACTICAl" property="PRACTICAl" />
+					<result column="ADDRESS" property="ADDRESS" />
+					<result column="ENTRY_TIME" property="ENTRY_TIME" />
+					<result column="UPDATE_TIME" property="UPDATE_TIME" />
+					<result column="NOTE" property="NOTE" />
+					<result column="STATE" property="STATE" />
+				</association>
+			
+		</resultMap>
+		
+		
+		<!-- 查询出产品 -->
+		<select id="matlistPage" parameterType="page" resultType="pd">
+			SELECT mi.ID,mi.BIANHAO,mi.NAME,mi.COUNT,mi.UNIT,mi.NOTE from  output_storage os,materials_information mi,warehouse wa 
+			WHERE
+			mi.STATE=1
+			AND
+			os.WAREHOUSE_ID=wa.ID 
+			AND 
+			os.MATERIALS_ID=mi.ID
+			<if test=" pd.ckID!= null and pd.ckID !='' "> 
+			AND
+			wa.ID LIKE CONCAT(CONCAT(#{pd.ckID}))
+			</if>
+		</select>
+	</mapper>
