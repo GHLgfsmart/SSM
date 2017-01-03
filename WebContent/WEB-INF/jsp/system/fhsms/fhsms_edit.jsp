@@ -12,7 +12,8 @@
 <html lang="en">
 <head>
 <base href="<%=basePath%>">
-
+<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<link rel="stylesheet" href="static/js/common/jbox.css" />
 <!-- jsp文件头和头部 -->
 <%@ include file="../index/top.jsp"%>
 		<style type="text/css">
@@ -31,36 +32,29 @@
 		.commitbox_cen div.right span.quxiao{border:solid 1px #f77400; background:#f77400; border-radius:3px; color:#FFF; padding:4px 9px;}
 		</style>
 	</head>
+	<style>
+	textarea {
+		padding: 10px;
+		vertical-align: top;
+		width: 200px;
+	}
+	textarea:focus {
+		outline-style: solid;
+		outline-width: 2px;
+	}
+
+</style>
 <body class="no-skin">
-	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
-		<!-- /section:basics/sidebar -->
 		<div class="main-content">
-		
-		<!-- 编辑用户名  -->
-		<div id="dialog-add">
-			<div class="commitopacity"></div>
-		  	<div class="commitbox">
-			  	<div class="commitbox_inner">
-			        <div class="commitbox_top">
-			        	<textarea name="USERNAMES" id="USERNAMES" readonly="readonly" title="这里不能手动修改"></textarea>
-			            <div class="commitbox_cen">
-			                <div class="left" id="cityname"></div>
-			                <div class="right"><span class="save" onClick="cancel_pl()">确定</span>&nbsp;&nbsp;<span class="quxiao" onClick="cancel_pl()">取消</span></div>
-			            </div>
-			        </div>
-			  	</div>
-		  	</div>
-		</div>
 
 		<div id="zhongxin">
-		<textarea name="CONTENT" id="CONTENT" style="display:none" ></textarea>
-		<input type="hidden" name="TYPE" id="TYPE" value="1"/>
 		<table style="width:98%;margin-top: 10px;margin-left: 9px;" >
 			<tr>
 				<td style="margin-top:0px;">
-					 <div style="float: left;" style="width:81%"><textarea readonly="readonly" name="USERNAME" id="USERNAME" rows="1" cols="50" style="width:595px;height:32px;" title="这里不能手动修改">${pd.username}</textarea></div>
-					 <div style="float: right;margin-right: 12px;" style="width:19%"><a class='btn btn-mini btn-info' title="查看用户名" onclick="dialog_open();"><i class="ace-icon fa fa-search nav-search-icon"></i></a></div>
+				 <div style="float: left;" style="width:81%"><input readonly="readonly" name="USERNAME" id="USERNAME" style="width: 98%;height:40px;border: none;font-size: 20px;color: #438EB9;" title="这里不能手动修改" value="${pd.username}"/></div>
+					<div style="float: right;margin-right: 12px;" style="width:19%"><a class='btn btn-mini btn-info' title="选择用户" onclick="dialog_open();"><i class="ace-icon fa fa-search nav-search-icon"></i></a></div>
+					<textarea style='resize: none;width: 98%; height: 300px;' name="CONTENT" id="CONTENT" ></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -72,8 +66,6 @@
 				<td style="text-align: center;padding-top: 15px;" id="nr">
 					<a class="btn btn-mini btn-primary" onclick="sendFhsms();">发送</a>
 					<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>
-					<label style="float:left;padding-left: 32px;"><input name="form-field-radio" id="form-field-radio1" onclick="setType('1');" checked="checked" type="radio" class="ace" value="icon-edit"><span class="lbl">纯文本</span></label>
-					<label style="float:left;padding-left: 5px;"><input name="form-field-radio" id="form-field-radio2" onclick="setType('2');" type="radio" value="icon-edit" class="ace" ><span class="lbl">带标签</span></label>
 				</td>
 			</tr>
 		</table>
@@ -86,16 +78,109 @@
 	<!-- basic scripts -->
 	<!-- 页面底部js¨ -->
 	<%@ include file="../index/foot.jsp"%>
+	<script src='static/affiche/js/autosize.js'></script>
 	<!-- ace scripts -->
 	<script src="static/ace/js/ace/ace.js"></script>
 	<!-- 编辑框-->
 	<script type="text/javascript" charset="utf-8">window.UEDITOR_HOME_URL = "<%=path%>/plugins/ueditor/";</script>
 	<script type="text/javascript" charset="utf-8" src="plugins/ueditor/ueditor.config.js"></script>
 	<script type="text/javascript" charset="utf-8" src="plugins/ueditor/ueditor.all.js"></script>
-	<!-- 编辑框-->
-	<!--引入属于此页面的js -->
-	<script type="text/javascript" src="static/js/myjs/fhsms.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
+	<script type="text/javascript" src="static/js/common/jquery.jBox-2.3.min.js"></script>
+	<script type="text/javascript" src="static/js/common/jquery.jBox-zh-CN.js"></script>
+	<script>
+	$(top.hangge());
+	//发送
+	function sendFhsms(){
+		if($("#USERNAME").val()==""){
+			$("#USERNAME").tips({
+				side:3,
+	            msg:'请选择用户名',
+	            bg:'#AE81FF',
+	            time:2
+	        });
+			$("#USERNAME").focus();
+			return false;
+		}
+		if($("#CONTENT").val()==""){
+			$("#CONTENT").tips({
+				side:1,
+	            msg:'请输入内容',
+	            bg:'#AE81FF',
+	            time:3
+	        });
+			return false;
+		}
+		$("#zhongxin").hide();
+		$("#zhongxin2").show();
+		var USERNAME = $("#USERNAME").val();
+		var CONTENT = $("#CONTENT").val();
+		$.ajax({
+			type: "POST",
+			url: '<%=basePath%>fhsms/save.do?tm='+new Date().getTime(),
+	    	data: {USERNAME:USERNAME,CONTENT:CONTENT},
+			dataType:'json',
+			cache: false,
+			success: function(data){
+				 $.each(data.list, function(i, list){
+					 if(list.msg == 'ok'){
+						 var count = list.count;
+						 var ecount = list.ecount;
+						 $("#msg").tips({
+							side:3,
+				            msg:'成功发出'+count+'条,失败'+ecount+'条',
+				            bg:'#68B500',
+				            time:3
+					      });
+						 top.fhsmsmsg(USERNAME); //websocket即时通讯去通知收信人有站内信接收 ，fhsmsmsg()函数 editUserH()在 WebRoot\static\js\myjs\head.js
+					 }else{
+						 $("#msg").tips({
+								side:3,
+					            msg:'发送失败,请联系管理员!',
+					            bg:'#FF0000',
+					            time:6
+						 });
+					 }
+					 setTimeout("close()",3000);
+					 timer(2);
+				 });
+			}
+		});
+		
+	}
+	//倒计时
+	function timer(intDiff){
+		window.setInterval(function(){
+		$('#second_shows').html('<s></s>'+intDiff+'秒');
+		intDiff--;
+		}, 1000);
+	} 
+	function close(){
+		top.Dialog.close();
+	}
+	setTimeout("ueditor()",500);
+	function ueditor(){
+		var ue = UE.getEditor('editor');
+	}
+	//跳转UserList
+	/**选择*/
+	var supplier = $("#USERNAME").val();
+	function dialog_open(){
+		    jBox.open(
+		        "iframe:<%=basePath%>fhsms/listUsers.do",
+		        "选择", 750, 400,
+		        {buttons: {}, iframeScrolling: 'yes', showClose: true,
+		            closed:function (){
+		                //在弹出窗口页面，如果我们保存了数据，就将父页面里的变量isFreshFlag 值设置为2
+		                /**if(isFreshFlag==2){
+		                    location.reload();
+		                }*/
+		                $("#USERNAME").val(supplier);
+		            }
+		        }
+		    );
+		} 
+	</script>
 </body>
 </html>
