@@ -280,7 +280,7 @@ public class DrawingController extends BaseController {
 				vpd.put("var6", i.getString("JINGSHUO_ID"));
 				vpd.put("var7", i.getString("DRAWING_INST"));
 				String STATE = i.get("STATE") + "";
-				vpd.put("var8", STATE);
+				vpd.put("var8", STATE+"(0代表未审核,1代表已审核)");
 				vpd.put("var9", i.getString("INSPECTOR"));
 				vpd.put("var10", i.getString("AUDITOR"));
 				vpd.put("var11", i.getString("chu"));
