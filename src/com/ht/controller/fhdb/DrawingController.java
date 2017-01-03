@@ -119,14 +119,6 @@ public class DrawingController extends BaseController {
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}
-		/*String lastLoginStart = pd.getString("lastLoginStart");	//开始时间
-		String lastLoginEnd = pd.getString("lastLoginEnd");		//结束时间
-		if(lastLoginStart != null && !"".equals(lastLoginStart)){
-			pd.put("lastLoginStart", lastLoginStart+" 00:00:00");
-		}
-		if(lastLoginEnd != null && !"".equals(lastLoginEnd)){
-			pd.put("lastLoginEnd", lastLoginEnd+" 00:00:00");
-		} */
 		page.setPd(pd);
 		// 生成添加时间
 		 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -248,7 +240,7 @@ public class DrawingController extends BaseController {
 	 * @throws Exception
 	 * @throws Throwable
 	 */
-	@RequestMapping(value = "/ExportData")
+	@RequestMapping(value = "/Export")
 	public ModelAndView ExportData(Page page) throws Exception {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
@@ -258,8 +250,10 @@ public class DrawingController extends BaseController {
 			if(null != keywords && !"".equals(keywords)){
 				pd.put("keywords", keywords.trim());
 			}
+			page.setPd(pd);
 			Map<String, Object> dataMap = new HashMap<String, Object>();
 			List<String> titles = new ArrayList<String>();
+			titles.add("ID");
 			titles.add("编号");
 			titles.add("业务日期");
 			titles.add("录入时间");
@@ -273,23 +267,24 @@ public class DrawingController extends BaseController {
 			titles.add("调入仓库");
 			dataMap.put("titles", titles);
 			mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
-			page.setPd(pd);
-			List<PageData> warList = drawingServiceImpl.drwingList(page);
+			List<PageData> darList = drawingServiceImpl.drwingList(page);
+			System.out.println("--------------------返回的值:"+darList);
 			List<PageData> varList = new ArrayList<PageData>();
-			for (PageData i : warList) {
+			for (PageData i : darList) {
 				PageData vpd = new PageData();
-				vpd.put("var1", i.getString("BIANHAO"));
-				vpd.put("var2", i.getString("BusinessDate"));
-				vpd.put("var3", i.getString("ENTRY_TIME"));
-				vpd.put("var4", i.getString("UPDATE_TIME"));
-				vpd.put("var5", i.getString("JINGSHUO_ID"));
-				vpd.put("var6", i.getString("DRAWING_INST"));
+				vpd.put("var1", i.getString("ID"));
+				vpd.put("var2", i.getString("BIANHAO"));
+				vpd.put("var3", i.getString("BusinessDate"));
+				vpd.put("var4", i.getString("ENTRY_TIME"));
+				vpd.put("var5", i.getString("UPDATE_TIME"));
+				vpd.put("var6", i.getString("JINGSHUO_ID"));
+				vpd.put("var7", i.getString("DRAWING_INST"));
 				String STATE = i.get("STATE") + "";
-				vpd.put("var7", STATE);
-				vpd.put("var8", i.getString("INSPECTOR"));
-				vpd.put("var9", i.getString("AUDITOR"));
-				vpd.put("var10", i.getString("WAREHOUSE_OUT_ID"));
-				vpd.put("var11", i.getString("WAREHOUSE_PUT_ID"));
+				vpd.put("var8", STATE+"(0代表未审核,1代表已审核)");
+				vpd.put("var9", i.getString("INSPECTOR"));
+				vpd.put("var10", i.getString("AUDITOR"));
+				vpd.put("var11", i.getString("chu"));
+				vpd.put("var12", i.getString("ru"));
 				varList.add(vpd);
 			}
 			dataMap.put("varList", varList);
