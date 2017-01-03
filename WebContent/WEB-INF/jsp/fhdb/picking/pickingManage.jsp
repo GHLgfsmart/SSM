@@ -31,7 +31,7 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="warehousing/findsales_returnListAll.do" method="post" name="Form" id="Form">
+						<form action="outstorage/outstorageList.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
@@ -46,6 +46,7 @@
 								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginEnd" name="lastLoginEnd"  value="${pd.lastLoginEnd}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="最近登录结束"/></td>
 								<td style="vertical-align:top;padding-left:2px;">
 								 	<select class="chosen-select form-control" name="STATE" id="STATE" data-placeholder="请选择状态" style="vertical-align:top;width: 120px;">
+										<option value=""></option>
 										<option value="0">检验中</option>
 										<option value="1">已检验</option>
 										<option value="2">不合格</option>
@@ -65,14 +66,12 @@
 									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
 									</th>
 									<th class="center" style="width:50px;">序号</th>
-									<th class="center">退货单号</th>
-									<th class="center">出库单号</th>
-									<th class="center">出库仓库</th>
-									<th class="center">入库仓库</th>
-									<th class="center">制单时间</th>
-									<th class="center">数量</th>
+									<th class="center">单据编号</th>
+									<th class="center">拣取数量</th>
+									<th class="center">出库单数</th>
+									<th class="center">拣取时间</th>
+									<th class="center">装车状态</th>
 									<th class="center">操作员</th>
-									<th class="center">状态</th>
 									<th class="center">备注</th>
 									<th class="center">操作</th>
 								</tr>
@@ -89,25 +88,17 @@
 												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
 											</td>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class='center'>${var.RETREAT_CODE}</td>
-											<td class='center'>${var.OUT_CODE}</td>
-											<td class='center'>${var.OTNAME}</td>
-											<td class='center'>${var.PTNAME}</td>
-											<td class='center'>${var.MAKETIME}</td>
+											<td class='center'>${var.BIANHAO}</td>
 											<td class='center'>${var.COUNT}</td>
+											<td class='center'>${var.MATCOUNT}</td>
+											<td class='center'>${var.TIME}</td>
+											<c:if test="${var.STATE eq 1 }">
+												<td class='center'>未装车</td>
+											</c:if>
+											<c:if test="${var.STATE eq 2 }">
+												<td class='center'>已装车</td>
+											</c:if>
 											<td class='center'>${var.INSPECTOR}</td>
-											<c:if test="${var.STATE eq 0}">
-												<td class='center'>检验中</td>
-											</c:if>
-											<c:if test="${var.STATE eq 1}">
-												<td class='center'>已检验</td>
-											</c:if>
-											<c:if test="${var.STATE eq 2}">
-												<td class='center'>不合格</td>
-											</c:if>
-											<c:if test="${var.STATE eq 3}">
-												<td class='center'>审核成功</td>
-											</c:if>
 											<td class='center'>${var.NOTE}</td>
 											<td class="center">
 												<c:if test="${QX.edit != 1 && QX.del != 1 }">
@@ -126,17 +117,8 @@
 													</c:if>
 													<c:if test="${QX.del == 1 }">
 													<a class="btn btn-xs btn-info" onclick="examine('${var.ID}','${var.STATE}');">
-														<i class="ace-icon fa fa-sign-in bigger-120" title="检验"></i>
+														<i class="ace-icon fa fa-search bigger-120" title="查看详情"></i>
 													</a>
-													</c:if>
-													<c:if test="${QX.del == 1 }">
-													<a class="btn btn-xs btn-info" onclick="auditing('${var.ID}','${var.STATE}');">
-														<i class="ace-icon fa fa-check-circle bigger-120" title="审核"></i>
-													</a>
-													<a class="btn btn-xs btn-info" onclick="auditing('${var.ID}','${var.STATE}');">
-														<i class="ace-icon fa fa-times-circle bigger-120" title="去审"></i>
-													</a>
-													
 													</c:if>
 												</div>
 												<div class="hidden-md hidden-lg">
@@ -166,23 +148,9 @@
 															</c:if>
 															<c:if test="${QX.del == 1 }">
 															<li>
-																<a style="cursor:pointer;" onclick="examine('${var.ID}','${var.STATE}');" class="tooltip-error" data-rel="tooltip" title="检验">
+																<a style="cursor:pointer;" onclick="examine('${var.ID}','${var.STATE}');" class="tooltip-error" data-rel="tooltip" title="查看详情">
 																	<span class="blue">
-																		<i class="ace-icon fa fa-sign-in bigger-120"></i>
-																	</span>
-																</a>
-															</li>
-															</c:if>
-															<c:if test="${QX.del == 1 }">
-															<li>
-																<a style="cursor:pointer;" onclick="auditing('${var.ID}','${var.STATE}');" class="tooltip-error" data-rel="tooltip" title="审核">
-																	<span class="blue">
-																		<i class="ace-icon fa fa-check-circle bigger-120"></i>
-																	</span>
-																</a>
-																<a style="cursor:pointer;" onclick="auditing('${var.ID}','${var.STATE}');" class="tooltip-error" data-rel="tooltip" title="去审">
-																	<span class="blue">
-																		<i class="ace-icon fa fa-times-circle bigger-120"></i>
+																		<i class="ace-icon fa fa-search bigger-120"></i>
 																	</span>
 																</a>
 															</li>
@@ -266,7 +234,7 @@ function add(){
 	 var diag = new top.Dialog();
 	 diag.Drag=true;
 	 diag.Title ="新增";
-	 diag.URL = '<%=basePath%>warehousing/sales_returnAddPage.do';
+	 diag.URL = '<%=basePath%>outstorage/pickingAddPage.do';
 	 diag.Width = 850;
 	 diag.Height = 500;
 	 diag.CancelEvent = function(){ //关闭事件
@@ -297,7 +265,7 @@ function examine(Id,state){
 		 var diag = new top.Dialog();
 		 diag.Drag=true;
 		 diag.Title ="检验";
-		 diag.URL = '<%=basePath%>warehousing/outputcheckoutAddPage.do?yan=th&ID='+Id;
+		 diag.URL = '<%=basePath%>outstorage/checkoutAddPage.do?ID='+Id;
 		 diag.Width = 850;
 		 diag.Height = 500;
 		 diag.CancelEvent = function(){ //关闭事件
@@ -315,50 +283,12 @@ function examine(Id,state){
 	}
 }
 
-//审核
-function auditing(Id,state){
-	if(state==0){
-		bootbox.dialog({
-			message: "<span class='bigger-110'>商品未检验，暂时无法审核!</span>",
-			buttons: 			
-			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-		});
-		return;
-	}else{
-		 if(state==1) {
-			 	top.jzts();
-				var url = '<%=basePath%>warehousing/sales_returnAuditing.do?STATE=3&ID='+Id;
-				$.get(url,function(data){
-					if(data == 'success'){
-						alert("成功");
-					}else {
-						alert("失败");
-					}
-					nextPage(${page.currentPage});
-				});
-		}else if(state==2) {
-			bootbox.confirm("检验不合格，确定要审核吗?", function(result) {
-				top.jzts();
-				var url = '<%=basePath%>warehousing/sales_returnAuditing.do?STATE=3&ID='+Id;
-				$.get(url,function(data){
-					if(data == 'success'){
-						alert("成功");
-					}else {
-						alert("失败");
-					}
-					nextPage(${page.currentPage});
-				});
-			});
-		}
-	}
-}
-
 //删除
 function del(Id){
 	bootbox.confirm("确定要删除吗?", function(result) {
 		if(result) {
 			top.jzts();
-			var url = '<%=basePath%>warehousing/sales_returnDel.do?ID='+Id;
+			var url = '<%=basePath%>outstorage/outstorageDel.do?ID='+Id;
 			$.get(url,function(data){
 				if(data == 'success'){
 					alert("成功");
@@ -377,7 +307,7 @@ function edit(Id){
 	 var diag = new top.Dialog();
 	 diag.Drag=true;
 	 diag.Title ="编辑";
-	 diag.URL = '<%=basePath%>warehousing/sales_returnEditPage.do?ID='+Id;
+	 diag.URL = '<%=basePath%>outstorage/outstorageEditPage.do?ID='+Id;
 	 diag.Width = 850;
 	 diag.Height = 500;
 	 diag.CancelEvent = function(){ //关闭事件
@@ -414,7 +344,7 @@ function makeAll(msg){
 		bootbox.confirm(msg, function(result) {
 			if(result) {
 				top.jzts();
-				var url = '<%=basePath%>warehousing/sales_returnBatchDel.do?DATA_IDS='+str;
+				var url = '<%=basePath%>outstorage/outstorageDel.do?DATA_IDS='+str;
 				$.get(url,function(data){
 					if(data == 'success'){
 						alert("成功");

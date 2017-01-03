@@ -5,7 +5,7 @@
 	<mapper namespace="Output_typeMapper">
 		<resultMap type="Output_type" id="output_typeResult">
 			<id property="ID" column="ID"/>
-			<result property="NAME" column="NAME"/>
+			<result property="OPTNAME" column="OPTNAME"/>
 			<result property="NOTE" column="NOTE"/>
 		</resultMap>
 		

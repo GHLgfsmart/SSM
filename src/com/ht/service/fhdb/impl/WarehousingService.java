@@ -135,5 +135,31 @@ public class WarehousingService implements WarehousingManager{
 	public PageData findBysalesreturnState(PageData pd) throws Exception {
 		return (PageData)dao.findForObject("SalesreturnMapper.findBysalesreturnByState", pd);
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PageData> findBypickingAll(Page page) throws Exception {
+		return (List<PageData>)dao.findForList("PickingMapper.datalistPage", page);
+	}
+
+	@Override
+	public int pickingUpdate(PageData pd) throws Exception {
+		return (Integer)dao.update("PickingMapper.pickingUpdate", pd);
+	}
+
+	@Override
+	public int pickingDelete(PageData pd) throws Exception {
+		return (Integer)dao.delete("PickingMapper.pickingdel", pd);
+	}
+
+	@Override
+	public int pickingSave(PageData pd) throws Exception {
+		return (Integer)dao.save("PickingMapper.pickingInsert", pd);
+	}
+
+	@Override
+	public PageData findBypickingId(PageData pd) throws Exception {
+		return (PageData)dao.findForObject("PickingMapper.pickingById", pd);
+	}
 	
 }

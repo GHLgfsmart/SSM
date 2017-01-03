@@ -25,6 +25,7 @@ import com.ht.util.PageData;
 public class OutstorageController extends BaseController{
 	
 	String menuUrl = "outstorage/outstorageList.do"; //菜单地址(权限用)
+	String pickingmenuUrl = "outstorage/pickingList.do"; //菜单地址(权限用)
 	@Resource(name="warehousingService")
 	private WarehousingManager warehousingService;
 	
@@ -222,6 +223,76 @@ public class OutstorageController extends BaseController{
 		if(result>0) {
 			pd.put("ID", yuanid);
 			warehousingService.output_storageUpdate(pd);
+			mv.addObject("msg","success");
+		}else {
+			mv.addObject("msg","fail");
+		}
+		mv.setViewName("save_result");
+		return mv;
+	}
+	
+	/**
+	 * @author Mr.Lin
+	 * 查询所有拣货信息
+	 * @param page
+	 * @return
+	 * @throws Exception 
+	 * */
+	@RequestMapping(value="/pickingList")
+	private ModelAndView findpickingListAll(Page page) throws Exception {
+		logBefore(logger, Jurisdiction.getUsername()+"列表pickingList");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();	
+		String keywords = pd.getString("keywords");			//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
+		List<PageData> list = warehousingService.findBypickingAll(page);
+		mv.setViewName("fhdb/picking/pickingManage");
+		mv.addObject("varList", list);
+		mv.addObject("pd", pd);
+		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		return mv;
+	}
+	
+	/**
+	 * @author Mr.Lin
+	 * 拣货弹出新增界面
+	 * @throws Exception
+	 * @return
+	 */
+	@RequestMapping(value="/pickingAddPage")
+	public ModelAndView pickingAddPage()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		String dj = "JH"+sdf.format(new Date());
+		mv.setViewName("fhdb/picking/pickingEdit");
+		mv.addObject("dj", dj);
+		mv.addObject("msg", "pickingAdd");
+		mv.addObject("pd", pd);
+		return mv;
+	}
+	
+	/**
+	 * @author Mr.Lin
+	 * 拣货新增操作
+	 * @throws Exception
+	 * @return
+	 */
+	@RequestMapping(value="/pickingAdd")
+	public ModelAndView pickingAdd()throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"出库新增");
+		if(!Jurisdiction.buttonJurisdiction(pickingmenuUrl, "add")){return null;} //校验权限
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd.put("ID", this.get32UUID());	//主键
+		int result = warehousingService.output_storageSave(pd);
+		if(result>0) {
 			mv.addObject("msg","success");
 		}else {
 			mv.addObject("msg","fail");

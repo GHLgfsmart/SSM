@@ -19,7 +19,7 @@
 		<result column="STATE" property="STATE"/>
 		<association property="supplier" javaType="com.ht.entity.Supplier_customer">
 			<id property="ID" column="ID" />
-			<result property="NAME" column="SUPNAME" />
+			<result property="SUPNAME" column="SUPNAME" />
 		</association>
 	</resultMap>
 	

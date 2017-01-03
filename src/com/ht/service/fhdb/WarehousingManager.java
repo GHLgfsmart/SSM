@@ -187,4 +187,44 @@ public interface WarehousingManager {
 	 * @throws Exception
 	 * */
 	public PageData findBysalesreturnState(PageData pd) throws Exception;
+	
+	/**
+	 * @author Mr.Lin
+	 * 查询拣货单全部信息
+	 * @param page
+	 * @throws Exception
+	 * */
+	public List<PageData> findBypickingAll(Page page)throws Exception;
+	
+	/**
+	 * @author Mr.Lin
+	 * 拣货单修改
+	 * @param pd
+	 * @throws Exception
+	 * */
+	public int pickingUpdate(PageData pd)throws Exception;
+	
+	/**
+	 * @author Mr.Lin
+	 * 拣货单删除
+	 * @param pd
+	 * @throws Exception
+	 * */
+	public int pickingDelete(PageData pd)throws Exception;
+	
+	/**
+	 * @author Mr.Lin
+	 * 拣货单保存
+	 * @param pd
+	 * @throws Exception
+	 * */
+	public int pickingSave(PageData pd)throws Exception;
+	
+	/**
+	 * @author Mr.Lin
+	 * 根据id查询拣货单信息
+	 * @param pd
+	 * @throws Exception
+	 * */
+	public PageData findBypickingId(PageData pd) throws Exception;
 }
