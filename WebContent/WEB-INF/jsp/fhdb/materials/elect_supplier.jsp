@@ -75,8 +75,8 @@
 											<td class='center'>${var.BIANHAO}</td>
 											<td class='center'>${var.BAR_CODE}</td>
 											<td class='center'><label><input type='hidden' name='name' value="${var.NAME}" class="ace" /></label>${var.NAME}</td>
-											<td class='center'>${var.supplier.NAME}</td>
-											<td class='center'>${var.supplier.NAME}</td>
+											<td class='center'>${var.supplier.SUPNAME}</td>
+											<td class='center'>${var.supplier.SUPNAME}</td>
 										</tr>
 									
 									</c:forEach>

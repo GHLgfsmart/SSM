@@ -78,7 +78,15 @@
 											<td class='center'>${var.materials.NAME}</td>
 											<td class='center'>${var.warehouse.WARNAME}</td>
 											<td class='center'>${var.output_put.OPTNAME}</td>
-											<td class='center'>${var.STATE}</td>
+											<c:if test="${var.STATE eq 0}">
+												<td class='center'>检验中</td>
+											</c:if>
+											<c:if test="${var.STATE eq 1}">
+												<td class='center'>已检验</td>
+											</c:if>
+											<c:if test="${var.STATE eq 2}">
+												<td class='center'>不合格</td>
+											</c:if>
 										</tr>
 									
 									</c:forEach>

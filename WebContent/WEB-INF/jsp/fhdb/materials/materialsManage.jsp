@@ -93,7 +93,7 @@
 											<td class='center'>${var.BIANHAO}</td>
 											<td class='center'>${var.BAR_CODE}</td>
 											<td class='center'>${var.NAME}</td>
-											<td class='center'>${var.supplier.NAME}</td>
+											<td class='center'>${var.supplier.SUPNAME}</td>
 											<td class='center'>${var.COUNT}</td>
 											<td class='center'>${var.UNIT}</td>
 											<td class='center'>${var.ENTRY_TIME}</td>

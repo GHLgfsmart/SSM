@@ -301,4 +301,31 @@ public class OutstorageController extends BaseController{
 		return mv;
 	}
 	
+	/**
+	 * @author Mr.Lin
+	 * 选择出库计划
+	 * @param page
+	 * @return
+	 * @throws Exception 
+	 * */
+	@RequestMapping(value="/electOutstoragePage")
+	private ModelAndView electOutstoragePage(Page page) throws Exception {
+		logBefore(logger, Jurisdiction.getUsername()+"列表output_storageList");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();	
+		String keywords = pd.getString("keywords");			//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		pd.put("TYPE", "2");
+		page.setPd(pd);
+		List<Output_storage> list = warehousingService.findByOutput_storageAll(page);
+		mv.setViewName("fhdb/picking/elect_outstorage");
+		mv.addObject("varList", list);
+		mv.addObject("pd", pd);
+		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		return mv;
+	}
+	
 }

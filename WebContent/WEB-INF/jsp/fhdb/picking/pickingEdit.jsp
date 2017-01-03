@@ -232,7 +232,7 @@
 		var outid = "";
 		function matelect(){
 		    jBox.open(
-		        "iframe:<%=basePath%>warehousing/electMaterialsPage.do?STATE=0",
+		        "iframe:<%=basePath%>outstorage/electOutstoragePage.do",
 		        "选择", 750, 400,
 		        {buttons: {}, iframeScrolling: 'yes', showClose: true,
 		            closed:function (){
