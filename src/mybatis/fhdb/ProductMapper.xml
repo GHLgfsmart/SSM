@@ -20,7 +20,7 @@
 				<result column="NOTE" property="NOTE"/>
 			
 			<!-- 物资信息 -->
-				<association property="materials_information" javaType="Materials_information">
+				<association property="materials" javaType="Materials_information">
 					<id column="ID" property="ID"/>
 					<result column="BIANHAO" property="BIANHAO"/>
 					<result column="PINYIN" property="PINYIN"/>
@@ -67,30 +67,4 @@
 			wa.ID LIKE CONCAT(CONCAT(#{pd.ckID}))
 			</if>
 		</select>
-		
-		<!-- 模糊查询产品 -->
-		<!-- <select id="likePage" parameterType="page" resultType="pd">
-			SELECT mi.ID,mi.BIANHAO,mi.NAME,mi.COUNT,mi.UNIT,mi.NOTE from  output_storage os,materials_information mi,warehouse wa 
-				WHERE
-					mi.STATE=1
-				AND
-					os.WAREHOUSE_ID=wa.ID 
-				AND 
-					os.MATERIALS_ID=mi.ID
-			<if test="pd.keywords!= null and pd.keywords != ''">
-				AND 
-				(
-					mi.BIANHAO LIKE CONCAT(CONCAT(#{pd.keywords}))
-						or
-					mi.NAME	LIKE CONCAT(CONCAT(#{pd.keywords}))
-						or
-					mi.COUNT	LIKE CONCAT(CONCAT(#{pd.keywords}))
-						or
-					mi.UNIT	LIKE CONCAT(CONCAT(#{pd.keywords}))
-						or
-					mi.NOTE	LIKE CONCAT(CONCAT(#{pd.keywords}))
-				)
-			</if>
-		</select> -->
-		
 	</mapper>

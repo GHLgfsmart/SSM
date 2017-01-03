@@ -34,7 +34,7 @@
 				<result column="SKIN" property="SKIN"/>
 			</association>
 			<!-- 产品（关联materials_information（物资表）） -->
-			<association property="materials_information" javaType="Materials_information">
+			<association property="materials" javaType="Materials_information">
 				<id column="ID" property="ID"/>
 				<result column="BIANHAO" property="BIANHAO"/>
 				<result column="PINYIN" property="PINYIN"/>
@@ -53,7 +53,7 @@
 			<!-- 调出，调入（关联warehouse（仓库表） -->
 			<association property="warehouse" javaType="Warehouse">
 				<id column="ID" property="ID" />
-				<result column="NAME" property="NAME" />
+				<result column="WARNAME" property="WARNAME" />
 				<result column="SIZE" property="SIZE" />
 				<result column="UPPER_LIMIT" property="UPPER_LIMIT" />
 				<result column="LOWER_LIMIT" property="LOWER_LIMIT" />
@@ -74,7 +74,7 @@
 		</select>
 		<!-- 查询仓库名 -->
 		 <select id="warlist" resultType="pd">
-			select w.ID,w.NAME from warehouse w
+			select w.ID,w.WARNAME from warehouse w
 		</select>
 		
 		<!-- 保存调拨的数据 -->
@@ -85,7 +85,7 @@
 		
 		<!-- 查询调拨单 -->
 		<select id="datalistPage" parameterType="page" resultType="pd">
-			select dr.ID,dr.BusinessDate,dr.BIANHAO,dr.ENTRY_TIME,dr.UPDATE_TIME,dr.DRAWING_INST,dr.INSPECTOR,dr.WAREHOUSE_PUT_ID,dr.WAREHOUSE_OUT_ID,ws.NAME as ru,dr.AUDITOR,dr.STATE,w.NAME as chu,u.USERNAME from drawing dr ,warehouse ws ,warehouse w ,sys_user u  
+			select dr.ID,dr.BusinessDate,dr.BIANHAO,dr.ENTRY_TIME,dr.UPDATE_TIME,dr.DRAWING_INST,dr.INSPECTOR,dr.WAREHOUSE_PUT_ID,dr.WAREHOUSE_OUT_ID,ws.WARNAME as ru,dr.AUDITOR,dr.STATE,w.WARNAME as chu,u.USERNAME from drawing dr ,warehouse ws ,warehouse w ,sys_user u  
 			where
 				dr.WAREHOUSE_OUT_ID=w.ID AND dr.JINGSHUO_ID=u.USER_ID and dr.WAREHOUSE_PUT_ID=ws.ID
 				<if test="pd.keywords!= null and pd.keywords != ''"><!-- 根据编号查询 -->

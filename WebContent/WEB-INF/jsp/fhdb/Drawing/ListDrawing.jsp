@@ -33,10 +33,10 @@
 						
 						<!-- 检索  -->
 						<form action="Drawing/ListDrawing.do" method="post" name="alertForm" id="alertForm">
-							<input type="hidden" name="STATE" id="STATE" value=1>
-							<input type="hidden" name="zt" id="zt" value=0>
+							<input type="hidden" name="sh" id="sh" value=1>
+							<input type="hidden" name="qs" id="qs" value=0>
 							<input type="hidden" name="AUDITOR" id="AUDITOR" value="${Operator}">
-							<input type="hidden" name="qs" id="qs" value="">
+							<input type="hidden" name="qshr" id="qshr" value="">
 							<input type="hidden" name="updatetime" id="updatetime" value="${updatetime}">
 							
 						<table style="margin-top:5px;">
@@ -52,7 +52,7 @@
 								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginStart" id="lastLoginStart"  value="${pd.lastLoginStart}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="最近登录开始"/></td>
 								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginEnd" name="lastLoginEnd"  value="${pd.lastLoginEnd}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="最近登录结束"/></td>
 								<td style="vertical-align:top;padding-left:2px;">
-								 	<select class="chosen-select form-control" name="STATE" id="STATE" data-placeholder="请选择状态" style="vertical-align:top;width: 120px;">
+								 	<select name="STATE" id="STATE" style="vertical-align:top;width: 120px;">
 										<option value="">请选择状态</option>
 										<option value="0">未审核</option>
 										<option value="1">已审核</option>
@@ -60,9 +60,7 @@
 								</td>
 								<c:if test="${QX.cha == 1 }">
 									<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
-									<%-- <c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if> --%>
-									<c:if test="${QX.edit == 1 }"><td style="vertical-align:top;padding-left:10px; color: green;"><b><input type="button" value="审核" onclick="audit();"></b></td></c:if>
-									<c:if test="${QX.edit == 1 }"><td style="vertical-align:top;padding-left:10px; color: red;"><b><input type="button" value="去审" onclick="abolish();"></b></td></c:if>
+									<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="ExcelData();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
 								</c:if>
 							</tr>
 						</table>
@@ -116,9 +114,6 @@
 											<c:if test="${dar.STATE eq 1}">
 												<td class="center" style="color:green;font-size: 12px;"><b>已审核</b></td>
 											</c:if>
-											<%-- <c:if test="${dar.STATE eq 2}">
-												<td class="center" style="color: red; font-size: 12px;"><b>审核不通过</b></td>
-											</c:if> --%>
 											<td class="center">${dar.INSPECTOR}</td>
 											<td class="center">${dar.AUDITOR}</td>
 											<td class="center">${dar.chu}</td>
@@ -137,6 +132,16 @@
 													<c:if test="${QX.del == 1 }">
 													<a class="btn btn-xs btn-danger" onclick="del('${dar.ID}','${dar.STATE }');">
 														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
+													</a>
+													</c:if>
+													<c:if test="${QX.edit == 1 }">
+													<a class="btn btn-xs btn-info" onclick="auditing('${dar.ID}','${dar.STATE}');">
+														<i class="ace-icon fa fa-check-circle bigger-120" title="审核"></i>
+													</a>
+													</c:if>
+													<c:if test="${QX.edit == 1 }">
+													<a class="btn btn-xs btn-info" onclick="abolish('${dar.ID}','${dar.STATE}');">
+														<i class="ace-icon fa fa-times-circle bigger-120" title="去审"></i>
 													</a>
 													</c:if>
 												</div>
@@ -207,6 +212,14 @@
 <script type="text/javascript">
 $(top.hangge());
 
+
+
+//导出excel
+function ExcelData(){
+	var keywords = $("#nav-search-input").val();
+	window.location.href='<%=basePath%>Drawing/Export.do?keywords='+keywords;
+}
+
 //检索
 function searchs(){
 	top.jzts();
@@ -217,7 +230,7 @@ function searchs(){
 function edit(Id,STATE){
 	if (STATE==1) {
 			bootbox.dialog({
-				message: "<span class='bigger-110'>您选中的单据已审核,请去审核后编辑!</span>",
+				message: "<span class='bigger-110'>此单据已审核,请去审核后编辑!</span>",
 				buttons: 			
 				{ "button":{"className":"btn-sm btn-success","label":"确定"}}
 			});
@@ -266,41 +279,41 @@ function add(){
 /**
  * 审核
  */
-function audit() {
- 			var ID = '';
- 			var STATE=$("#STATE").val();
- 			var AUDITOR=$("#AUDITOR").val();
- 			var UPDATE_TIME=$("#updatetime").val();
- 			for(var i=0;i < document.getElementsByName('ID').length;i++)
- 			{
- 				  if(document.getElementsByName('ID')[i].checked){
- 				  	if(ID=='') ID += document.getElementsByName('ID')[i].value;
- 				  	else ID += ',' + document.getElementsByName('ID')[i].value;
- 				  
- 				  }
- 			}
- 			
-	window.location.href='<%=basePath%>Drawing/Audit.do?ID='+ID+'&STATE='+STATE+'&AUDITOR='+AUDITOR+'&UPDATE_TIME='+UPDATE_TIME;
+function auditing(ID,STATE) {
+	var AUDITOR=$("#AUDITOR").val();
+ 	var UPDATE_TIME=$("#updatetime").val();
+ 	var sh=$("#sh").val();
+ 	if (STATE==1) {
+ 			bootbox.dialog({
+					message: "<span class='bigger-110'>此单据已审核,不能重复审核!</span>",
+					buttons: 			
+					{ "button":{"className":"btn-sm btn-success","label":"确定"}}
+				});
+			return;
+		}else{
+			top.jzts();
+ 			window.location.href='<%=basePath%>Drawing/Audit.do?ID='+ID+'&STATE='+sh+'&AUDITOR='+AUDITOR+'&UPDATE_TIME='+UPDATE_TIME;
+ 		}
 }
 
 /**
  * 去审
  */
- function abolish() {
-	 			var ID = '';
-	 			var STATE=$("#zt").val();
-	 			var AUDITOR=$("#qs").val();
-	 			var UPDATE_TIME=$("#updatetime").val();
-	 			for(var i=0;i < document.getElementsByName('ID').length;i++)
-	 			{
-	 				  if(document.getElementsByName('ID')[i].checked){
-	 				  	if(ID=='') ID += document.getElementsByName('ID')[i].value;
-	 				  	else ID += ',' + document.getElementsByName('ID')[i].value;
-	
-	 				  }
-	 			}
-
-		window.location.href='<%=basePath%>Drawing/Abolish.do?ID='+ID+'&STATE='+STATE+'&AUDITOR='+AUDITOR+'&UPDATE_TIME='+UPDATE_TIME;
+ function abolish(ID,STATE) {
+	 var AUDITOR=$("#qshr").val();
+	 var UPDATE_TIME=$("#updatetime").val();
+	 var qs=$("#qs").val();
+	 if (STATE==0) {
+			bootbox.dialog({
+					message: "<span class='bigger-110'>此单据已去核,不能重复去审!</span>",
+					buttons: 			
+					{ "button":{"className":"btn-sm btn-success","label":"确定"}}
+				});
+			return;
+		}else{
+			top.jzts();
+ 			window.location.href='<%=basePath%>Drawing/Abolish.do?ID='+ID+'&STATE='+qs+'&AUDITOR='+AUDITOR+'&UPDATE_TIME='+UPDATE_TIME;
+ 		}
 	}
 
 /**
@@ -359,13 +372,6 @@ function audit() {
  		}
  	});
  }
-
-
-//导出excel
-function toExcel(){
-	var keywords = $("#nav-search-input").val();
-	window.location.href='<%=basePath%>Drawing/ExportData.do?keywords='+keywords;
-}
 
 $(function() {
 	//日期框

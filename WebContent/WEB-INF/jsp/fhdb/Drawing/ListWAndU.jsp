@@ -60,7 +60,7 @@
 								<td style="padding-right: 50px;">
 							调出仓库:<select  name="WAREHOUSE_OUT_ID" id="WAREHOUSE_OUT_ID" style="width: 140px;">
 										<c:forEach items="${ListWA}" var="wa">
-											<option value="${wa.ID }">${wa.NAME }</option>
+											<option value="${wa.ID }">${wa.WARNAME }</option>
 										</c:forEach>
 								   </select>
 								   <c:if test="${QX.cha == 1 }">
@@ -71,7 +71,7 @@
 							调入仓库:<select name="WAREHOUSE_PUT_ID" id="WAREHOUSE_PUT_ID" style="width: 180px;" >
 										<option value=""></option>
 										<c:forEach items="${ListWA}" var="lw">
-											<option value="${lw.ID }">${lw.NAME }</option>
+											<option value="${lw.ID }">${lw.WARNAME }</option>
 										</c:forEach>
 								   </select>
 								</td>
@@ -219,26 +219,26 @@ function save(){
 		$("#WAREHOUSE_PUT_ID").focus();
 	return false;
 	}
- 			var ID = '';
- 			for(var i=0;i < document.getElementsByName('MATERIALS_ID').length;i++)
- 			{
- 				  if(document.getElementsByName('MATERIALS_ID')[i].checked){
- 				  	if(ID=='') ID += document.getElementsByName('MATERIALS_ID')[i].value;
- 				  	else ID += ',' + document.getElementsByName('MATERIALS_ID')[i].value;
- 				  }
- 			}
- 			if(ID==''){
- 				bootbox.dialog({
- 					message: "<span class='bigger-110'>您没有选择任何内容!</span>",
- 					buttons: 			
- 					{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
- 				});
- 				return;
- 			}else{
- 				$("#Form").submit();
- 				$("#zhongxin").hide();
- 				$("#zhongxin2").show();
- 			}
+ 	var MATERIALS_ID = "";
+ 	for(var i=0;i < document.getElementsByName('MATERIALS_ID').length;i++)
+ 		{
+ 				if(document.getElementsByName('MATERIALS_ID')[i].checked){
+ 				  if(MATERIALS_ID=='') MATERIALS_ID += document.getElementsByName('MATERIALS_ID')[i].value;
+ 				  else MATERIALS_ID += ',' + document.getElementsByName('MATERIALS_ID')[i].value;
+ 				 }
+ 		 }
+ 		if(MATERIALS_ID==''){
+ 			bootbox.dialog({
+ 				message: "<span class='bigger-110'>您没有选择任何内容!</span>",
+ 				buttons: 			
+ 				{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+ 			});
+ 			return;
+ 		}else{
+ 			$("#Form").submit();
+ 			$("#zhongxin").hide();
+ 			$("#zhongxin2").show();
+ 		}
 }
 //搜索此仓库下的产品
 /* var WAREHOUSE_OUT_ID = ""; */
