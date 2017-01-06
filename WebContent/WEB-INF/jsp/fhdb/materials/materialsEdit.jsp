@@ -15,6 +15,7 @@
 		<link rel="stylesheet" href="static/js/common/jbox.css" />
 		<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
 		<script type="text/javascript" src="static/js/common/brief_code.js"></script><!-- 引用拼音方法JS -->
+		<link rel="stylesheet" type="text/css" href="static/ace/css/build.css"><!-- 洪青青     复选框  必须要有<link rel="stylesheet" href="static/ace/css/bootstrap.css" /> <link rel="stylesheet" href="static/ace/css/font-awesome.css" />-->
 		<script type="text/javascript">
 			//查看拼音首字母缩写
 			function query(){  
@@ -25,6 +26,7 @@
 			}
 
 			function getNowFormatDate() {
+				moneytoo();
 			    var date = new Date();
 			    var seperator1 = "-";
 			    var seperator2 = ":";
@@ -98,12 +100,12 @@
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">供应商:</td>
 								<td>
-									<input type="hidden" id="CUS_ID" name="CUS_ID" />
+									<input type="hidden" id="CUS_ID" name="CUS_ID" value="${pd.CUS_ID}" />
  									<input type="text" name="supname" id="supname" value="${pd.SUPNAME}" maxlength="30" readonly placeholder="这里选择供应商" title="供应商" style="width:80%;"/>
 									<button class="btn btn-mini radius" onclick="elect();" type="button">选择</button>
 								</td>
 								<td style="width:79px;text-align: right;padding-top: 13px;">商品数量:</td>
-								<td><input type="text" name="COUNT" id="COUNT" value="${pd.COUNT}" maxlength="30" placeholder="这里输入商品数量" title="商品数量" style="width:98%;"/></td>
+								<td><input type="text" onblur="moneytoo()" name="COUNT" id="COUNT" value="${pd.COUNT }" maxlength="30" placeholder="这里输入商品数量" title="商品数量" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">单位:</td>
@@ -129,6 +131,37 @@
 									<select id="STATE" name="STATE">
 										<option value="0" selected>未入库</option>
 									</select>
+								</td>
+							</tr>
+							<tr>
+								<td style="width:79px;text-align: right;padding-top: 13px;">费用:</td>
+								<td colspan="3">
+								<fieldset style="float: left; padding-right: 25px;">
+								<div class="checkbox checkbox-success">
+									<input class="styled styled" id="STORAGE" name="STORAGE" value="${pd1.STORAGE}" type="checkbox" onclick="return false;" checked>
+									<label for="checkbox10">
+										存储费（<span style="color: #438EB9;">每<span style="color: red;" id="money">${pd1.STORAGE }</span>  &nbsp;共<span style="color: red;" id="moneys">0</span> </span>）/<i class="ace-icon fa fa-cny red"></i>
+									</label>
+								</div>
+								</fieldset>
+								<fieldset style="padding-right: 25px;">
+								<div class="checkbox checkbox-success">
+									<input type="checkbox" class="styled" id="RICHARD" name="RICHARD" value="${pd1.RICHARD}" checked>
+									<label for="inlineCheckbox2"> 理货费（<span style="color: #438EB9;">每<span style="color: red;" id="money">${pd1.RICHARD }</span>  &nbsp;共<span style="color: red;" id="moneys1">0</span> </span>）/<i class="ace-icon fa fa-cny red"></i></label>
+								</div> 
+								</fieldset>
+								<fieldset style="float: left; padding-right: 25px;">
+								<div class="checkbox checkbox-success">
+									<input type="checkbox" class="styled" id="LOADING" name="LOADING" value="${pd1.LOADING}" checked>
+									<label for="inlineCheckbox2"> 装车费 （<span style="color: #438EB9;">每<span style="color: red;" id="money">${pd1.LOADING }</span>  &nbsp;共<span style="color: red;" id="moneys2">0</span> </span>）/<i class="ace-icon fa fa-cny red"></i></label>
+								</div> 
+								</fieldset>
+								<fieldset style="float: left;">
+								<div class="checkbox checkbox-success">
+									<input type="checkbox" class="styled" id="UNLOADING" name="UNLOADING" value="${pd1.UNLOADING}" checked>
+									<label for="inlineCheckbox2"> 卸车费 （<span style="color: #438EB9;">每<span style="color: red;" id="money">${pd1.UNLOADING }</span>  &nbsp;共<span style="color: red;" id="moneys3">0</span> </span>）/<i class="ace-icon fa fa-cny red"></i></label>
+								</div> 
+								</fieldset>
 								</td>
 							</tr>
 							<tr>
@@ -168,6 +201,50 @@
 	<script type="text/javascript" src="static/js/common/jquery.jBox-zh-CN.js"></script>
 		<script type="text/javascript">
 		$(top.hangge());
+		//洪青青-----计算费用
+		function moneytoo(){
+			var COUNT=$("#COUNT").val();
+			var name=parseInt(COUNT);
+			if(!isNaN(name)){
+				 var STORAGE =eval('${pd1.STORAGE}') * name;//存储费
+				 var RICHARD =eval('${pd1.RICHARD}') * name;//理货费
+				 var LOADING =eval('${pd1.LOADING}') * name;//装车费
+				 var UNLOADING =eval('${pd1.UNLOADING}') * name;//卸车费
+				 $("#STORAGE").val(STORAGE);
+				 $("#RICHARD").val(RICHARD);
+				 $("#LOADING").val(LOADING);
+				 $("#UNLOADING").val(UNLOADING);
+				 if((STORAGE+"").indexOf(".") > 0 ){
+					 window.document .getElementById ("moneys").innerHTML=STORAGE;
+				 }else{
+					 window.document .getElementById ("moneys").innerHTML=STORAGE+".00";
+				 }
+				 if((RICHARD+"").indexOf(".") > 0 ){
+					 window.document .getElementById ("moneys1").innerHTML=RICHARD;
+				 }else{
+					 window.document .getElementById ("moneys1").innerHTML=RICHARD+".00";
+				 }
+				 if((LOADING+"").indexOf(".") > 0 ){
+					 window.document .getElementById ("moneys2").innerHTML=LOADING;
+				 }else{
+					 window.document .getElementById ("moneys2").innerHTML=LOADING+".00";
+				 }
+				 if((UNLOADING+"").indexOf(".") > 0 ){
+					 window.document .getElementById ("moneys3").innerHTML=UNLOADING;
+				 }else{
+					 window.document .getElementById ("moneys3").innerHTML=UNLOADING+".00";
+				 }
+			}else if(COUNT != null && COUNT !=''){
+				$("#COUNT").tips({
+					side:3,
+		            msg:'必须是数字',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#COUNT").focus();
+				return false;
+			}
+		}
 		//保存
 		function save(){
 			
@@ -237,11 +314,11 @@
 			$("#zhongxin2").show();
 		}
 		/**选择供应商*/
-		var supplier = "";
-		var supid = "";
+		var supplier =  $("#supname").val();
+		var supid = $("#CUS_ID").val();
 		function elect(){
 		    jBox.open(
-		        "iframe:<%=basePath%>warehousing/testPage.do",
+		        "iframe:<%=basePath%>warehousing/SClist.do",
 		        "选择", 750, 400,
 		        {buttons: {}, iframeScrolling: 'yes', showClose: true,
 		            closed:function (){
@@ -250,27 +327,12 @@
 		                    location.reload();
 		                }*/
 		                $("#supname").val(supplier);
-		                //$("#CUS_ID").val(supid);
-		                $("#CUS_ID").val("001");
+		                $("#CUS_ID").val(supid);
 		            }
 		        }
 		    );
 		} 
-		<%-- 
-		function elect(){
-			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="资料";
-			 diag.URL = '<%=basePath%>warehousing/testPage.do';
-			 diag.Width = 700;
-			 diag.Height = 530;
-			 diag.CancelEvent = function(){ //关闭事件
-				diag.close();
-			 };
-			 diag.show();
-		}
-		--%>
+		
 		</script>
 </body>
 </html>

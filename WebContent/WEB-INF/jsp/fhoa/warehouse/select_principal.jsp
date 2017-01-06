@@ -31,7 +31,7 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="warehousing/SClist.do" method="post" name="Form" id="Form">
+						<form action="warehousing/testPage.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
@@ -53,11 +53,12 @@
 									<th class="center" style="width:35px;">
 									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
 									</th>
-									<th class="center" style="width:50px;">序号</th>
-									<th class="center">名称</th>
-									<th class="center">类型</th>
-									<th class="center">联系人</th>
-									<th class="center">联系电话</th>
+									<th class="center" style="width:50px;">编号</th>
+									<th class="center">姓名</th>
+									<th class="center">职位</th>
+									<th class="center">联系方式</th>
+									<th class="center">供应商</th>
+									<th class="center">供应商</th>
 								</tr>
 							</thead>
 													
@@ -71,10 +72,11 @@
 												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
 											</td>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class='center'><label><input type='hidden' name='name' value="${var.SUPNAME}" class="ace" /></label>${var.SUPNAME}</td>
-											<td class='center'> ${var.NAME }</td>
-											<td class='center'>${var.CONTACT}</td>
-											<td class='center'>${var.PHONE}</td>
+											<td class='center'>${var.BIANHAO}</td>
+											<td class='center'>${var.BAR_CODE}</td>
+											<td class='center'><label><input type='hidden' name='name' value="${var.NAME}" class="ace" /></label>${var.NAME}</td>
+											<td class='center'>${var.supplier.NAME}</td>
+											<td class='center'>${var.supplier.NAME}</td>
 										</tr>
 									
 									</c:forEach>
@@ -86,8 +88,8 @@
 							<table style="width:100%;">
 								<tr>
 									<td style="vertical-align:top;">
-										<a class="btn btn-sm btn-success" onclick="elect('确定要选中数据吗?');">选择</a>
-										<a class="btn btn-sm btn-danger" onclick="window.parent.window.jBox.close();">取消</a>
+										<a class="btn btn-sm btn-success" onclick="elect('确定要删除选中的数据吗?');">选择</a>
+										<a class="btn btn-sm btn-danger" onclick="top.Dialog.close();">取消</a>
 									</td>
 									<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 								</tr>

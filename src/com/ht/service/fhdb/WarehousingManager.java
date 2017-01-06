@@ -227,6 +227,12 @@ public interface WarehousingManager {
 	 * @throws Exception
 	 * */
 	public PageData findBypickingId(PageData pd) throws Exception;
-	
-	
+	/**
+	 * @author Su
+	 * IQC查询出入库数量
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public int cknumber(PageData pd) throws Exception;
 }

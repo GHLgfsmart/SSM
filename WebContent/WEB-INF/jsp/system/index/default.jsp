@@ -22,11 +22,12 @@
 </head>
 <!-- <body class="no-skin"> -->
 <body class="gray-bg" style="background-color: white;">
+		<form action="<%=basePath%>login_default.do" method="post" id="defaultForm" name="defaultForm">
             <div class="ibox float-e-margins" style="width: 60%;height:268px;float: left;margin-top: 12px;border:7px #E7EAEC solid;margin-left: 12px;">
                 <div class="ibox-title">
                     <h5 style="color: #438EB9;">-------公告栏-------</h5>
                     <div class="ibox-tools">
-                        <a class="collapse-link">
+                        <a class="collapse-link" onclick="searchs();">
                             <i class="fa fa-chevron-up"></i>
                         </a>
                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -53,7 +54,6 @@
                                 </p>
 
                                 <p style="text-indent:2em; padding:0px; margin:0px; ">${pd.MSGCON }</p>
-
                                 <p>
 									<svg class="peity" height="16" width="64">
                                         <polygon fill="#1ab394" points="0 15 0 10.5 1.7777777777777777 0.5 3.5555555555555554 5.5 5.333333333333333 7.166666666666666 7.111111111111111 0.5 8.88888888888889 8.833333333333332 10.666666666666666 3.833333333333332 12.444444444444443 10.5 14.222222222222221 12.166666666666666 16 0.5 17.77777777777778 2.166666666666666 19.555555555555554 3.833333333333332 21.333333333333332 8.833333333333332 23.11111111111111 7.166666666666666 24.888888888888886 13.833333333333334 26.666666666666664 12.166666666666666 28.444444444444443 0.5 30.22222222222222 7.166666666666666 32 8.833333333333332 33.77777777777778 3.833333333333332 35.55555555555556 12.166666666666666 37.33333333333333 3.833333333333332 39.11111111111111 3.833333333333332 40.888888888888886 10.5 42.666666666666664 7.166666666666666 44.44444444444444 12.166666666666666 46.22222222222222 10.5 48 10.5 49.77777777777777 12.166666666666666 51.55555555555555 13.833333333333334 53.33333333333333 5.5 55.11111111111111 0.5 56.888888888888886 2.166666666666666 58.666666666666664 2.166666666666666 60.44444444444444 10.5 62.22222222222222 3.833333333333332 64 8.833333333333332 64 15"></polygon>
@@ -85,6 +85,7 @@
                     </div>
                 </div>
             </div>
+            </form>
 <style type="text/css">
 #bodyC { font-size:12px; line-height:normal; margin-left:65%; margin-right:auto; padding:10px; width:300px; height:400px; text-align:left; position:relative; }
 #bodyC a { color:#0E6DBC; }
@@ -393,6 +394,11 @@ function openMusic(clock123,repeat,time,mid,text){
 	<script src="static/ace/js/ace/ace.js"></script>
 	<script type="text/javascript">
 		$(top.hangge());
+		function searchs(){
+			alert()
+			top.jzts();
+			$("#defaultForm").submit();
+		}
 	</script>
 </body>
 </html>

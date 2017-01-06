@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WSMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		warehouse
+	</sql>
+	<sql id="userTableName">
+		SYS_USER
+	</sql>
+	<sql id="osTableName">
+		output_storage
+	</sql>
+	<!-- 字段 -->
+	<sql id="Field">
+		ID,
+		WARNAME,
+		USER_ID,
+		SIZE,
+		UPPER_LIMIT,
+		LOWER_LIMIT,
+		PRACTICAL,
+		ADDRESS,
+		ENTRY_TIME,
+		UPDATE_TIME,
+		NOTE,
+		STATE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ID},
+		#{WARNAME},
+		#{USER_ID},
+		#{SIZE},
+		#{UPPER_LIMIT},
+		#{LOWER_LIMIT},
+		#{PRACTICAL},
+		#{ADDRESS},
+		#{ENTRY_TIME},
+		#{UPDATE_TIME},
+		#{NOTE},
+		#{STATE}
+	</sql>
+	
+	<!-- 列表 -->
+	 <select id="datalistPage" parameterType="Page" resultType="pd">
+		select	w.ID,
+				w.WARNAME,
+				w.SIZE,
+				w.UPPER_LIMIT,
+				w.LOWER_LIMIT,
+				w.PRACTICAL,
+				w.ADDRESS,
+				w.ENTRY_TIME,
+				w.UPDATE_TIME,
+				w.NOTE,
+				w.STATE,
+				user.USER_ID,
+				user.USERNAME,
+				user.PHONE
+		from 
+		<include refid="tableName"></include> w
+		,
+		<include refid="userTableName"></include> user
+		where w.USER_ID = user.USER_ID
+  		<if test="pd.keywords != null and pd.keywords != ''">
+			and
+				(
+				 NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				 or
+				 ADDRESS LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+		order by w.ENTRY_TIME desc
+	</select> 
+	<!-- 通过id获取数据 -->
+	
+	<select id="findById" parameterType="pd" resultType="pd">
+	select
+	w.ID,
+				w.WARNAME,
+				w.SIZE,
+				w.UPPER_LIMIT,
+				w.LOWER_LIMIT,
+				w.PRACTICAL,
+				w.ADDRESS,
+				w.ENTRY_TIME,
+				w.UPDATE_TIME,
+				w.NOTE,
+				w.STATE,user.USERNAME
+	from
+	<include refid="tableName"></include> w,<include refid="userTableName"></include> user
+	where
+		ID = #{ID} and w.USER_ID = user.USER_ID
+	</select>
+	
+	<!-- 新增仓库 -->
+	<insert id="saveWare" parameterType="pd">
+		insert into 
+		<include refid="tableName"></include>
+		( <include refid="Field"></include> )
+		values
+		(<include refid="FieldValue"></include>)
+	</insert>
+	
+	<!-- 修改仓库 -->
+	<update id="editWare" parameterType="pd">
+		update 
+		<include refid="tableName"></include>
+		set WARNAME				=#{WARNAME},
+			USER_ID				=#{USER_ID},
+			SIZE				=#{SIZE},
+			UPPER_LIMIT			=#{UPPER_LIMIT},
+			LOWER_LIMIT			=#{LOWER_LIMIT},
+			PRACTICAL			=#{PRACTICAL},
+			ADDRESS				=#{ADDRESS},
+			ENTRY_TIME			=#{ENTRY_TIME},
+			UPDATE_TIME			=#{UPDATE_TIME},
+			NOTE				=#{NOTE},
+			STATE				=#{STATE}
+		where
+			ID		=	#{ID}
+		
+	</update>
+	<!-- 修改仓库 -->
+	<update id="editSTATE" parameterType="pd">
+		update 
+		<include refid="tableName"></include>
+		set
+			STATE				=#{STATE}
+		where
+			ID		=	#{ID}
+		
+	</update>
+	<!-- 获取总数 -->
+	<select id="getCount" parameterType="pd" resultType="int">
+		select 
+			count(ID)
+		from 
+		<include refid="osTableName"></include>
+		where  WAREHOUSE_ID=#{ID}
+	</select>
+	<!-- 删除仓库 -->
+	<delete id="deleteWare" parameterType="pd" flushCache="false">
+		delete from
+		<include refid="tableName"></include>
+		where
+			ID = #{ID}
+	</delete>
+	
+	<!-- 仓库列表（全部） -->
+	<select id="listWare" parameterType="pd" resultType="pd">
+		select	w.WARNAME,
+				u.USERNAME,
+				w.SIZE,
+				w.UPPER_LIMIT,
+				w.LOWER_LIMIT,
+				w.PRACTICAL,
+				w.ADDRESS,
+				w.ENTRY_TIME,
+				w.UPDATE_TIME,
+				w.NOTE,
+				w.STATE
+		from 
+		<include refid="tableName"></include> w
+		,
+		<include refid="userTableName"></include> u
+		where w.USER_ID = u.USER_ID
+		order by u.LAST_LOGIN desc
+		
+	</select>
+</mapper>

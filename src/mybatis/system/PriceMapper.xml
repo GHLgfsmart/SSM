@@ -43,9 +43,17 @@
 		select 
 			<include refid="Field"></include>
 		from 
-			<include refid="tableName"></include>   
-		where PRICE_ID =#{PRICE_ID}
-		
+			<include refid="tableName"></include> 
+		<where>
+		<choose>
+			<when test="toos=='toos'">
+				STATE='0'
+			</when>
+			<otherwise>
+			PRICE_ID =#{PRICE_ID}
+			</otherwise>
+		</choose>  
+		</where>
 	</select> 
 	<!-- 列表 -->
 	<select id="mlistPage" parameterType="page" resultType="pd" >

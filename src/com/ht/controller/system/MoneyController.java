@@ -9,11 +9,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import net.sf.json.JSONArray;
-
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +21,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ht.controller.base.BaseController;
 import com.ht.entity.Page;
 import com.ht.service.fhoa.DepartmentManager;
+import com.ht.service.system.MoneyManager;
 import com.ht.util.AppUtil;
+import com.ht.util.DateUtil;
 import com.ht.util.Jurisdiction;
 import com.ht.util.PageData;
 
@@ -37,7 +36,10 @@ public class MoneyController extends BaseController {
 	
 	String menuUrl = "money/listAll.do"; //菜单地址(权限用)
 	@Resource(name="departmentService")
-	private DepartmentManager departmentService;	
+	private DepartmentManager departmentService;
+	@Resource(name="moneyService")
+	private MoneyManager moneyService;
+	
 	/**
 	 * 删除
 	 * @param DEPARTMENT_ID
@@ -89,21 +91,13 @@ public class MoneyController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		String keywords = pd.getString("keywords");					//检索条件
-		if(null != keywords && !"".equals(keywords)){
-			pd.put("keywords", keywords.trim());
-		}
-		String DEPARTMENT_ID = null == pd.get("DEPARTMENT_ID")?"":pd.get("DEPARTMENT_ID").toString();
-		if(null != pd.get("id") && !"".equals(pd.get("id").toString())){
-			DEPARTMENT_ID = pd.get("id").toString();
-		}
-		pd.put("DEPARTMENT_ID", DEPARTMENT_ID);					//上级ID
+		pd.put("MO_TIME", pd.getString("MO_TIME"));
+		pd.put("boos", pd.getString("boos"));
 		page.setPd(pd);
-		List<PageData>	varList = departmentService.list(page);	//列出Dictionaries列表
-		mv.addObject("pd", departmentService.findById(pd));		//传入上级所有信息
-		mv.addObject("DEPARTMENT_ID", DEPARTMENT_ID);			//上级ID
+		List<PageData>	varList = moneyService.listMoneys(page);	//列出moneyService列表
 		mv.setViewName("system/money/money_list");
 		mv.addObject("varList", varList);
+		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());				//按钮权限
 		return mv;
 	}
@@ -114,21 +108,15 @@ public class MoneyController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value="/listAll")
-	public ModelAndView listAllDepartment(Model model,String DEPARTMENT_ID)throws Exception{
+	public ModelAndView listAllDepartment()throws Exception{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
+		String time= DateUtil.getTime().toString();
+		String arr[]=time.split("-");
 		pd = this.getPageData();
-		try{
-			JSONArray arr = JSONArray.fromObject(departmentService.listAllDepartment("0"));
-			String json = arr.toString();
-			json = json.replaceAll("DEPARTMENT_ID", "id").replaceAll("PARENT_ID", "pId").replaceAll("NAME", "name").replaceAll("subDepartment", "nodes").replaceAll("hasDepartment", "checked").replaceAll("treeurl", "url");
-			model.addAttribute("zTreeNodes", json);
-			mv.addObject("DEPARTMENT_ID",DEPARTMENT_ID);
-			mv.addObject("pd", pd);	
-			mv.setViewName("system/money/money_ztree");
-		} catch(Exception e){
-			logger.error(e.toString(), e);
-		}
+		pd.put("MO_TIME", arr[0]+'-'+arr[1]);
+		mv.setViewName("system/money/money_ztree");
+		mv.addObject("pd", pd);
 		return mv;
 	}
 	 /**去修改页面

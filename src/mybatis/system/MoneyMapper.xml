@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MoneyMapper">
+	
+<!-- 	物质表名 -->
+	<sql id="tableName">
+		materials_information
+	</sql>
+	<!-- 费用表名 -->
+	<sql id="moneyTableName">
+		money
+	</sql>
+	<!-- 供应商表 -->
+	<sql id="S_C_TableName">
+		supplier_customer
+	</sql>
+	<!-- 分类表  -->
+	<sql id="C_C_TableName">
+		customer_categories
+	</sql>
+	<!-- 	费用字段 -->
+	<sql id="Field">
+		ID,
+		PRODUCT_ID,
+		MO_TIME,
+		MONEY,
+		STORAGE_STATE,
+		RICHARD_STATE,
+		LOADING_STATE,
+		UNLOADING_STATE
+	</sql>
+	<!-- 	费用字段值 -->
+	<sql id="FieldValue">
+		#{ID},
+		#{PRODUCT_ID},
+		#{MO_TIME},
+		#{MONEY},
+		#{STORAGE_STATE},
+		#{RICHARD_STATE},
+		#{LOADING_STATE},
+		#{UNLOADING_STATE}
+		
+	</sql>
+<!-- 	新增公告栏 -->
+	<insert id="saveU" parameterType="pd" >
+		insert into <include refid="tableName"></include> (
+			<include refid="Field"></include>
+		) values (
+			<include refid="FieldValue"></include>
+		)
+	</insert>
+	<!-- 通过MSGID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd" >
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>   
+		
+	</select> 
+	<!-- 用户列表 -->
+	<select id="mlistPage" parameterType="page" resultType="pd" >
+		select  ma.ID maID,
+		ma.BIANHAO,
+		ma.NAME maNAME,
+		ma.CUS_ID,
+		ma.COUNT,
+		m.ID mID,
+		m.PRODUCT_ID,
+		m.MO_TIME,
+		m.MONEY,
+				sc.ID scID,
+		sc.SUPNAME,
+		cc.ID ccID,
+		cc.NAME ccNAME
+		from <include refid="tableName"></include> ma,<include refid="moneyTableName"></include> m,
+			 <include refid="S_C_TableName"></include> sc,<include refid="C_C_TableName"></include> cc
+			 where ma.ID = m.PRODUCT_ID and ma.CUS_ID = sc.ID and sc.CATEGORIES_ID=cc.ID
+			 <choose>
+			<when test="pd.boos=='true'">
+			and m.MO_TIME &gt;=CONCAT(#{pd.MO_TIME},'-01-01 00:00:00') and m.MO_TIME &lt;= CONCAT(#{pd.MO_TIME},'-06-30 23:59:59')
+			</when>
+			<when test="pd.boos=='false'"> 
+			and m.MO_TIME &gt;=#{pd.MO_TIME}'-07-01 00:00:00' and m.MO_TIME &lt;= #{pd.MO_TIME}'-12-30 23:59:59'
+			</when>
+			<otherwise>
+			and m.MO_TIME LIKE CONCAT(CONCAT('', #{pd.MO_TIME}),'%')
+			</otherwise>
+		</choose>
+	</select>
+	<!-- 修改 -->
+	<update id="editU" parameterType="pd" >
+		<!-- update  <include refid="tableName"></include>
+			set MSGTITLE 					= #{MSGTITLE},
+				MSGCON 				= #{MSGCON}
+				where MSGID      =#{MSGID} -->
+	</update>
+	
+	<!-- 删除用-->
+	<delete id="deleteU" parameterType="pd" flushCache="false">
+		delete from <include refid="tableName"></include>
+		
+	</delete>
+	<!-- 批量删除 -->
+	<delete id="deleteAllU" parameterType="String" >
+		delete from <include refid="tableName"></include>
+		where 
+			MSGID in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+	</delete>
+</mapper>

@@ -34,7 +34,7 @@ a:hover{
  text-decoration:underline;  /*鼠标放上去有下划线*/
 }
 </style>
-<body class="no-skin">
+<body class="no-skin" onload="onChecks()">
 
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
@@ -62,20 +62,19 @@ a:hover{
 								<td style="vertical-align:top;padding-left:2px;">
 								 	<select name="state" id="state" style="vertical-align:top;width: 120px;">
 										<option value="">请选择状态</option>	
-		 								<option value="0">未审核</option>
-		 								<option value="1">通过</option>
-		 								<option value="2">未通过</option>
+		 								<option value="0">未审</option>
+		 								<option value="1">已审</option>
 								  	</select>
 								</td>
+								<c:if test="${QX.cha == 1 }">
 								<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
-								<%-- <td><button onclick="shenHe('${inventory.ID}')">审核</button></td>
-								<td><button onclick="quShen('${inventory.ID}')">去审</button></td> --%>
-								<!-- <td><button onclick="windowprint()">报表</button></td> -->
+								</c:if>
 							</tr>
 						</table>
 						<!-- 检索  -->
 		<div id="bb">
-						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
+						<table id="simple-table" class="table table-striped table-bordered table-hover"  
+				             style="margin-top:5px;">
 							<thead>
 								<tr>
 									<th class="center" style="width:35px;">
@@ -102,78 +101,62 @@ a:hover{
 							<!-- 开始循环 -->	
 				    		<c:choose>
 								<c:when test="${not empty inventoryList}">
+								 <c:if test="${QX.cha == 1 }">
 									<c:forEach items="${inventoryList}" var="inventory" varStatus="vs">
-										<input type="hidden" name="ID" id="ID" value="${pd.ID }"/>		
-										<tr>
+										<input type="hidden" name="ID" id="ID" value="${pd.ID }"/>
+										<input type="hidden" name="MATERIALS_ID" id="MATERIALS_ID" value="${inventory.MATERIALS_ID }"/>
+										<tr id="t${vs.index}">
 											<td class='center' style="width: 30px;">
-												<c:if test="${user.USERNAME != 'admin'}"><label><input type='checkbox' name='ids' value="${inventory.ID }" id="${inventory.BIANHAO }" alt="${inventory.ADUDITOR }" title="${inventory.MANY }" class="ace"/><span class="lbl"></span></label></c:if>
+												<c:if test="${user.USERNAME != 'admin'}"><label><input type='checkbox' name='ids' value="${inventory.ID }" title="${inventory.STATE }" class="ace"/><span class="lbl"></span></label></c:if>
 												<c:if test="${user.USERNAME == 'admin'}"><label><input type='checkbox' disabled="disabled" class="ace" /><span class="lbl"></span></label></c:if>
 											</td>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
 											<td class="center">${inventory.BIANHAO }</td>
 											<td class="center">${inventory.INSPECTOR }</td>
 											<td class="center">${inventory.PRO_NAME }</td>
-											<c:if test="${pd.username != null}">
-												<td class="center">
-													<c:if test="${inventory.STATE == 0}">
-														<a href="<%=basePath%>inventory/yes.do?ID=${inventory.ID}&AUDITOR=${pd.username }"><font color="blue">YES</font></a><B>/</B>
-														<a href="<%=basePath%>inventory/no.do?ID=${inventory.ID}&AUDITOR=${pd.username }"><font color="red">NO</font></a>
-													</c:if>
-													<c:if test="${inventory.STATE == 1}">
-														<font>通过</font><B>/</B>
-														<a href="<%=basePath%>inventory/quShen.do?ID=${inventory.ID}&AUDITOR=${pd.username }"><font color="red">去审</font></a>
-														<%-- <a href="#" onclick="javascript:quShen('${inventory.ID}','${pd.username}')"><font color="red">去审</font></a> --%>
-													</c:if>
-													<c:if test="${inventory.STATE == 2}">
-														<font>未通过</font><B>/</B>
-														<a href="<%=basePath%>inventory/yes.do?ID=${inventory.ID}&AUDITOR=${pd.username }"><font color="blue">通过</font></a>
-													</c:if>
-												</td>
-											</c:if>
-											<c:if test="${pd.username == null }">
-												<td class="center">
-													<c:if test="${inventory.STATE == 0}">
-														<a href="<%=basePath%>inventory/yes.do?ID=${inventory.ID}&AUDITOR=${inventory.AUDITOR}"><font color="blue">YES</font></a><B>/</B>
-														<a href="<%=basePath%>inventory/no.do?ID=${inventory.ID}&AUDITOR=${inventory.AUDITOR}"><font color="red">NO</font></a>
-													</c:if>
-													<c:if test="${inventory.STATE == 1}">
-														<font>通过</font><B>/</B>
-														<a href="<%=basePath%>inventory/quShen.do?ID=${inventory.ID}&AUDITOR=${inventory.AUDITOR}"><font color="red">去审</font></a>
-														<%-- <a href="#" onclick="javascript:quShen('${inventory.ID}','${pd.username}')"><font color="red">去审</font></a> --%>
-													</c:if>
-													<c:if test="${inventory.STATE == 2}">
-														<font>未通过</font><B>/</B>
-														<a href="<%=basePath%>inventory/yes.do?ID=${inventory.ID}&AUDITOR=${inventory.AUDITOR}"><font color="blue">通过</font></a>
-													</c:if>
-												</td>
-											</c:if>
+											<td class="center">
+												<c:if test="${inventory.STATE == 0}">
+													<B><font color="red">未审</font></B>
+												</c:if>
+												<c:if test="${inventory.STATE == 1}">
+													<B><font color="green">已审</font></B>
+												</c:if>
+											</td>
 											<td class="center">${inventory.AUDITOR }</td>
 											<td class="center">
-											<fmt:parseDate value="${inventory.ENTRY_TIME}" pattern="yyyy-MM-dd HH:mm:ss" var="test"/>   
-											<fmt:formatDate value="${test}" pattern="yyyy-MM-dd HH:mm:ss"/>  
+												<fmt:parseDate value="${inventory.ENTRY_TIME}" pattern="yyyy-MM-dd HH:mm:ss" var="test"/>   
+												<fmt:formatDate value="${test}" pattern="yyyy-MM-dd HH:mm:ss"/>  
 											</td>
 											<td class="center">
-											<fmt:parseDate value="${inventory.UPDATE_TIME}" pattern="yyyy-MM-dd HH:mm:ss" var="test"/>   
-											<fmt:formatDate value="${test}" pattern="yyyy-MM-dd HH:mm:ss"/>  
+												<fmt:parseDate value="${inventory.UPDATE_TIME}" pattern="yyyy-MM-dd HH:mm:ss" var="test"/>   
+												<fmt:formatDate value="${test}" pattern="yyyy-MM-dd HH:mm:ss"/>  
 											</td>
-										<%-- 	<td class="center">
-											${inventory.ENTRY_TIME}
-											</td>
-											<td class="center">
-											${inventory.UPDATE_TIME}
-											</td> --%>
 											<td class="center">${inventory.MANY }</td>
 											<td class="center">${inventory.PRACTICAL}</td>
 											<td class="center">${inventory.DECREASE_COUNT}</td>
 											<td class="center">${inventory.NOTE}</td>
 											<td class="center">
 												<div class="hidden-sm hidden-xs btn-group">
-													<a class="btn btn-xs btn-success" title="编辑" onclick="editUser('${inventory.ID}','${inventory.STATE}');">
-														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
-													</a>
-													<a class="btn btn-xs btn-danger" onclick="delInventory('${inventory.ID }','${inventory.STATE}');">
-														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
-													</a>
+													<c:if test="${QX.edit == 1 }">
+														<a class="btn btn-xs btn-success" title="编辑" onclick="editUser('${inventory.ID}','${inventory.STATE}');">
+															<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
+														</a>
+													</c:if>
+													<c:if test="${QX.del == 1 }">
+														<a class="btn btn-xs btn-danger" onclick="delInventory('${inventory.ID }','${inventory.STATE}');">
+															<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
+														</a>
+													</c:if>
+													<c:if test="${QX.email == 1 }">
+														<a class="btn btn-xs btn-info" onclick="shenHe('${inventory.ID}','${inventory.STATE}');">
+															<i class="ace-icon fa fa-check-circle bigger-120" title="审核"></i>
+														</a>
+													</c:if>
+													<c:if test="${QX.email == 1 }">
+														<a class="btn btn-xs btn-info" onclick="quShen('${inventory.ID}','${inventory.STATE}');">
+															<i class="ace-icon fa fa-times-circle bigger-120" title="去审"></i>
+														</a>
+													</c:if>
 												</div>
 											
 												<div class="hidden-md hidden-lg">
@@ -182,6 +165,7 @@ a:hover{
 															<i class="ace-icon fa fa-cog icon-only bigger-110"></i>
 														</button>
 														<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+														  <c:if test="${QX.edit == 1 }">
 															<li>
 																<a style="cursor:pointer;" onclick="editUser('${inventory.ID}');" class="tooltip-success" data-rel="tooltip" title="修改">
 																	<span class="green">
@@ -189,6 +173,8 @@ a:hover{
 																	</span>
 																</a>
 															</li>
+														  </c:if>
+														  <c:if test="${QX.del == 1 }">
 															<li>
 																<a style="cursor:pointer;" onclick="delUser('${inventory.ID }');" class="tooltip-error" data-rel="tooltip" title="删除">
 																	<span class="red">
@@ -196,6 +182,25 @@ a:hover{
 																	</span>
 																</a>
 															</li>
+														  </c:if>
+														  <c:if test="${QX.email == 1 }">
+														  	<li>
+																<a style="cursor:pointer;" onclick="shenHe('${inventory.ID}','${inventory.STATE}');" class="tooltip-error" data-rel="tooltip" title="审核">
+																	<span class="red">
+																		<i class="ace-icon fa fa-check-circle bigger-120"></i>
+																	</span>
+																</a>
+															</li>
+														  </c:if>	
+														  <c:if test="${QX.email == 1 }">
+														  	<li>
+																<a style="cursor:pointer;" onclick="quShen('${inventory.ID}','${inventory.STATE}');" class="tooltip-error" data-rel="tooltip" title="去审">
+																	<span class="red">
+																		<i class="ace-icon fa fa-times-circle bigger-120"></i>
+																	</span>
+																</a>
+															</li>
+														  </c:if>
 														</ul>
 													</div>
 												</div>
@@ -203,6 +208,12 @@ a:hover{
 										</tr>
 									
 									</c:forEach>
+									</c:if>
+									<c:if test="${QX.cha == 0 }">
+										<tr>
+											<td colspan="14" class="center">您无权查看</td>
+										</tr>
+									</c:if>
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
@@ -217,8 +228,12 @@ a:hover{
 					<table style="width:100%;">
 						<tr>
 							<td style="vertical-align:top;">
+							  <c:if test="${QX.add == 1 }">
 								<a class="btn btn-mini btn-success" onclick="add();">新增</a>
+							  </c:if>
+							  <c:if test="${QX.del == 1 }">
 								<a title="批量删除" class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
+							  </c:if>
 							</td>
 							<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
 						</tr>
@@ -265,6 +280,17 @@ a:hover{
 <script type="text/javascript">
 $(top.hangge());
 
+
+function onChecks() {
+	var fir = document.getElementsByName("ids");
+	for(var i=0;i < fir.length;i++){
+		if(document.getElementsByName('ids')[i].title =='1'){
+			document.getElementById("t"+i).style.color="#f00";
+			fir[i].disabled = "disabled";
+		}
+	}
+}
+
 //检索
 function searchs(){
 	top.jzts();
@@ -272,15 +298,37 @@ function searchs(){
 }
 
 //删除
-function delInventory(ID,STATE,msg){
+function delInventory(ID,STATE){
 	if(STATE==1){
 		sweetAlert("系统提示", "不能删除已审核的单据！请去审后在删除！", "error");
 		return false;
 	}else {
+		<%-- swal({
+			title: "系统提示", 
+			text: "您确定要删除这条数据？", 
+			type: "warning",
+			showCancelButton: true,
+			closeOnConfirm: false,
+			timer: 9544400,
+			confirmButtonText: "是的，我要删除！",
+			cancelButtonText:"让我再考虑一下…", 
+			confirmButtonColor: "#DD6B55"
+		}, function() {
+			$.ajax({
+				url: "<%=basePath%>inventory/deleteU.do?ID="+ID,
+				type: "DELETE"
+			}).done(function(data) {
+				sweetAlert("操作成功!", "已成功删除数据！", "success");
+				$("#inventoryForm").submit();
+				/* window.location.reload(); */
+			}).error(function(data) {
+				swal("OMG", "删除操作失败了!", "error");
+			});
+		}); --%>
 		bootbox.confirm("确定要删除该单据吗?", function(result) {
 			if(result) {
 				top.jzts();
-				var url = "<%=basePath%>inventory/deleteU.do?ID="+ID+"&tm="+new Date().getTime();
+				var url = "<%=basePath%>inventory/deleteU.do?ID="+ID;
 				$.get(url,function(data){
 					nextPage(${page.currentPage});
 				});
@@ -289,13 +337,44 @@ function delInventory(ID,STATE,msg){
 	}
 }
 
+function quShen(ID,STATE) {
+	if(STATE == 0) {
+		sweetAlert("系统提示", "该单据还未审核！", "error");
+		return false;
+	}else {
+		$.post("<%=basePath%>inventory/quShen.do",{ID:ID,AUDITOR:'${pd.username }'},function(msg){
+			sweetAlert("操作成功!", "修改成功！", "success");
+			$("#inventoryForm").submit();
+		});
+	}
+}
+
+function shenHe(ID,STATE) {
+	if(STATE == 1) {
+		sweetAlert("系统提示", "该单据已经审核！", "error");
+		return false;
+	}else {
+		$.post("<%=basePath%>inventory/yes.do",{ID:ID,AUDITOR:'${pd.username }'},function(msg){
+			sweetAlert("操作成功!", "修改成功！", "success");
+			$("#inventoryForm").submit();
+		});
+	}
+}
+
 //新增
 function add(){
+	var ids=document.getElementsByName('ids');
+	var MATERIALS_ID="";
+	for(var i=0;i < ids.length;i++){
+		if(MATERIALS_ID=='') MATERIALS_ID += document.getElementsByName('MATERIALS_ID')[i].value;
+		else
+			MATERIALS_ID += ";"+document.getElementsByName('MATERIALS_ID')[i].value;
+	}
 	 top.jzts();
 	 var diag = new top.Dialog();
 	 diag.Drag=true;
 	 diag.Title ="新增";
-	 diag.URL = '<%=basePath%>inventory/goAddU.do';
+	 diag.URL = '<%=basePath%>inventory/goAddU.do?MATERIALS_ID='+MATERIALS_ID;
 	 diag.Width = 760;
 	 diag.Height = 510;
 	 diag.CancelEvent = function(){ //关闭事件
@@ -335,42 +414,18 @@ function editUser(ID,STATE){
 	}
 }
 
-//修改
-function quShen(ID,AUDITOR){
-	bootbox.confirm("确定要修改该单据吗?", function(result) {
-		if(result) {
-			top.jzts();
-			var url = "<%=basePath%>inventory/quShen.do?ID="+ID+"&AUDITOR="+AUDITOR;
-			$.get(url,function(data){
-				nextPage(${page.currentPage});
-			});
-		};
-	});
-}
-
 
 //批量操作
 function makeAll(msg){
 	bootbox.confirm(msg, function(result) {
 		if(result) {
 			var str = '';
-			var emstr = '';
-			var phones = '';
-			var username = '';
 			for(var i=0;i < document.getElementsByName('ids').length;i++)
 			{
 				  if(document.getElementsByName('ids')[i].checked){
-				  	if(str=='') str += document.getElementsByName('ids')[i].value;
-				  	else str += ',' + document.getElementsByName('ids')[i].value;
-				  	
-				  	if(emstr=='') emstr += document.getElementsByName('ids')[i].id;
-				  	else emstr += ';' + document.getElementsByName('ids')[i].id;
-				  	
-				  	if(phones=='') phones += document.getElementsByName('ids')[i].alt;
-				  	else phones += ';' + document.getElementsByName('ids')[i].alt;
-				  	
-				  	if(username=='') username += document.getElementsByName('ids')[i].title;
-				  	else username += ';' + document.getElementsByName('ids')[i].title;
+						  if(str=='') str += document.getElementsByName('ids')[i].value;
+						  	else str += ',' + document.getElementsByName('ids')[i].value;
+						  	
 				  }
 			}
 			if(str==''){

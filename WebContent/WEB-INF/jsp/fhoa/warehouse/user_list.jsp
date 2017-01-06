@@ -16,13 +16,13 @@
 <!-- 下拉框 -->
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
 <!-- jsp文件头和头部 -->
-<%@ include file="../index/top.jsp"%>
+<%@ include file="../../system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 <script type="text/javascript">
 </script>
 </head>
-<body class="no-skin" onload="onloadname();">
+<body class="no-skin">
 
 	<div class="main-container" id="main-container">
 		<div class="main-content">
@@ -32,7 +32,7 @@
 						<div class="col-xs-12">
 						
 						<!-- 检索  -->
-						<form action="fhsms/listUsers.do" method="post" name="userForm" id="userForm">
+						<form action="warehouse/testPage.do" method="post" name="userForm" id="userForm">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
@@ -136,7 +136,7 @@
 
 	<!-- basic scripts -->
 	<!-- 页面底部js¨ -->
-	<%@ include file="../index/foot.jsp"%>
+	<%@ include file="../../system/index/foot.jsp"%>
 	<!-- 删除时确认窗口 -->
 	<script src="static/ace/js/bootbox.js"></script>
 	<!-- ace scripts -->
@@ -158,29 +158,18 @@ function searchs(){
 	$("#userForm").submit();
 }
 var supp=window.parent.window.supplier;
-function onloadname(){
-	var strs= new Array(); //定义一数组 
-	strs=supp.split(";"); //字符分割 
-	var fir = document.getElementsByName("ids");
-	for(var i=0;i < fir.length;i++){
-		for(var j=0;j<strs.length ;j++ ){			
-			if(document.getElementsByName('name')[i].value == strs[j]){		
-				document.getElementById("t"+(i+1)).style.color="#f00";
-				fir[i].disabled = "disabled";
-			}
-		}
-	}
-}
 //选择
 function elect(msg){
 	var xid = '';
 	var xname = '';
+	var c=0;
 	for(var i=0;i < document.getElementsByName('ids').length;i++){
 	  if(document.getElementsByName('ids')[i].checked){
 	  	if(xid=='') xid += document.getElementsByName('ids')[i].value;
 	  	if(xname=='') xname += document.getElementsByName('name')[i].value;
-	  	else xname += ';' + document.getElementsByName('name')[i].value;
+	 	c=c+1;
 	  }
+	  alert(xname+"=="+xid)
 	}
 	if(xid==''){
 		bootbox.dialog({
@@ -189,12 +178,16 @@ function elect(msg){
 			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
 		});
 		return;
+	}else if(c!=1){
+		bootbox.dialog({
+			message: "<span class='bigger-110'>请选择一条数据!</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		return;
 	}else {
-		if(';' != supp.charAt(supp.length - 1) && supp!=''){
-			window.parent.window.supplier +=";"+ xname;
-		}else{
-			window.parent.window.supplier += xname;
-		}
+		window.parent.window.supplier = xname;
+		window.parent.window.supid = xid;
 		window.parent.window.jBox.close();
 	}
 }

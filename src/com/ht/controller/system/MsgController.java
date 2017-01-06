@@ -46,7 +46,7 @@ public class MsgController extends BaseController{
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
 	}
-	/**去修改用户页面(系统用户列表修改)
+	/**去修改页面
 	 * @return
 	 * @throws Exception
 	 */
@@ -110,7 +110,6 @@ public class MsgController extends BaseController{
 		pd.put("USER_ID", Jurisdiction.getUsername());	
 		pd.put("MSGTIME", DateUtil.getTime().toString());
 		msgService.saveU(pd); 
-		
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
 		return mv;

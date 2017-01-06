@@ -246,7 +246,6 @@ function delUser(userId,msg){
 			top.jzts();
 			var url = "<%=basePath%>user/deleteU.do?USER_ID="+userId+"&tm="+new Date().getTime();
 			$.get(url,function(data){
-				alert(data);
 				nextPage(${page.currentPage});
 			});
 		};

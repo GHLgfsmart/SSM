@@ -230,7 +230,7 @@ function add(){
 	 diag.Title ="新增";
 	 diag.URL = '<%=basePath%>warehousing/materialsAddPage.do';
 	 diag.Width = 850;
-	 diag.Height = 500;
+	 diag.Height = 550;
 	 diag.CancelEvent = function(){ //关闭事件
 		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 			 if('${page.currentPage}' == '0'){
@@ -279,7 +279,7 @@ function edit(Id,state){
 		 diag.Title ="编辑";
 		 diag.URL = '<%=basePath%>warehousing/materialsEditPage.do?ID='+Id;
 		 diag.Width = 850;
-		 diag.Height = 500;
+		 diag.Height = 550;
 		 diag.CancelEvent = function(){ //关闭事件
 			 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 				 nextPage(${page.currentPage});

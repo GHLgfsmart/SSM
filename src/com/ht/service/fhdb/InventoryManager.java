@@ -90,5 +90,12 @@ public interface InventoryManager {
 	 * @throws Exception
 	 */
 	public PageData findByUN(PageData pd)throws Exception;
+	/**盘点差异报表
+	 * @WMF
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> cylist(Page page) throws Exception;
 
 }

@@ -225,5 +225,24 @@
 		where 
 			BIANHAO = #{BIANHAO}
 	</select>
-	
+	<select id="cylistPage" parameterType="page" resultType="pd">
+				SELECT I.BIANHAO,I.MATERIALS_ID,I.ENTRY_TIME,I.warehouse_ID,I.PRACTICAL,C.QUANTITY,
+				C.DAMAGEDQTY,C.SHORTQTY,C.DAMAGEDREASON,C.SHORTREASON,M.NAME,W.WARNAME AS WNAME FROM inventory I 
+				INNER JOIN checkout C INNER JOIN materials_information M INNER JOIN warehouse W WHERE C.SOURCECODE IN 
+				(SELECT O.BIANHAO FROM output_storage O INNER JOIN inventory I where I.MATERIALS_ID=O.MATERIALS_ID AND
+				 I.WAREHOUSE_ID=O.warehouse_ID AND O.OUTPUT_TYPE_ID='28e94ad13cf342ef99699b62eab5fb3c'
+				) AND I.STATE=1 and M.ID=I.MATERIALS_ID AND W.ID=I.warehouse_ID
+				<if test="pd.MATERIALS_ID != null and pd.MATERIALS_ID != ''">
+					and I.MATERIALS_ID=#{pd.MATERIALS_ID}
+				</if>
+				<if test="pd.warehouse_ID != null and pd.warehouse_ID != ''">
+					and I.warehouse_ID=#{pd.warehouse_ID}
+				</if>
+				<if test="pd.startTime!=null and pd.startTime!=''"><!-- 登录时间检索 -->
+					and I.ENTRY_TIME &gt;= #{pd.startTime} 
+				</if>
+				<if test="pd.lastTime!=null and pd.lastTime!=''"><!-- 登录时间检索 -->
+					and I.ENTRY_TIME &lt;= #{pd.lastTime} 
+				</if>
+		</select>
 	</mapper>

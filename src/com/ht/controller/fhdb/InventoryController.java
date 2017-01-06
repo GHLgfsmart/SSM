@@ -25,6 +25,7 @@ import com.ht.entity.Inventory;
 import com.ht.entity.Materials_information;
 import com.ht.entity.Page;
 import com.ht.service.fhdb.InventoryManager;
+import com.ht.service.fhdb.WarehousingManager;
 import com.ht.util.AppUtil;
 import com.ht.util.DateUtil;
 import com.ht.util.Jurisdiction;
@@ -43,7 +44,8 @@ public class InventoryController extends BaseController{
 	
 	@Resource
 	private InventoryManager inventoryService;
-	
+	@Resource
+	private WarehousingManager warehouseService;
 	@RequestMapping("/list")
 	public ModelAndView list(Page page) throws Exception {
 		ModelAndView mv = this.getModelAndView();
@@ -74,7 +76,39 @@ public class InventoryController extends BaseController{
 		mv.addObject("inventoryList", inventoryList);
 		return mv;
 	}
-	
+	/**
+	*@WMF
+	*盘点差异列表
+	*/
+	@RequestMapping(value="/cylist")
+	public ModelAndView cylist(Page page)throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"盘点差异报表列表");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		page.setPd(pd);
+		List<PageData> cylist=inventoryService.cylist(page);
+		List<PageData> wz=new ArrayList<PageData>();
+		int ck=0;
+		for(int i=0;i<cylist.size();i++){
+			pd.put("warehouse_ID", cylist.get(i).get("warehouse_ID"));
+			pd.put("MATERIALS_ID",cylist.get(i).get("MATERIALS_ID"));
+			PageData t=new PageData();
+			t.put("MID", cylist.get(i).get("MATERIALS_ID"));
+			t.put("MNAME", cylist.get(i).get("NAME"));
+			t.put("WID",cylist.get(i).get("warehouse_ID"));
+			t.put("WNAME",cylist.get(i).get("WNAME"));
+			wz.add(t);
+			ck=warehouseService.cknumber(pd);
+			cylist.get(i).put("ck",ck);
+		}
+		mv.addObject("cylist",cylist); 
+		mv.addObject("wz",wz);
+		mv.addObject("pd",pd);
+		mv.setViewName("system/inventory/difference");
+		mv.addObject("QX",Jurisdiction.getHC());				//按钮权限
+		return mv;
+	}
 	
 	/**去新增用户页面
 	 * @return

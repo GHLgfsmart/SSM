@@ -102,5 +102,15 @@ public class InventoryService implements InventoryManager{
 	public List<Materials_information> findBymaterialAll(Page page) throws Exception {
 		return (List<Materials_information>)dao.findForList("MaterialMapper.datalistPage", page);
 	}
-
+	/**盘点差异报表
+	 * @WMF
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PageData> cylist(Page page) throws Exception {
+		return (List<PageData>)dao.findForList("InventoryMapper.cylistPage", page);
+	}
 }

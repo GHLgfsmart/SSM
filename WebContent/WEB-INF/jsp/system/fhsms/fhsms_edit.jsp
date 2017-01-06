@@ -172,10 +172,6 @@
 		        "选择", 750, 400,
 		        {buttons: {}, iframeScrolling: 'yes', showClose: true,
 		            closed:function (){
-		                //在弹出窗口页面，如果我们保存了数据，就将父页面里的变量isFreshFlag 值设置为2
-		                /**if(isFreshFlag==2){
-		                    location.reload();
-		                }*/
 		                $("#USERNAME").val(supplier);
 		            }
 		        }

@@ -4,9 +4,7 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
 import javax.annotation.Resource;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,9 +14,13 @@ import com.ht.entity.Materials_information;
 import com.ht.entity.Output_storage;
 import com.ht.entity.Page;
 import com.ht.service.fhdb.WarehousingManager;
+import com.ht.service.fhoa.SupplierAndCustomerManager;
+import com.ht.service.fhoa.impl.CategoriesService;
+import com.ht.service.system.MoneyManager;
+import com.ht.service.system.PriceManager;
+import com.ht.util.DateUtil;
 import com.ht.util.Jurisdiction;
 import com.ht.util.PageData;
-
 /**
  * 入库控制
  * */
@@ -32,6 +34,15 @@ public class WarehousingController extends BaseController{
 	String returnmenuUrl = "warehousing/findsales_returnListAll.do"; //菜单地址(权限用)
 	@Resource(name="warehousingService")
 	private WarehousingManager warehousingService;
+	//洪青青修改
+	@Resource(name="priceService")
+	private PriceManager priceService;
+	@Resource(name="moneyService")
+	private MoneyManager moneyService;
+	@Resource(name="categoriesService")
+	private CategoriesService categoriesService;
+	@Resource(name="supplierAndCustomerService")
+	private SupplierAndCustomerManager service;
 	
 	/**
 	 * @author Mr.Lin
@@ -58,7 +69,41 @@ public class WarehousingController extends BaseController{
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
 	}
-	
+	/**
+	 * @author 洪青青
+	 * 费用规则查询
+	 * @throws Exception
+	 * @return
+	 */
+	public PageData Moneytoo()throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd.put("toos", "toos");
+		pd = priceService.findById(pd);
+		return pd;
+	}
+	/**
+	 * @author 洪青青
+	 * 供应商信息查询
+	 * @throws Exception
+	 * @return
+	 */
+	@RequestMapping(value="/SClist")
+	public ModelAndView list(Page page) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"列表supplierAndCustomer");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		String keywords = pd.getString("keywords");					//检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
+		List<PageData>	varList = service.list(page);
+		mv.addObject("varList", varList);
+		mv.setViewName("fhdb/materials/elect_supplier");
+		return mv;
+	}
 	/**
 	 * @author Mr.Lin
 	 * 物资弹出新增界面
@@ -72,6 +117,10 @@ public class WarehousingController extends BaseController{
 		pd = this.getPageData();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String dj = "WZ"+sdf.format(new Date());
+		//洪青青修改
+		PageData pd1=Moneytoo();
+		mv.addObject("pd1", pd1);
+		//--------
 		mv.setViewName("fhdb/materials/materialsEdit");
 		mv.addObject("dj", dj);
 		mv.addObject("msg", "materialsAdd");
@@ -92,8 +141,41 @@ public class WarehousingController extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		//洪青青修改
+		PageData pd1 = new PageData();
+		pd1 = this.getPageData();
+		String STORAGE=pd1.getString("STORAGE");
+		String RICHARD=pd1.getString("RICHARD");
+		String LOADING=pd1.getString("LOADING");
+		String UNLOADING=pd1.getString("UNLOADING");
+		double MONEY=Double.valueOf(STORAGE);
+		pd1.put("ID", this.get32UUID());	//主键
+		pd1.put("STORAGE_STATE", '0');
+		if(RICHARD == null){
+			pd1.put("RICHARD_STATE", '1');
+		}else{
+			MONEY +=Double.valueOf(RICHARD);
+			pd1.put("RICHARD_STATE", '0');
+		}
+		if(LOADING == null){
+			pd1.put("LOADING_STATE", '1');
+		}else{
+			MONEY +=Double.valueOf(LOADING);
+			pd1.put("LOADING_STATE", '0');
+		}
+		if(UNLOADING == null){
+			pd1.put("UNLOADING_STATE", '1');
+		}else{
+			MONEY +=Double.valueOf(UNLOADING);
+			pd1.put("UNLOADING_STATE", '0');
+		}
+		pd1.put("MONEY", MONEY);
 		pd.put("ID", this.get32UUID());	//主键
+		pd1.put("PRODUCT_ID", pd.getString("ID"));
+		pd1.put("MO_TIME", DateUtil.getTime().toString());
 		int result = warehousingService.materialSave(pd);
+		moneyService.saveU(pd1);
+		//--------
 		if(result>0) {
 			mv.addObject("msg","success");
 		}else {
