@@ -100,7 +100,7 @@
 				<if test="pd.STATE != null and pd.STATE != ''"><!-- 状态检索 -->
 					and dr.STATE=#{pd.STATE} 
 				</if>
-				order by dr.ID DESC
+				order by dr.ENTRY_TIME DESC
 		</select>
 		
 		<!-- 审核 -->
@@ -120,12 +120,12 @@
 		
 		<!-- 根据id查询 -->
 		<select id="DraeingById" parameterType="String" resultType="pd">
-			select ID,BusinessDate,DRAWING_INST from drawing WHERE ID=#{ID} 
+			select dr.ID,dr.BusinessDate,dr.DRAWING_INST,u.USER_ID from drawing dr,sys_user u WHERE dr.JINGSHUO_ID=u.USER_ID AND dr.ID=#{ID} 
 		</select>
 		
 		<!-- 修改 -->
 		<update id="updateDraeing" parameterType="pd">
-			update drawing SET BusinessDate=#{BusinessDate},DRAWING_INST=#{DRAWING_INST},UPDATE_TIME=#{UPDATE_TIME} WHERE ID=#{ID}
+			update drawing SET BusinessDate=#{BusinessDate},DRAWING_INST=#{DRAWING_INST},UPDATE_TIME=#{UPDATE_TIME},JINGSHUO_ID=#{JINGSHUO_ID} WHERE ID=#{ID}
 		</update>
 	
 		

@@ -80,4 +80,20 @@ public interface DrawingService {
 	 * @param ID
 	 */
 	public void updateDraeing(PageData pd);
+	
+	/**
+	 * 统计待入库的物资报表
+	 * @param pd
+	 * @return
+	 * @throws Exception 
+	 */
+	public List<PageData> notSuppliesList(PageData pd) throws Exception;
+	
+	/**
+	 * 统计已入库的物资报表
+	 * @param pd
+	 * @return
+	 * @throws Exception 
+	 */
+	/*public List<PageData> hasSuppliesList() throws Exception;*/
 }

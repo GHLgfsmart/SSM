@@ -227,4 +227,6 @@ public interface WarehousingManager {
 	 * @throws Exception
 	 * */
 	public PageData findBypickingId(PageData pd) throws Exception;
+	
+	
 }

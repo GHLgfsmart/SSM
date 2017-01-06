@@ -57,14 +57,35 @@
 		<select id="matlistPage" parameterType="page" resultType="pd">
 			SELECT mi.ID,mi.BIANHAO,mi.NAME,mi.COUNT,mi.UNIT,mi.NOTE from  output_storage os,materials_information mi,warehouse wa 
 			WHERE
-			mi.STATE=1
-			AND
 			os.WAREHOUSE_ID=wa.ID 
 			AND 
 			os.MATERIALS_ID=mi.ID
+			AND
+			mi.STATE=1
+			AND
+			wa.STATE=0
+			AND
+			os.STATE!=0
 			<if test=" pd.ckID!= null and pd.ckID !='' "> 
 			AND
 			wa.ID LIKE CONCAT(CONCAT(#{pd.ckID}))
 			</if>
-		</select>
+		</select> 
+		
+		<!-- 统计待入库的物资报表 -->
+	<select id="notSuppliesList" parameterType="pd" resultType="pd">
+		select mat.NAME,mat.COUNT,mat.UNIT,mat.ENTRY_TIME from materials_information mat
+		where mat.STATE=0
+			<if test="lastLoginStart!=null and lastLoginStart!='' ">
+				and mat.ENTRY_TIME 	BETWEEN #{lastLoginStart}
+			</if>
+			<if test="lastLoginEnd!=null and lastLoginEnd!='' ">
+				and #{lastLoginEnd} 
+			</if>
+	</select>
+	
+	<!-- 统计已入库的物资报表 -->
+<!-- 	<select id="hasSuppliesList" resultType="pd">
+		select NAME,COUNT from materials_information where STATE=1;
+	</select> -->
 	</mapper>

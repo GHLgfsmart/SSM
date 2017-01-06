@@ -161,5 +161,7 @@ public class WarehousingService implements WarehousingManager{
 	public PageData findBypickingId(PageData pd) throws Exception {
 		return (PageData)dao.findForObject("PickingMapper.pickingById", pd);
 	}
+
+	
 	
 }

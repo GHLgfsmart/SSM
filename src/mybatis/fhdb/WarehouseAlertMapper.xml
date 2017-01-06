@@ -28,7 +28,7 @@
 		ID,SIZE,WARNAME,UPPER_LIMIT,LOWER_LIMIT,PRACTICAl,ADDRESS
 		from
 		<include refid="tableName"></include>
-		where (PRACTICAL > UPPER_LIMIT or PRACTICAL &lt; LOWER_LIMIT)
+		where (PRACTICAL > UPPER_LIMIT or PRACTICAL &lt; LOWER_LIMIT) and STATE=0
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(	  	ID LIKE CONCAT(CONCAT(#{pd.keywords}))
