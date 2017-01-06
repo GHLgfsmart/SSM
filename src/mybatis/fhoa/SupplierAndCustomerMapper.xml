@@ -42,6 +42,10 @@
 		)
 	</insert>
 
+	<select id="checkID" parameterType="pd" resultType="pd">
+		select * from materials_information where cus_id=#{ID};
+	</select>
+
 	<delete id="delete" parameterType="pd">
 		delete from supplier_customer where ID=#{ID};
 	</delete>

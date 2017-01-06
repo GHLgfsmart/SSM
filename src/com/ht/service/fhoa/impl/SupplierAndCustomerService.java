@@ -5,7 +5,6 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import com.ht.dao.DaoSupport;
 import com.ht.entity.Page;
-import com.ht.entity.Supplier_customer;
 import com.ht.service.fhoa.SupplierAndCustomerManager;
 import com.ht.util.PageData;
 
@@ -51,6 +50,12 @@ public class SupplierAndCustomerService implements SupplierAndCustomerManager{
 	@Override
 	public void deleteAll(String[] IDS) throws Exception {
 		dao.delete("SupplierAndCustomerMapper.deleteAll", IDS);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PageData> checkID(PageData pd) throws Exception {
+		return (List<PageData>)dao.findForList("SupplierAndCustomerMapper.checkID", pd);
 	}
 	
 	

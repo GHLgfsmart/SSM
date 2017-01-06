@@ -1,9 +1,7 @@
 package com.ht.service.fhoa;
 
 import java.util.List;
-
 import com.ht.entity.Page;
-import com.ht.entity.Supplier_customer;
 import com.ht.util.PageData;
 
 public interface SupplierAndCustomerManager {
@@ -51,4 +49,12 @@ public interface SupplierAndCustomerManager {
 	 * @throws Exception
 	 */
 	public void deleteAll(String[] IDS) throws Exception;
+	
+	/**
+	 * 检验供应商或者客户是否有物资
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> checkID(PageData pd)throws Exception;
 }

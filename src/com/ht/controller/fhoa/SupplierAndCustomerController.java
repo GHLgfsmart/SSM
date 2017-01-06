@@ -8,11 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import com.ht.controller.base.BaseController;
 import com.ht.entity.Customer_categories;
@@ -20,14 +17,9 @@ import com.ht.entity.Page;
 import com.ht.service.fhoa.SupplierAndCustomerManager;
 import com.ht.service.fhoa.impl.CategoriesService;
 import com.ht.service.system.impl.UserService;
-import com.ht.util.Const;
-import com.ht.util.FileDownload;
-import com.ht.util.FileUpload;
 import com.ht.util.Jurisdiction;
-import com.ht.util.ObjectExcelRead;
 import com.ht.util.ObjectExcelView;
 import com.ht.util.PageData;
-import com.ht.util.PathUtil;
 
 @Controller
 @RequestMapping(value="/supplierAndcustomer")
@@ -63,13 +55,10 @@ public class SupplierAndCustomerController extends BaseController{
 			CATEGORIES_ID = pd.get("CATEGORIES_ID").toString();
 		}
 		pd.put("CATEGORIES_ID", CATEGORIES_ID);
-		System.out.println("===========================");
-		System.out.println("pd:"+pd.toString());
 		List<Customer_categories> categoriesList=categoriesService.findAllName();
 		mv.addObject("list",categoriesList);
 		page.setPd(pd);
 		List<PageData>	varList = service.list(page);
-		System.out.println("varList.size:"+varList.size());
 		mv.addObject("varList", varList);
 		mv.setViewName("fhoa/supplierAndcustomer/list");
 		mv.addObject("QX",Jurisdiction.getHC());				//按钮权限
@@ -88,16 +77,12 @@ public class SupplierAndCustomerController extends BaseController{
 		pd.put("USERNAME", Jurisdiction.getUsername());
 		PageData obj = service.findById(pd);	//根据ID读取
 		String USER_ID=obj.getString("USER_ID");
-		String address=obj.getString("ADDRESS");
-		String add[] = address.split(",");
-		System.out.println("ADDRESS:"+address);
 		pd.put("USER_ID",USER_ID);
 		String ID=pd.getString("ID");
 		pd.put("ID",ID);
 		List<Customer_categories> categoriesList=categoriesService.findAllName();
 		mv.addObject("list",categoriesList);
 		mv.addObject("obj",obj);
-		mv.addObject("address",add);
 		mv.addObject("pd", pd);					
 		mv.setViewName("fhoa/supplierAndcustomer/save");
 		mv.addObject("msg", "edit");
@@ -135,8 +120,13 @@ public class SupplierAndCustomerController extends BaseController{
 		logBefore(logger, Jurisdiction.getUsername()+"删除supplierAndCustomer");
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		service.delete(pd);
-		out.write("success");
+		List<PageData> mlist=service.checkID(pd);
+		if(mlist.size()>0){
+			out.write("fail");
+		}else{
+			service.delete(pd);
+			out.write("success");
+		}
 		out.close();
 	}
 	

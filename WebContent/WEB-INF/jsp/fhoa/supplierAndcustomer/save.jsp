@@ -72,18 +72,19 @@
 							<tr>
 								<td style="width:70px;text-align: right;padding-top: 13px;">地址:</td>
 								<td colspan="9">
-									<div id="distpicker2" style="width:100%">
+									<input type="hidden" name="ADDRESS" id="ADDRESS" value="${obj.ADDRESS}" />
+									<div id="distpicker5" style="width:100%">
 										<div class="form-group" style="width:25%;float:left">
-											<label class="sr-only" for="province5">Province</label>
-											<select class="form-control" id="province5"></select>&nbsp;
+											<label class="sr-only" for="province10">Province</label>
+											<select class="form-control" id="province10"></select>&nbsp;
 										</div>
 										<div class="form-group" style="width:25%;float:left">
-											<label class="sr-only" for="city5">City</label>
-											<select class="form-control" id="city5"></select>&nbsp;
+											<label class="sr-only" for="city10">City</label>
+											<select class="form-control" id="city10"></select>&nbsp;
 										</div>
 										<div class="form-group" style="width:25%;float:left">
-											<label class="sr-only" for="district5">District</label>
-											<select class="form-control" id="district5"></select>
+											<label class="sr-only" for="district10">District</label>
+											<select class="form-control" id="district10"></select>
 										</div>
 									</div>
 								</td>
@@ -161,9 +162,25 @@
 		 });
 		 
 		 function sanji(){
-			 $("#province5").val=address[0];
-			 $("#city5").val=address[1];
-			 $("#district5").val=address[2];
+			 if('${msg}' == 'edit'){
+					var abc='${obj.ADDRESS}';//获取地址
+					var cze=abc.split(","); 
+	//-------------------------------------------------------------				
+					  var all_options = document.getElementById("province10").options;
+					  alert(all_options.length);
+					   for (i=0; i<all_options.length; i++)
+					   {
+					      if (all_options[i].id.split('_')[1] == optionID)  // 根据option标签的ID来进行判断  测试的代码这里是两个等号
+					      {
+					         all_options[i].selected = true;
+					      }
+					   }
+					$("#province10").selectmenu('refresh');//下拉框刷新
+					/*  $("#province10").val().options[i].text=cze[0];
+					$("#city10").val(2);
+					$("#district10").val(cze[2]); 
+					 */
+				 }
 		 }
 		function shijiao(){
 			var str = $("#SUPNAME").val(); 
@@ -333,7 +350,8 @@
 			$("#EIN").focus();
 			return false;
 		}
-			//var ADDRESS=$("#province5").val()+","+$("#city5").val()+","+$("#district5").val();
+			var ADDRESS=$("#province10").val()+","+$("#city10").val()+","+$("#district10").val();
+			$("#ADDRESS").val(ADDRESS);
 			$("#Form").submit();
 			swal({
 		        title: "系统提示", 

@@ -101,7 +101,7 @@
 											<td class='center'>${var.CONTACT}</td>
 											<td class='center'>${var.PHONE}</td>
 											<td class='center'>${var.ADDRESS}</td>
-											<td class='center'><a title="发送电子邮件" style="text-decoration:none;cursor:pointer;" onclick="sendEmail('${var.MAIL }');">${var.MAIL}</a></td>
+											<td class='center'>${var.MAIL}</td>
 											<td class='center'>
 												<c:if test="${var.STATE == 0 }">合作</c:if>
 												<c:if test="${var.STATE == 1 }">流失</c:if>
@@ -229,21 +229,6 @@
 	
 	$(top.hangge());//关闭加载状态
 	
-		//去发送电子邮件页面
-		function sendEmail(EMAIL){
-			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="发送电子邮件";
-			 diag.URL = '<%=basePath%>head/goSendEmail.do?EMAIL='+EMAIL;
-			 diag.Width = 660;
-			 diag.Height = 486;
-			 diag.CancelEvent = function(){ //关闭事件
-				diag.close();
-			 };
-			 diag.show();
-		}
-		
 		//进入详细资料
 		function findByID(ID){
 			 top.jzts();
@@ -294,17 +279,24 @@
 					top.jzts();
 					var url = "<%=basePath%>supplierAndcustomer/delete.do?ID="+ID
 					$.get(url,function(data){
-						nextPage(${page.currentPage});
+						$(top.hangge());//关闭加载状态
+						if(data == 'success'){
+							swal({   
+								title: "系统提示",
+								text: "删除成功!", 
+								type: "success",
+								confirmButtonText: "OK" },function(){
+									nextPage('${page.currentPage}');
+								});
+						}else {
+							swal({   
+								title: "系统提示",
+								text: "该供应商和客户尚有物资!", 
+								type: "error",
+								confirmButtonText: "OK" });
+						}
 					});
 				}
-				swal({
-			        title: "系统提示", 
-			        text: "操作成功！", 
-			        type: "success",
-			        timer: 55444000,
-			        showConfirmButton: false,
-			        confirmButtonColor: "#ec6c62"
-			    });
 			});
 		}
 
@@ -373,26 +365,22 @@
 						top.jzts();
 						var url = '<%=basePath%>supplierAndcustomer/deleteAll.do?IDS='+str;
 						$.get(url,function(data){
+							$(top.hangge());//关闭加载状态
 							if(data == 'success'){
-								swal({
-							        title: "系统提示", 
-							        text: "操作成功！", 
-							        type: "success",
-							        timer: 55444000,
-							        showConfirmButton: false,
-							        confirmButtonColor: "#ec6c62"
-							    });
+								swal({   
+									title: "系统提示",
+									text: "删除成功!", 
+									type: "success",
+									confirmButtonText: "OK" },function(){
+										nextPage('${page.currentPage}');
+									});
 							}else {
-								swal({
-							        title: "系统提示", 
-							        text: "操作成功！", 
-							        type: "error",
-							        timer: 55444000,
-							        showConfirmButton: false,
-							        confirmButtonColor: "#ec6c62"
-							    });
+								swal({   
+									title: "系统提示",
+									text: "删除失败!", 
+									type: "error",
+									confirmButtonText: "OK" });
 							}
-							nextPage(${page.currentPage});
 						});
 					}
 				});
