@@ -205,7 +205,11 @@ public class DrawingController extends BaseController {
 		String updatetime = df.format(new Date());
 		String ID=pd.getString("ID");
 		pd= drawingServiceImpl.DraeingById(ID);
+		//查询经手人
+		Page page=null;
+		List<PageData> goAddPage = drawingServiceImpl.ListWAndU(page);
 		mv.addObject("updatetime",updatetime);
+		mv.addObject("goAddPage", goAddPage);
 		mv.addObject("pd", pd);
 		mv.addObject("amend", "updatewar");
 		mv.setViewName("fhdb/Drawing/DrawingByid");
@@ -228,6 +232,7 @@ public class DrawingController extends BaseController {
 		pd.get("BusinessDate");
 		pd.getString("DRAWING_INST");
 		pd.get("UPDATE_TIME");
+		pd.get("JINGSHUO_ID");
 		drawingServiceImpl.updateDraeing(pd);
 		mv.setViewName("save_result");
 		return mv;
@@ -249,11 +254,11 @@ public class DrawingController extends BaseController {
 			String keywords = pd.getString("keywords");				//关键词检索条件
 			if(null != keywords && !"".equals(keywords)){
 				pd.put("keywords", keywords.trim());
+				
 			}
 			page.setPd(pd);
 			Map<String, Object> dataMap = new HashMap<String, Object>();
 			List<String> titles = new ArrayList<String>();
-			titles.add("ID");
 			titles.add("编号");
 			titles.add("业务日期");
 			titles.add("录入时间");
@@ -268,23 +273,21 @@ public class DrawingController extends BaseController {
 			dataMap.put("titles", titles);
 			mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
 			List<PageData> darList = drawingServiceImpl.drwingList(page);
-			System.out.println("--------------------返回的值:"+darList);
 			List<PageData> varList = new ArrayList<PageData>();
 			for (PageData i : darList) {
 				PageData vpd = new PageData();
-				vpd.put("var1", i.getString("ID"));
-				vpd.put("var2", i.getString("BIANHAO"));
-				vpd.put("var3", i.getString("BusinessDate"));
-				vpd.put("var4", i.getString("ENTRY_TIME"));
-				vpd.put("var5", i.getString("UPDATE_TIME"));
-				vpd.put("var6", i.getString("JINGSHUO_ID"));
-				vpd.put("var7", i.getString("DRAWING_INST"));
+				vpd.put("var1", i.getString("BIANHAO"));
+				vpd.put("var2", i.getString("BusinessDate"));
+				vpd.put("var3", i.getString("ENTRY_TIME"));
+				vpd.put("var4", i.getString("UPDATE_TIME"));
+				vpd.put("var5", i.getString("USERNAME"));
+				vpd.put("var6", i.getString("DRAWING_INST"));
 				String STATE = i.get("STATE") + "";
-				vpd.put("var8", STATE+"(0代表未审核,1代表已审核)");
-				vpd.put("var9", i.getString("INSPECTOR"));
-				vpd.put("var10", i.getString("AUDITOR"));
-				vpd.put("var11", i.getString("chu"));
-				vpd.put("var12", i.getString("ru"));
+				vpd.put("var7", STATE+"(0代表未审核,1代表已审核)");
+				vpd.put("var8", i.getString("INSPECTOR"));
+				vpd.put("var9", i.getString("AUDITOR"));
+				vpd.put("var10", i.getString("chu"));
+				vpd.put("var11", i.getString("ru"));
 				varList.add(vpd);
 			}
 			dataMap.put("varList", varList);

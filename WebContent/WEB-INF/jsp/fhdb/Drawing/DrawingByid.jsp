@@ -41,6 +41,15 @@
 											</td>
 										</tr>
 										<tr>
+											<td style="margin-right: 90px;padding-top: 50px;">
+												 经手人:<select name="JINGSHUO_ID" id="JINGSHUO_ID" style="width: 180px;">
+														<c:forEach items="${goAddPage}" var="role">
+															<option value="${role.USER_ID }"  <c:if test="${role.USER_ID == pd.USER_ID }">selected</c:if>>${role.USERNAME }</option>
+														</c:forEach>
+													</select>
+											</td>
+										</tr>	
+										<tr>
 											<td style="text-align: center; padding-top: 30px;" colspan="10">
 												<a class="btn btn-mini btn-primary" onclick="save();">确定</a>
 												<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">取消</a>

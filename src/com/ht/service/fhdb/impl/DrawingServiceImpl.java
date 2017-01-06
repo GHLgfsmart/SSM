@@ -123,4 +123,16 @@ public class DrawingServiceImpl implements DrawingService{
 			return (PageData) ds.findForObject("DrawingMapper.DraeingById", ID);
 		
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PageData> notSuppliesList(PageData pd) throws Exception {
+		return (List<PageData>) ds.findForList("ProductMapper.notSuppliesList", pd);
+	}
+
+	/*@SuppressWarnings("unchecked")
+	@Override
+	public List<PageData> hasSuppliesList() throws Exception {
+		return (List<PageData>) ds.findForList("ProductMapper.hasSuppliesList","");
+	}*/
 }
