@@ -16,7 +16,7 @@
 <!-- jsp文件头和头部 -->
 <%@ include file="../../system/index/top.jsp"%>
 </head>
-<body class="no-skin">
+<body class="no-skin" onload="listname();">
 
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
@@ -91,7 +91,7 @@
 									<c:forEach items="${varList}" var="var" varStatus="vs">
 										<tr>
 											<td class='center' style="width: 30px;">
-												<label><input type='checkbox' name='ids' value="${var.ID }" id="${var.MAIL }" class="ace"/><span class="lbl"></span></label>
+												<label><input type='checkbox' name='ids' value="${var.ID }" id="${var.MAIL }" alt="${var.ADDRESS }" class="ace"/><span class="lbl"></span></label>
 											</td>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
 											<td class='center'>
@@ -100,7 +100,7 @@
 											<td class='center'> ${var.NAME }</td>
 											<td class='center'>${var.CONTACT}</td>
 											<td class='center'>${var.PHONE}</td>
-											<td class='center'>${var.ADDRESS}</td>
+											<td class='center'><span id="t${vs.index }"></span></td>
 											<td class='center'>${var.MAIL}</td>
 											<td class='center'>
 												<c:if test="${var.STATE == 0 }">合作</c:if>
@@ -228,7 +228,14 @@
 	<script type="text/javascript">
 	
 	$(top.hangge());//关闭加载状态
-	
+		function listname(){
+			 var fir = document.getElementsByName("ids");
+			 for(var i=0;i < fir.length;i++){
+				var abc=fir[i].alt;//获取地址
+				var cze=abc.split(",");
+				document.getElementById("t"+i).innerHTML=cze[0]+cze[2]+cze[4];
+			 }
+		}
 		//进入详细资料
 		function findByID(ID){
 			 top.jzts();

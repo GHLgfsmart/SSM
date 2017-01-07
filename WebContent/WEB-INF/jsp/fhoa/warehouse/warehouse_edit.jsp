@@ -17,9 +17,17 @@
 <!-- jsp文件头和头部 -->
 <%@ include file="../../system/index/top.jsp"%>
 <link rel="stylesheet" href="static/js/common/jbox.css" />
-<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<!-- --三级联动 -->
+<link href="static/SanJiLianDong/bootstrap.min.css" rel="stylesheet">
+<link href="static/SanJiLianDong/main.css" rel="stylesheet">
+<script src="static/SanJiLianDong/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script src="static/SanJiLianDong/bootstrap.min.js"></script>
+<script src="static/SanJiLianDong/distpicker.data.js"></script>
+<script src="static/SanJiLianDong/distpicker.js"></script>
+<script src="static/SanJiLianDong/main.js"></script>
+
 </head>
-<body class="no-skin">
+<body class="no-skin" onload="sanji();">
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
 		<!-- /section:basics/sidebar -->
@@ -33,11 +41,11 @@
 									<div id="zhongxin" style="padding-top: 13px;">
 									<table id="table_report" class="table table-striped table-bordered table-hover">
 										<tr>
-											<td style="width:79px;text-align: right;padding-top: 13px;">仓库名称:</td>
+											<td style="width:79px;text-align: right;padding-top: 13px; color: black;">仓库名称:</td>
 											<td><input type="text" name="WARNAME" id="WARNAME" value="${pd.WARNAME }" maxlength="32" placeholder="这里输入仓库名称" title="仓库名称"  style="width:98%;"/></td>
 										</tr>
 										<tr>
-											<td style="width:79px;text-align: right;padding-top: 13px;">负责人:</td>
+											<td style="width:79px;text-align: right;padding-top: 13px; color: black;">负责人:</td>
 											<td>
 												<input type="hidden" name="USER_ID" id="USER_ID" value="${pd.USER_ID }"/>
 												<input type="text" name="USERNAME" id="USERNAME" value="${pd.USERNAME }" readonly maxlength="32" style="width:85%;"/>
@@ -45,30 +53,50 @@
 											</td>
 										</tr>
 										<tr>
-											<td style="width:79px;text-align: right;padding-top: 13px;">仓库大小:</td>
+											<td style="width:79px;text-align: right;padding-top: 13px; color: black;">仓库大小:</td>
 											<td>
 												<input type="text" name="SIZE" id="SIZE" value="${pd.SIZE }"  maxlength="32"style="width:98%;"/>
 												
 											</td>
 										</tr>
 										<tr>
-											<td style="width:79px;text-align: right;padding-top: 13px;">仓库上限:</td>
+											<td style="width:79px;text-align: right;padding-top: 13px; color: black;">仓库上限:</td>
 											<td><input type="text" name="UPPER_LIMIT" id="UPPER_LIMIT" value="${pd.UPPER_LIMIT }"  maxlength="32" style="width:98%;"/></td>
 										</tr>
 										<tr>
-											<td style="width:79px;text-align: right;padding-top: 13px;">仓库下限:</td>
+											<td style="width:79px;text-align: right;padding-top: 13px; color: black;">仓库下限:</td>
 											<td><input type="text" name="LOWER_LIMIT" id="LOWER_LIMIT" value="${pd.LOWER_LIMIT }"  maxlength="32" style="width:98%;"/></td>
 										</tr>
 										<tr>
-											<td style="width:79px;text-align: right;padding-top: 13px;">实际库存:</td>
+											<td style="width:79px;text-align: right;padding-top: 13px; color: black;">实际库存:</td>
 											<td><input type="text" name="PRACTICAL" id="PRACTICAL"  value="${pd.PRACTICAL }" maxlength="32" style="width:98%;"/></td>
 										</tr>
 										<tr>
-											<td style="width:79px;text-align: right;padding-top: 13px;">仓库地址:</td>
-											<td><input type="text" name="ADDRESS" id="ADDRESS"  value="${pd.ADDRESS }" maxlength="32" style="width:98%;"/></td>
+											<td style="width:79px;text-align: right;padding-top: 13px; color: black;">仓库地址:</td>
+											<td>
+												<input type="hidden" name="ADDRESS" id="ADDRESS" value="${pd.ADDRESS}" />
+												<div id="distpicker5" style="width:100%">
+													<div class="" style="width:25%;float:left"><!-- ----hqq class="form-group" -->
+														<select class="form-control" id="province10" onchange="save_name()"></select>&nbsp;
+													</div>
+													<div id="cityhqq" style="width:25%;float:left"><!-- ----hqq class="form-group" -->
+														<select class="form-control" id="city10"></select>&nbsp;
+													</div>
+													<div id="districthqq" style="width:25%;float:left"><!-- ----hqq class="form-group" -->
+														<select class="form-control" id="district10"></select>
+													</div>
+													<!-- ---------假的显示框 -->
+													<div id="cityhqq1" style="width:25%;float:left"><!-- ----hqq class="form-group" -->
+														<select class="form-control" id="jdnamehqq"></select>&nbsp;
+													</div>
+													<div id="districthqq1" style="width:25%;float:left"><!-- ----hqq class="form-group" -->
+														<select class="form-control" id="jdnamehqq1"></select>
+													</div>
+												</div>
+											</td>
 										</tr>
 										<tr>
-											<td style="width:79px;text-align: right;padding-top: 13px;">备注:</td>
+											<td style="width:79px;text-align: right;padding-top: 13px; color: black;">备注:</td>
 											<td><input type="text" name="NOTE" id="NOTE"value="${pd.NOTE }" maxlength="64" style="width:98%;"/></td>
 										</tr>
 										<tr>
@@ -113,7 +141,35 @@
 			$("#loginname").css("color","gray");
 		}
 	});
-	
+	 function save_name(){
+		 if('${msg}' == 'editWare'){
+			 $('#cityhqq1').hide();//隐藏
+			 $('#districthqq1').hide();
+			 $('#cityhqq').show();//显示
+			 $('#districthqq').show();
+		 }
+	 }
+	 function sanji(){
+		 if('${msg}' == 'editWare'){
+				var abc='${obj.ADDRESS}';//获取地址
+				var cze=abc.split(",");
+				var province10=parseInt(cze[1]);
+				$('#cityhqq').hide();
+				$('#districthqq').hide();
+				window.document.getElementById("province10").options[province10].selected="selected";
+				//根据id查找对象， 
+				var obj=document.getElementById('jdnamehqq'); 
+				//添加一个选项 
+				obj.add(new Option(cze[2],cze[3])); //这个只能在IE中有效 
+				//根据id查找对象， 
+				var obj=document.getElementById('jdnamehqq1'); 
+				//添加一个选项 
+				obj.add(new Option(cze[4],cze[5])); //这个只能在IE中有效 
+		 }else if('${msg }' == 'saveWare'){
+			$('#cityhqq1').hide();
+			$('#districthqq1').hide();
+		}
+	 }
 	//保存
 	function savepd(){
 		if($("#NAME").val()==""){
@@ -218,6 +274,19 @@
 			$("#ADDRESS").focus();
 			return false;
 		}else{
+			var select=document.getElementById("province10");  
+		    var lastIndex = select.selectedIndex; 
+		    var lastValue = select.options[lastIndex].value;
+		    
+		    var select1=document.getElementById("city10");  
+		    var lastIndex1 = select1.selectedIndex;
+		    var lastValue1 = select1.options[lastIndex].value;
+		    
+		    var select2=document.getElementById("district10");  
+		    var lastIndex2 = select2.selectedIndex;
+		    var lastValue2 = select2.options[lastIndex].value;
+			var ADDRESS=lastValue+","+lastIndex+","+lastValue1+","+lastIndex1+","+lastValue2+","+lastIndex2;
+			$("#ADDRESS").val(ADDRESS);
 			$("#pdForm").submit();
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();

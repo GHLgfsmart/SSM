@@ -41,13 +41,13 @@
 						<div id="zhongxin">
 						<table id="table_report" class="table table-striped table-bordered table-hover" style="margin-top:10px;">
 							<tr>
-								<td style="width:70px;text-align: right;padding-top: 13px;">名称:</td>
+								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">名称:</td>
 								<td><input type="text" name="SUPNAME" id="SUPNAME" onblur="shijiao()" maxlength="50" placeholder="这里输入名称" title="名称" value="${obj.SUPNAME}" style="width:98%;"/></td>
-								<td style="width:70px;text-align: right;padding-top: 13px;">拼音简码:</td>
+								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">拼音简码:</td>
 								<td><input type="text" name="PINYIN" id="PINYIN" maxlength="50" placeholder="这里输入拼音简码" title="简码" value="${obj.PINYIN}"  readonly="readonly" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:70px;text-align: right;padding-top: 13px;">类型:</td>
+								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">类型:</td>
 								<td colspan="9" id="type">
 									<select class="chosen-select form-control" name="CATEGORIES_ID" id="CATEGORIES_ID" data-placeholder="请选择类型" style="vertical-align:top;" style="width:98%;" >
 										<option value=""></option>
@@ -58,64 +58,65 @@
 								</td>
 							</tr>
 							<tr>
-								<td style="width:70px;text-align: right;padding-top: 13px;">联系人:</td>
+								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">联系人:</td>
 								<td><input type="text" name="CONTACT" id="CONTACT" value="${obj.CONTACT}" maxlength="32" placeholder="这里输入联系人" title="联系人" style="width:66%;"/></td>
-								<td style="width:70px;text-align: right;padding-top: 13px;">联系电话:</td>
+								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">联系电话:</td>
 								<td><input type="text" name="PHONE" id="PHONE" value="${obj.PHONE}" maxlength="32" placeholder="这里输入联系电话" title="联系电话" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:70px;text-align: right;padding-top: 13px;">传真:</td>
+								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">传真:</td>
 								<td><input type="text" name="FAX_PHONE" id="FAX_PHONE" value="${obj.FAX_PHONE}" maxlength="32" placeholder="这里输入传真" title="传真" style="width:98%;"/></td>
-								<td style="width:70px;text-align: right;padding-top: 13px;">邮件:</td>
+								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">邮件:</td>
 								<td><input type="text" name="MAIL" id="MAIL" value="${obj.MAIL}" maxlength="32" placeholder="这里输入邮件" title="邮件" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:70px;text-align: right;padding-top: 13px;">地址:</td>
+								<td style="height: 20px;text-align: right; color: black;">地址:</td>
 								<td colspan="9">
 									<input type="hidden" name="ADDRESS" id="ADDRESS" value="${obj.ADDRESS}" />
 									<div id="distpicker5" style="width:100%">
-										<div class="form-group" style="width:25%;float:left">
-											<label class="sr-only" for="province10">Province</label>
-											<select class="form-control" id="province10"></select>&nbsp;
+										<div class="" style="width:25%;float:left"><!-- ----hqq class="form-group" -->
+											<select class="form-control" id="province10" onchange="save_name()"></select>&nbsp;
 										</div>
-										<div class="form-group" style="width:25%;float:left">
-											<label class="sr-only" for="city10">City</label>
+										<div id="cityhqq" style="width:25%;float:left"><!-- ----hqq class="form-group" -->
 											<select class="form-control" id="city10"></select>&nbsp;
 										</div>
-										<div class="form-group" style="width:25%;float:left">
-											<label class="sr-only" for="district10">District</label>
+										<div id="districthqq" style="width:25%;float:left"><!-- ----hqq class="form-group" -->
 											<select class="form-control" id="district10"></select>
+										</div>
+										<!-- ---------假的显示框 -->
+										<div id="cityhqq1" style="width:25%;float:left"><!-- ----hqq class="form-group" -->
+											<select class="form-control" id="jdnamehqq"></select>&nbsp;
+										</div>
+										<div id="districthqq1" style="width:25%;float:left"><!-- ----hqq class="form-group" -->
+											<select class="form-control" id="jdnamehqq1"></select>
 										</div>
 									</div>
 								</td>
 							
 							</tr>
 							<tr>
-								<td style="width:70px;text-align: right;padding-top: 13px;">开户行:</td>
+								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">开户行:</td>
 								<td><input type="text" name="OPEN_ACCOUNT" id="OPEN_ACCOUNT" value="${obj.OPEN_ACCOUNT}" maxlength="32" placeholder="这里输入开户行址" title="开户行" style="width:98%;"/></td>
-								<td style="width:70px;text-align: right;padding-top: 13px;">银行账号:</td>
+								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">银行账号:</td>
 								<td><input type="text" name="BANK" id="BANK" value="${obj.BANK}" maxlength="32" placeholder="这里输入银行账号" title="银行账号" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:70px;text-align: right;padding-top: 13px;">企业税号:</td>
+								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">企业税号:</td>
 								<td><input type="text" name="EIN" id="EIN" value="${obj.EIN}" maxlength="32" placeholder="这里输入企业税号" title="企业税号" style="width:98%;"/></td>
-								<td style="width:70px;text-align: right;padding-top: 13px;">网站地址:</td>
+								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">网站地址:</td>
 								<td><input type="text" name="SITE_ADDRESS" id="SITE_ADDRESS" value="${obj.SITE_ADDRESS}" maxlength="32" placeholder="这里输入网站地址" title="网站地址" style="width:98%;"/></td>
 							
 							</tr>
 							<tr>
-								<td style="width:70px;text-align: right;padding-top: 13px;">备注:</td>
+								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">备注:</td>
 								<td colspan="9">
+								<input type="hidden" value="${pd.USERNAME}" name="USERNAME" id="USERNAME"/>
 									<textarea rows="3" cols="46" name="NOTE" id="NOTE" placeholder="这里输入备注" title="备注"  style="width:98%;">${obj.NOTE}</textarea>
 								</td>
 							</tr>
-							<tr>
-								<td style="width:70px;text-align: right;padding-top: 13px;">操作人:</td>
-								<td colspan="9"><input type="text" value="${pd.USERNAME}" name="USERNAME" id="USERNAME" maxlength="32" readonly title="操作人" style="width:66%;"/></td>
-							</tr>
 						<c:if test="${msg == 'edit' }">
 							<tr>
-								<td style="width:70px;text-align: right;padding-top: 13px;">状态:</td>
+								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">状态:</td>
 								<td colspan="9">
 									<select class="chosen-select form-control" name="STATE" id="STATE" data-placeholder="请输入状态" style="vertical-align:top;" style="width:98%;" >
 										<option value="0" <c:if test="${obj.STATE == 0 }">selected</c:if>>合作</option>
@@ -155,32 +156,39 @@
 	<%@ include file="../../system/index/foot.jsp"%>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
-	<script src="static/js/brief_code.js"></script>
+	<script type="text/javascript" src="static/js/common/brief_code.js"></script><!-- 引用拼音方法JS -->
 		<script type="text/javascript">
 		 $(function(){
 			 $("#ENTRY_TIME").val(getCurrentDate());
 		 });
-		 
+		 function save_name(){
+			 if('${msg}' == 'edit'){
+				 $('#cityhqq1').hide();//隐藏
+				 $('#districthqq1').hide();
+				 $('#cityhqq').show();//显示
+				 $('#districthqq').show();
+			 }
+		 }
 		 function sanji(){
 			 if('${msg}' == 'edit'){
 					var abc='${obj.ADDRESS}';//获取地址
-					var cze=abc.split(","); 
-	//-------------------------------------------------------------				
-					  var all_options = document.getElementById("province10").options;
-					  alert(all_options.length);
-					   for (i=0; i<all_options.length; i++)
-					   {
-					      if (all_options[i].id.split('_')[1] == optionID)  // 根据option标签的ID来进行判断  测试的代码这里是两个等号
-					      {
-					         all_options[i].selected = true;
-					      }
-					   }
-					$("#province10").selectmenu('refresh');//下拉框刷新
-					/*  $("#province10").val().options[i].text=cze[0];
-					$("#city10").val(2);
-					$("#district10").val(cze[2]); 
-					 */
-				 }
+					var cze=abc.split(",");
+					var province10=parseInt(cze[1]);
+					$('#cityhqq').hide();
+					$('#districthqq').hide();
+					window.document.getElementById("province10").options[province10].selected="selected";
+					//根据id查找对象， 
+					var obj=document.getElementById('jdnamehqq'); 
+					//添加一个选项 
+					obj.add(new Option(cze[2],cze[3])); //这个只能在IE中有效 
+					//根据id查找对象， 
+					var obj=document.getElementById('jdnamehqq1'); 
+					//添加一个选项 
+					obj.add(new Option(cze[4],cze[5])); //这个只能在IE中有效 
+			 }else if('${msg }' == 'save'){
+				$('#cityhqq1').hide();
+				$('#districthqq1').hide();
+			}
 		 }
 		function shijiao(){
 			var str = $("#SUPNAME").val(); 
@@ -276,18 +284,6 @@
 			$("#MAIL").focus();
 			return false;
 		}
-		
-		/* if($("#ADDRESS").val()==""){
-			$("#ADDRESS").tips({
-				side:3,
-	            msg:'请输入地址',
-	            bg:'#AE81FF',
-	            time:2
-	        });
-			$("#ADDRESS").focus();
-			return false;
-		} */
-		
 		if($("#SITE_ADDRESS").val()==""){
 				$("#SITE_ADDRESS").tips({
 					side:3,
@@ -350,7 +346,18 @@
 			$("#EIN").focus();
 			return false;
 		}
-			var ADDRESS=$("#province10").val()+","+$("#city10").val()+","+$("#district10").val();
+			var select=document.getElementById("province10");  
+		    var lastIndex = select.selectedIndex; 
+		    var lastValue = select.options[lastIndex].value;
+		    
+		    var select1=document.getElementById("city10");  
+		    var lastIndex1 = select1.selectedIndex;
+		    var lastValue1 = select1.options[lastIndex].value;
+		    
+		    var select2=document.getElementById("district10");  
+		    var lastIndex2 = select2.selectedIndex;
+		    var lastValue2 = select2.options[lastIndex].value;
+			var ADDRESS=lastValue+","+lastIndex+","+lastValue1+","+lastIndex1+","+lastValue2+","+lastIndex2;
 			$("#ADDRESS").val(ADDRESS);
 			$("#Form").submit();
 			swal({
