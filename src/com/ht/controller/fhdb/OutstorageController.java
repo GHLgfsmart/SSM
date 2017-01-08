@@ -233,7 +233,7 @@ public class OutstorageController extends BaseController{
 	
 	/**
 	 * @author Mr.Lin
-	 * 查询所有拣货信息
+	 * 查询所有拣货  整进整出信息
 	 * @param page
 	 * @return
 	 * @throws Exception 
@@ -248,10 +248,40 @@ public class OutstorageController extends BaseController{
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}
+		pd.put("TYPE", "1");  //整进整出数据
 		page.setPd(pd);
 		List<PageData> list = warehousingService.findBypickingAll(page);
 		mv.setViewName("fhdb/picking/pickingManage");
 		mv.addObject("varList", list);
+		mv.addObject("YK", "1");
+		mv.addObject("pd", pd);
+		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
+		return mv;
+	}
+	
+	/**
+	 * @author Mr.Lin
+	 * 查询所有拣货  越库信息
+	 * @param page
+	 * @return
+	 * @throws Exception 
+	 * */
+	@RequestMapping(value="/exceedList")
+	private ModelAndView findexceedListAll(Page page) throws Exception {
+		logBefore(logger, Jurisdiction.getUsername()+"列表pickingList");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();	
+		String keywords = pd.getString("keywords");			//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		pd.put("TYPE", "2");  //一般越库数据
+		page.setPd(pd);
+		List<PageData> list = warehousingService.findBypickingAll(page);
+		mv.setViewName("fhdb/picking/pickingManage");
+		mv.addObject("varList", list);
+		mv.addObject("YK", "2");
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
@@ -270,7 +300,12 @@ public class OutstorageController extends BaseController{
 		pd = this.getPageData();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String dj = "JH"+sdf.format(new Date());
-		mv.setViewName("fhdb/picking/pickingEdit");
+		System.out.println(pd.get("YK"));
+		if(pd.get("YK").toString().equals("1")) {
+			mv.setViewName("fhdb/picking/pickingEdit");
+		}else {
+			mv.setViewName("fhdb/picking/picking_exceedEdit");
+		}
 		mv.addObject("dj", dj);
 		mv.addObject("msg", "pickingAdd");
 		mv.addObject("pd", pd);
@@ -290,8 +325,21 @@ public class OutstorageController extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd.put("ID", this.get32UUID());	//主键
-		int result = warehousingService.output_storageSave(pd);
+		pd.put("ID", this.get32UUID());	//主键    拣货单id
+		String pid = pd.getString("ID");
+		int result = warehousingService.pickingSave(pd);
+		String OUTID = pd.getString("OUTID"); //获取选择入库单的ID
+		if(null != OUTID && !"".equals(OUTID)){
+			OUTID = OUTID.replaceAll("；", ";");
+			OUTID = OUTID.replaceAll(" ", "");
+			String[] arrOUTID = OUTID.split(";");
+			for(int i=0; i<arrOUTID.length; i++) {
+				pd.put("ID", this.get32UUID());
+				pd.put("OID", arrOUTID[i]);
+				pd.put("PID", pid);
+				warehousingService.outstorage_pickingSave(pd);
+			}
+		}
 		if(result>0) {
 			mv.addObject("msg","success");
 		}else {
@@ -303,7 +351,7 @@ public class OutstorageController extends BaseController{
 	
 	/**
 	 * @author Mr.Lin
-	 * 选择出库计划
+	 * 选择出库计划页面
 	 * @param page
 	 * @return
 	 * @throws Exception 
@@ -318,7 +366,13 @@ public class OutstorageController extends BaseController{
 		if(null != keywords && !"".equals(keywords)){
 			pd.put("keywords", keywords.trim());
 		}
-		pd.put("TYPE", "2");
+		if(pd.get("YK").toString().equals("1")) {
+			pd.put("TYPE", "2");
+			pd.put("STATE", "1");
+		}else {
+			pd.put("TYPE", "1");
+			pd.put("matState", "0");
+		}
 		page.setPd(pd);
 		List<Output_storage> list = warehousingService.findByOutput_storageAll(page);
 		mv.setViewName("fhdb/picking/elect_outstorage");
@@ -326,6 +380,56 @@ public class OutstorageController extends BaseController{
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
+	}
+	
+	/**
+	 * @author Mr.Lin
+	 * 查看拣货单详细信息
+	 * @throws Exception 
+	 * @return
+	 * */
+	@RequestMapping(value="/picking_detailedPage")
+	public ModelAndView picking_detailedPage(Page page) throws Exception {
+		logBefore(logger, Jurisdiction.getUsername()+"列表picking_detailedPage");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		page.setPd(pd);
+		PageData picking = warehousingService.findBypickingId(pd);
+		List<PageData> list = warehousingService.findBypickingDetailed(page);
+		int mtotal = 0;int ctotal = 0;
+		for(PageData p : list) {
+			mtotal+=Integer.valueOf(p.get("MONEY").toString());
+			ctotal+=Integer.valueOf(p.get("COUNT").toString());
+		}
+		picking.put("mtotal", mtotal);
+		picking.put("ctotal", ctotal);
+		mv.addObject("varList", list);
+		mv.addObject("picking", picking);
+		mv.addObject("pd", pd);
+		mv.setViewName("fhdb/picking/picking_detailed");
+		return mv;
+	}
+	
+	/**
+	 * @author Mr.Lin
+	 * 拣货删除操作
+	 * @throws Exception 
+	 * */
+	@RequestMapping(value="/pickingDel")
+	public void pickingDel(PrintWriter out) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"拣货删除");
+		if(!Jurisdiction.buttonJurisdiction(pickingmenuUrl, "del")){return;} //校验权限
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		int result = warehousingService.pickingDelete(pd);
+		if(result>0) {
+			warehousingService.outstorage_pickingDelete(pd);
+			out.write("success");
+		}else {
+			out.write("fail");
+		}
+		out.close();
 	}
 	
 }

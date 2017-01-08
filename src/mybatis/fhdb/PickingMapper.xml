@@ -9,10 +9,21 @@
 		PI.BIANHAO,
 		PI.INSPECTOR,
 		PI.STATE,
+		PI.TYPE,
 		PI.COUNT,
 		PI.MATCOUNT,
 		PI.TIME,
 		PI.NOTE
+	</sql>
+	
+	<sql id="pic_ost">
+		OS.BIANHAO,
+		OS.MONEY,
+		OS.RAW_NUMBER,
+		MI.NAME,
+		MI.UNIT,
+		MI.COUNT,
+		WAR.WARNAME
 	</sql>
 	
 	<sql id="tableName">
@@ -27,26 +38,26 @@
 			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 				and 
 					(
-						CO.SOURCECODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+						PI.BIANHAO LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 	or 
-					 	CO.QUANTITY LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 	PI.INSPECTOR LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 	or 
-					 	CO.DAMAGEDQTY LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 	PI.COUNT LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					 	or 
-					 	CO.DAMAGEDREASON LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-					 	or 
-					 	CO.SHORTQTY LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-					 	or 
-					 	CO.SHORTREASON LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
-					 	or 
-					 	CO.INSPECTOR LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 	PI.MATCOUNT LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 					)
 			</if>
 			<if test="pd.lastLoginStart!=null and pd.lastLoginStart!=''"><!-- 登录时间检索 -->
-				and CO.TIME &gt;= #{pd.lastLoginStart} 
+				and PI.TIME &gt;= #{pd.lastLoginStart} 
 			</if>
 			<if test="pd.lastLoginEnd!=null and pd.lastLoginEnd!=''"><!-- 登录时间检索 -->
-				and CO.TIME &lt;= #{pd.lastLoginEnd} 
+				and PI.TIME &lt;= #{pd.lastLoginEnd} 
+			</if>
+			<if test="pd.STATE!=null and pd.STATE!=''"><!-- 状态查询 -->
+				and PI.STATE = #{pd.STATE} 
+			</if>
+			<if test="pd.TYPE!=null and pd.TYPE!=''"><!-- 状态查询 -->
+				and PI.TYPE = #{pd.TYPE} 
 			</if>
 		</where>
 			ORDER BY PI.TIME DESC
@@ -55,7 +66,7 @@
 	<select id="pickingById" parameterType="pd" resultType="pd">
 		SELECT 
 			<include refid="field" /> 
-		FROM <include refid="tableName" /> PI
+		FROM <include refid="tableName" /> PI WHERE PI.ID='${ID}'
 	</select>
 	
 	<!-- 删除用户 -->
@@ -63,6 +74,11 @@
 		DELETE FROM 
 			<include refid="tableName"></include>
 		WHERE ID = #{ID}
+	</delete>
+	
+	<delete id="outid_piciddel" parameterType="pd" flushCache="false">
+		DELETE FROM picking_outstorage 
+		WHERE PID = #{ID}
 	</delete>
 	
 	<update id="pickingUpdate" parameterType="pd">
@@ -93,7 +109,24 @@
 			#{COUNT},
 			#{MATCOUNT},
 			#{TIME},
-			#{NOTE}
+			#{NOTE},
+			#{TYPE}
 		)
 	</insert>
+	
+	<insert id="pic_outInsert" parameterType="pd">
+		INSERT INTO PICKING_OUTSTORAGE VALUES(
+			#{ID},
+			#{PID},
+			#{OID}
+		)
+	</insert>
+	
+	<select id="pickingDetailed" parameterType="page" resultType="pd">
+		SELECT 
+			<include refid="pic_ost" /> 
+		FROM PICKING_OUTSTORAGE PO LEFT JOIN PICKING PI ON (PO.PID=PI.ID) LEFT JOIN 
+		OUTPUT_STORAGE OS ON (PO.OID=OS.ID) LEFT JOIN MATERIALS_INFORMATION MI ON (OS.MATERIALS_ID=MI.ID) 
+		LEFT JOIN WAREHOUSE WAR ON (OS.WAREHOUSE_ID=WAR.ID) WHERE PI.ID=#{pd.ID};
+	</select>
 </mapper>

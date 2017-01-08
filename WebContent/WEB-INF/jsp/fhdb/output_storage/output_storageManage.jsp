@@ -19,6 +19,8 @@
 <%@ include file="/WEB-INF/jsp/system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
+<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="static/ace/css/sweetalert.css">
 </head>
 <body class="no-skin">
 
@@ -47,13 +49,14 @@
 								<td style="vertical-align:top;padding-left:2px;">
 								 	<select class="chosen-select form-control" name="STATE" id="STATE" data-placeholder="请选择状态" style="vertical-align:top;width: 120px;">
 										<option value=""></option>
-										<option value="0">检验中</option>
+										<option value="0">待检验</option>
 										<option value="1">已检验</option>
 										<option value="2">不合格</option>
 								  	</select>
 								</td>
 								<c:if test="${QX.cha == 1 }">
-								<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+									<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+									<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-cloud-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
 								</c:if>
 							</tr>
 						</table>
@@ -89,6 +92,7 @@
 								<c:when test="${not empty varList}">
 									<c:if test="${QX.cha == 1 }">
 									<c:forEach items="${varList}" var="var" varStatus="vs">
+										<input type="hidden" value="${var.MATERIALS_ID }" name="matid" id="matid"/>
 										<tr>
 											<td class='center'>
 												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
@@ -104,13 +108,13 @@
 											<td class='center'>${var.ENTRY_TIME}</td>
 											<%-- <td class='center'>${var.UPDATE_TIME}</td>  --%>
 											<c:if test="${var.STATE eq 0}">
-												<td class='center'>检验中</td>
+												<td class='center'><span class="label label-default">待检验</span></td>
 											</c:if>
 											<c:if test="${var.STATE eq 1}">
-												<td class='center'>已检验</td>
+												<td class='center'><span class="label label-success">已检验</span></td>
 											</c:if>
 											<c:if test="${var.STATE eq 2}">
-												<td class='center'>不合格</td>
+												<td class='center'><span class="label label-danger">不合格</span></td>
 											</c:if>
 											<td class='center'>${var.user.USERNAME}</td>
 											<c:if test="${empty var.AUDITOR}">
@@ -135,7 +139,7 @@
 														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 													</a>
 													</c:if>
-													<c:if test="${QX.del == 1 }">
+													<c:if test="${QX.sms == 1 }">
 													<a class="btn btn-xs btn-info" onclick="examine('${var.ID}','${var.STATE}');">
 														<i class="ace-icon fa fa-sign-in bigger-120" title="检验"></i>
 													</a>
@@ -166,7 +170,7 @@
 																</a>
 															</li>
 															</c:if>
-															<c:if test="${QX.del == 1 }">
+															<c:if test="${QX.sms == 1 }">
 															<li>
 																<a style="cursor:pointer;" onclick="examine('${var.ID}','${var.STATE}');" class="tooltip-error" data-rel="tooltip" title="检验">
 																	<span class="blue">
@@ -250,11 +254,17 @@ function tosearch(){
 
 //新增
 function add(){
+	var str = '';
+	for(var i=0;i < document.getElementsByName('matid').length;i++){
+	  	if(str=='') str += document.getElementsByName('matid')[i].value;
+	  	else str += ';' + document.getElementsByName('matid')[i].value;
+	}
+	
 	 top.jzts();
 	 var diag = new top.Dialog();
 	 diag.Drag=true;
 	 diag.Title ="新增";
-	 diag.URL = '<%=basePath%>warehousing/output_storageAddPage.do';
+	 diag.URL = '<%=basePath%>warehousing/output_storageAddPage.do?MATID='+str;
 	 diag.Width = 850;
 	 diag.Height = 500;
 	 diag.CancelEvent = function(){ //关闭事件
@@ -310,12 +320,22 @@ function del(Id){
 			top.jzts();
 			var url = '<%=basePath%>warehousing/output_storageDel.do?ID='+Id;
 			$.get(url,function(data){
+				$(top.hangge());//关闭加载状态
 				if(data == 'success'){
-					alert("成功");
+					swal({   
+						title: "系统提示",
+						text: "删除成功!", 
+						type: "success",
+						confirmButtonText: "OK" },function(){
+							nextPage('${page.currentPage}');
+						});
 				}else {
-					alert("失败");
+					swal({   
+						title: "系统提示",
+						text: "删除失败!正在拣货中，无法删除!!!", 
+						type: "error",
+						confirmButtonText: "OK" });
 				}
-				nextPage(${page.currentPage});
 			});
 		}
 	});
@@ -366,12 +386,22 @@ function makeAll(msg){
 				top.jzts();
 				var url = '<%=basePath%>warehousing/output_storageBatchDel.do?DATA_IDS='+str;
 				$.get(url,function(data){
+					$(top.hangge());//关闭加载状态
 					if(data == 'success'){
-						alert("成功");
+						swal({   
+							title: "系统提示",
+							text: "删除成功!", 
+							type: "success",
+							confirmButtonText: "OK" },function(){
+								nextPage('${page.currentPage}');
+							});
 					}else {
-						alert("失败");
+						swal({   
+							title: "系统提示",
+							text: "删除失败!正在拣货中，无法删除!!!", 
+							type: "error",
+							confirmButtonText: "OK" });
 					}
-					nextPage(${page.currentPage});
 				});
 			}
 		});

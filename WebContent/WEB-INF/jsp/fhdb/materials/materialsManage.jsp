@@ -19,6 +19,8 @@
 <%@ include file="/WEB-INF/jsp/system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
+<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="static/ace/css/sweetalert.css">
 </head>
 <body class="no-skin">
 
@@ -46,13 +48,16 @@
 								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginEnd" name="lastLoginEnd"  value="${pd.lastLoginEnd}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="最近登录结束"/></td>
 								<td style="vertical-align:top;padding-left:2px;">
 								 	<select class="chosen-select form-control" name="STATE" id="STATE" data-placeholder="请选择状态" style="vertical-align:top;width: 120px;">
+										<option value=""></option>
 										<option value="0">待入库</option>
 										<option value="1">已入库</option>
 										<option value="2">已出库</option>
 								  	</select>
 								</td>
 								<c:if test="${QX.cha == 1 }">
-								<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+									<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+									<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-cloud-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
+									<c:if test="${QX.FromExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="fromExcel();" title="从EXCEL导入"><i id="nav-search-icon" class="ace-icon fa fa-cloud-upload bigger-110 nav-search-icon blue"></i></a></td></c:if>
 								</c:if>
 							</tr>
 						</table>
@@ -99,13 +104,13 @@
 											<td class='center'>${var.ENTRY_TIME}</td>
 											<td class='center'>${var.UPDATE_TIME}</td>
 											<c:if test="${var.STATE eq 0}">
-												<td class='center'>待入库</td>
+												<td class='center'><span class="label label-default">待入库</span></td>
 											</c:if>
 											<c:if test="${var.STATE eq 1}">
-												<td class='center'>已入库</td>
+												<td class='center'><span class="label label-primary">已入库</span></td>
 											</c:if>
 											<c:if test="${var.STATE eq 2}">
-												<td class='center'>已出库</td>
+												<td class='center'><span class="label label-success">已出库</span></td>
 											</c:if>
 											<td class='center'>${var.NOTE}</td>
 											<td class="center">
@@ -119,7 +124,7 @@
 													</a>
 													</c:if>
 													<c:if test="${QX.del == 1 }">
-													<a class="btn btn-xs btn-danger" onclick="del('${var.ID}');">
+													<a class="btn btn-xs btn-danger" onclick="del('${var.ID}','${var.STATE}');">
 														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 													</a>
 													</c:if>
@@ -142,7 +147,7 @@
 															</c:if>
 															<c:if test="${QX.del == 1 }">
 															<li>
-																<a style="cursor:pointer;" onclick="del('${var.ID}');" class="tooltip-error" data-rel="tooltip" title="删除">
+																<a style="cursor:pointer;" onclick="del('${var.ID}','${var.STATE}');" class="tooltip-error" data-rel="tooltip" title="删除">
 																	<span class="red">
 																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
 																	</span>
@@ -246,21 +251,39 @@ function add(){
 }
 
 //删除
-function del(Id){
-	bootbox.confirm("确定要删除吗?", function(result) {
-		if(result) {
-			top.jzts();
-			var url = '<%=basePath%>warehousing/materialsDel.do?ID='+Id;
-			$.get(url,function(data){
-				if(data == 'success'){
-					alert("成功");
-				}else {
-					alert("失败");
-				}
-				nextPage(${page.currentPage});
-			});
-		}
-	});
+function del(Id,STATE){
+	if(STATE != 0) {
+		swal({   
+			title: "系统提示",
+			text: "物资信息已处理完成或处理中，无法删除!", 
+			type: "error",
+			confirmButtonText: "OK" });
+	}else {
+		bootbox.confirm("确定要删除吗?", function(result) {
+			if(result) {
+				top.jzts();
+				var url = '<%=basePath%>warehousing/materialsDel.do?ID='+Id;
+				$.get(url,function(data){
+					$(top.hangge());//关闭加载状态
+					if(data == 'success'){
+						swal({   
+							title: "系统提示",
+							text: "删除成功!", 
+							type: "success",
+							confirmButtonText: "OK" },function(){
+								nextPage('${page.currentPage}');
+							});
+					}else {
+						swal({   
+							title: "系统提示",
+							text: "删除失败!物资信息已生成入库计划，无法删除!!!", 
+							type: "error",
+							confirmButtonText: "OK" });
+					}
+				});
+			}
+		});
+	}
 }
 
 //修改
@@ -317,12 +340,22 @@ function makeAll(msg){
 				top.jzts();
 				var url = '<%=basePath%>warehousing/materialsBatchDel.do?DATA_IDS='+str;
 				$.get(url,function(data){
+					$(top.hangge());//关闭加载状态
 					if(data == 'success'){
-						alert("成功");
+						swal({   
+							title: "系统提示",
+							text: "删除成功!", 
+							type: "success",
+							confirmButtonText: "OK" },function(){
+								nextPage('${page.currentPage}');
+							});
 					}else {
-						alert("失败");
+						swal({   
+							title: "系统提示",
+							text: "删除失败!物资信息已生成入库计划，无法删除!!!", 
+							type: "error",
+							confirmButtonText: "OK" });
 					}
-					nextPage(${page.currentPage});
 				});
 			}
 		});
@@ -331,7 +364,6 @@ function makeAll(msg){
 $(function() {
 	//日期框
 	$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
-	
 	//下拉框
 	if(!ace.vars['touch']) {
 		$('.chosen-select').chosen({allow_single_deselect:true}); 

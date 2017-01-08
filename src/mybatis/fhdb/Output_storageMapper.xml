@@ -21,6 +21,7 @@
 		<association property="materials" javaType="com.ht.entity.Materials_information">
 			<id property="ID" column="ID" />
 			<result property="NAME" column="NAME" />
+			<result property="COUNT" column="COUNT" />
 		</association>
 		<association property="warehouse" javaType="com.ht.entity.Warehouse">
 			<id property="ID" column="ID" />
@@ -100,6 +101,9 @@
 			<if test="pd.TYPE!=null and pd.TYPE!=''"><!-- 登录时间检索 -->
 				and OS.TYPE = #{pd.TYPE} 
 			</if>
+			<if test="pd.matState!=null and pd.matState!=''"><!-- 登录时间检索 -->
+				and MI.STATE = #{pd.matState} 
+			</if>
 		</where>
 			ORDER BY OS.ENTRY_TIME DESC
 	</select>
@@ -110,6 +114,10 @@
 		FROM <include refid="tableName" /> OS INNER JOIN MATERIALS_INFORMATION MI ON OS.MATERIALS_ID = MI.ID 
 		INNER JOIN WAREHOUSE WH ON OS.WAREHOUSE_ID = WH.ID INNER JOIN OUTPUT_TYPE OT ON OS.OUTPUT_TYPE_ID = OT.ID 
 		INNER JOIN SYS_USER SU ON OS.USER_ID = SU.USER_ID WHERE OS.ID=#{ID}
+	</select>
+	
+	<select id="materialByCount" parameterType="pd" resultType="int">
+		SELECT COUNT(ID) FROM OUTPUT_STORAGE WHERE MATERIALS_ID=#{ID};
 	</select>
 	
 	<select id="output_storageByNum" parameterType="pd" resultType="pd">

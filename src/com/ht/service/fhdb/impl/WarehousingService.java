@@ -162,10 +162,33 @@ public class WarehousingService implements WarehousingManager{
 	public PageData findBypickingId(PageData pd) throws Exception {
 		return (PageData)dao.findForObject("PickingMapper.pickingById", pd);
 	}
+
+	@Override
+	public int outstorage_pickingSave(PageData pd) throws Exception {
+		return (Integer)dao.save("PickingMapper.pic_outInsert", pd);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PageData> findBypickingDetailed(Page page) throws Exception {
+		return (List<PageData>)dao.findForList("PickingMapper.pickingDetailed", page);
+	}
+
+	@Override
+	public int outstorage_pickingDelete(PageData pd) throws Exception {
+		return (Integer)dao.delete("PickingMapper.outid_piciddel", pd);
+	}
+
+	@Override
+	public int findBymaterialCount(PageData pd) throws Exception {
+		return (Integer)dao.findForObject("Output_storageMapper.materialByCount", pd);
+	}
+
 	@Override
 	public int cknumber(PageData pd) throws Exception{
 		return (int)dao.findForObject("CheckoutMapper.cknumber",pd);
 	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Checkout> barChar1() throws Exception {

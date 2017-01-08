@@ -19,6 +19,9 @@
 <%@ include file="/WEB-INF/jsp/system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
+<!-- 弹出框 -->
+<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="static/ace/css/sweetalert.css">
 </head>
 <body class="no-skin">
 
@@ -31,7 +34,7 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="outstorage/outstorageList.do" method="post" name="Form" id="Form">
+						<form action="outstorage/pickingList.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
@@ -47,9 +50,8 @@
 								<td style="vertical-align:top;padding-left:2px;">
 								 	<select class="chosen-select form-control" name="STATE" id="STATE" data-placeholder="请选择状态" style="vertical-align:top;width: 120px;">
 										<option value=""></option>
-										<option value="0">检验中</option>
-										<option value="1">已检验</option>
-										<option value="2">不合格</option>
+										<option value="1">未装车</option>
+										<option value="2">已装车</option>
 								  	</select>
 								</td>
 								<c:if test="${QX.cha == 1 }">
@@ -71,6 +73,7 @@
 									<th class="center">出库单数</th>
 									<th class="center">拣取时间</th>
 									<th class="center">装车状态</th>
+									<th class="center">越库</th>
 									<th class="center">操作员</th>
 									<th class="center">备注</th>
 									<th class="center">操作</th>
@@ -98,6 +101,12 @@
 											<c:if test="${var.STATE eq 2 }">
 												<td class='center'>已装车</td>
 											</c:if>
+											<c:if test="${var.TYPE eq 1 }">
+												<td class='center'>整进整出</td>
+											</c:if>
+											<c:if test="${var.TYPE eq 2 }">
+												<td class='center'>一般越库</td>
+											</c:if>
 											<td class='center'>${var.INSPECTOR}</td>
 											<td class='center'>${var.NOTE}</td>
 											<td class="center">
@@ -105,18 +114,18 @@
 												<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
 												</c:if>
 												<div class="hidden-sm hidden-xs btn-group">
-													<c:if test="${QX.edit == 1 }">
+													<%-- <c:if test="${QX.edit == 1 }">
 													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.ID}');">
 														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
 													</a>
-													</c:if>
+													</c:if> --%>
 													<c:if test="${QX.del == 1 }">
 													<a class="btn btn-xs btn-danger" onclick="del('${var.ID}');">
 														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 													</a>
 													</c:if>
 													<c:if test="${QX.del == 1 }">
-													<a class="btn btn-xs btn-info" onclick="examine('${var.ID}','${var.STATE}');">
+													<a class="btn btn-xs btn-info" onclick="examine('${var.ID}');">
 														<i class="ace-icon fa fa-search bigger-120" title="查看详情"></i>
 													</a>
 													</c:if>
@@ -128,7 +137,7 @@
 														</button>
 			
 														<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-															<c:if test="${QX.edit == 1 }">
+															<%-- <c:if test="${QX.edit == 1 }">
 															<li>
 																<a style="cursor:pointer;" onclick="edit('${var.ID}');" class="tooltip-success" data-rel="tooltip" title="修改">
 																	<span class="green">
@@ -136,7 +145,7 @@
 																	</span>
 																</a>
 															</li>
-															</c:if>
+															</c:if> --%>
 															<c:if test="${QX.del == 1 }">
 															<li>
 																<a style="cursor:pointer;" onclick="del('${var.ID}');" class="tooltip-error" data-rel="tooltip" title="删除">
@@ -182,10 +191,7 @@
 							<tr>
 								<td style="vertical-align:top;">
 									<c:if test="${QX.add == 1 }">
-									<a class="btn btn-sm btn-success" onclick="add();">新增</a>
-									</c:if>
-									<c:if test="${QX.del == 1 }">
-									<a class="btn btn-sm btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
+										<a class="btn btn-sm btn-success" onclick="add(${YK});">新开单</a>
 									</c:if>
 								</td>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
@@ -218,6 +224,7 @@
 	<script src="static/ace/js/chosen.jquery.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
+	
 	</body>
 
 <script type="text/javascript">
@@ -229,12 +236,12 @@ function tosearch(){
 }
 
 //新增
-function add(){
-	 top.jzts();
+function add(YK){
+	top.jzts();
 	 var diag = new top.Dialog();
 	 diag.Drag=true;
 	 diag.Title ="新增";
-	 diag.URL = '<%=basePath%>outstorage/pickingAddPage.do';
+	 diag.URL = '<%=basePath%>outstorage/pickingAddPage.do?YK='+YK;
 	 diag.Width = 850;
 	 diag.Height = 500;
 	 diag.CancelEvent = function(){ //关闭事件
@@ -252,8 +259,9 @@ function add(){
 }
 
 //检验
-function examine(Id,state){
-	if(state!=0){
+function examine(id){
+	window.location.href="<%=path%>/outstorage/picking_detailedPage?ID="+id;
+	<%-- if(state!=0){
 		bootbox.dialog({
 			message: "<span class='bigger-110'>您已经检验过了!</span>",
 			buttons: 			
@@ -280,7 +288,7 @@ function examine(Id,state){
 			diag.close();
 		 };
 		 diag.show();
-	}
+	} --%>
 }
 
 //删除
@@ -288,14 +296,24 @@ function del(Id){
 	bootbox.confirm("确定要删除吗?", function(result) {
 		if(result) {
 			top.jzts();
-			var url = '<%=basePath%>outstorage/outstorageDel.do?ID='+Id;
+			var url = '<%=basePath%>outstorage/pickingDel.do?ID='+Id;
 			$.get(url,function(data){
+				$(top.hangge());
 				if(data == 'success'){
-					alert("成功");
+					swal({   
+						title: "系统提示",
+						text: "删除成功!", 
+						type: "success",
+						confirmButtonText: "OK" },function(){
+							nextPage('${page.currentPage}');
+						});
 				}else {
-					alert("失败");
+					swal({   
+						title: "系统提示",
+						text: "删除失败!", 
+						type: "error",
+						confirmButtonText: "OK" });
 				}
-				nextPage(${page.currentPage});
 			});
 		}
 	});
@@ -318,45 +336,7 @@ function edit(Id){
 	 };
 	 diag.show();
 }
-//批量操作
-function makeAll(msg){
-	var str = '';
-	for(var i=0;i < document.getElementsByName('ids').length;i++){
-	  if(document.getElementsByName('ids')[i].checked){
-	  	if(str=='') str += document.getElementsByName('ids')[i].value;
-	  	else str += ',' + document.getElementsByName('ids')[i].value;
-	  }
-	}
-	if(str==''){
-		bootbox.dialog({
-			message: "<span class='bigger-110'>您没有选择任何内容!</span>",
-			buttons: 			
-			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
-		});
-		$("#zcheckbox").tips({
-			side:1,
-          msg:'点这里全选',
-          bg:'#AE81FF',
-          time:8
-      });
-		return;
-	}else {
-		bootbox.confirm(msg, function(result) {
-			if(result) {
-				top.jzts();
-				var url = '<%=basePath%>outstorage/outstorageDel.do?DATA_IDS='+str;
-				$.get(url,function(data){
-					if(data == 'success'){
-						alert("成功");
-					}else {
-						alert("失败");
-					}
-					nextPage(${page.currentPage});
-				});
-			}
-		});
-	}
-}
+
 $(function() {
 	//日期框
 	$('.date-picker').datepicker({autoclose: true,todayHighlight: true});

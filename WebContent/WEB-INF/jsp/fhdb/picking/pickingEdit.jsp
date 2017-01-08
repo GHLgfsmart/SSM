@@ -109,12 +109,14 @@
 								<td style="width:79px;text-align: right;padding-top: 13px;">录入时间:</td>
 								<td>
 									<input type="text" name="TIME" id="TIME" value="${pd.TIME}" maxlength="30" title="录入时间" readonly="readonly" style="width:98%;"/>
+									<input type="hidden" name="STATE" id="STATE" value="1" />
+									<input type="hidden" name="TYPE" id="TYPE" value="1" />
 								</td>
 							</tr>
 							<tr>
 								<td style="width:79px;height:80px;text-align: right;padding-top: 13px;">备注:</td>
 								<td colspan="2">
-									<textarea name="NOTE" cols="" rows="3" style="width:98%;" class="textarea" placeholder="这里输入备注">${pd.NOTE}</textarea>
+									<textarea id="NOTE" name="NOTE" cols="" rows="3" style="width:98%;" class="textarea" placeholder="这里输入备注">${pd.NOTE}</textarea>
 								</td>
 							</tr>
 							<tr>
@@ -150,66 +152,34 @@
 		//保存
 		function save(){
 			
-			if($("#RAW_NUMBER").val()==""){
-				$("#RAW_NUMBER").tips({
-					side:3,
-		            msg:'原始单号不能为空',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#RAW_NUMBER").focus();
-			return false;
-			}
 			if($("#NAME").val()==""){
 				$("#NAME").tips({
 					side:3,
-		            msg:'请选择物资',
+		            msg:'请选择出库计划单',
 		            bg:'#AE81FF',
 		            time:2
 		        });
 				$("#NAME").focus();
 			return false;
 			}
-			if($("#OPTNAME").val()==""){
-				$("#OPTNAME").tips({
+			if($("#COUNT").val()==""){
+				$("#COUNT").tips({
 					side:3,
-		            msg:'请选择出入库类型',
+		            msg:'请输入拣取数量',
 		            bg:'#AE81FF',
 		            time:2
 		        });
-				$("#OPTNAME").focus();
+				$("#COUNT").focus();
 			return false;
 			}
-
-			if($("#MONEY").val()==""){
-				$("#MONEY").tips({
+			if($("#MATCOUNT").val()==""){
+				$("#MATCOUNT").tips({
 					side:3,
-		            msg:'请输入单据金额',
+		            msg:'请输入出库计划单数',
 		            bg:'#AE81FF',
 		            time:2
 		        });
-				$("#MONEY").focus();
-			return false;
-			}
-			var reg = new RegExp("^[0-9]*$");
-			if($("#NUMBER_OF").val()==""){
-				$("#NUMBER_OF").tips({
-					side:3,
-		            msg:'请输入单据数量',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#NUMBER_OF").focus();
-			return false;
-			}
-			if(!reg.test($("#NUMBER_OF").val())){
-				$("#NUMBER_OF").tips({
-					side:3,
-		            msg:'数据格式不正确',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#NUMBER_OF").focus();
+				$("#MATCOUNT").focus();
 			return false;
 			}
 			
@@ -230,14 +200,18 @@
 		/**选择入库单据*/
 		var outname = "";
 		var outid = "";
+		var outcount = "";
+		var count = "";
 		function matelect(){
 		    jBox.open(
-		        "iframe:<%=basePath%>outstorage/electOutstoragePage.do",
+		        "iframe:<%=basePath%>outstorage/electOutstoragePage.do?YK=1",
 		        "选择", 750, 400,
 		        {buttons: {}, iframeScrolling: 'yes', showClose: true,
 		            closed:function (){
 		                $("#NAME").val(outname);
 		                $("#OUTID").val(outid);
+		                $("#MATCOUNT").val(outcount);
+		                $("#COUNT").val(count);
 		            }
 		        }
 		    );

@@ -175,31 +175,14 @@ public class WarehousingController extends BaseController{
 		pd1.put("MO_TIME", DateUtil.getTime().toString());
 		int result = warehousingService.materialSave(pd);
 		pd1.put("PRODUCT_ID", pd.getString("ID"));
-		moneyService.saveU(pd1);
 		//--------
 		if(result>0) {
+			moneyService.saveU(pd1);
 			mv.addObject("msg","success");
 		}else {
 			mv.addObject("msg","fail");
 		}
 		mv.setViewName("save_result");
-		return mv;
-	}
-	
-	/**
-	 * @author Mr.Lin
-	 * 弹出物资选择供应商界面
-	 * @throws Exception 
-	 * */
-	@RequestMapping(value="/testPage")
-	public ModelAndView testPage(Page page) throws Exception{
-		ModelAndView mv = this.getModelAndView();
-		PageData pd = new PageData();
-		pd = this.getPageData();
-		List<Materials_information> list = warehousingService.findBymaterialAll(page);
-		mv.setViewName("fhdb/materials/elect_supplier");
-		mv.addObject("varList", list);
-		mv.addObject("pd", pd);
 		return mv;
 	}
 	
@@ -276,11 +259,11 @@ public class WarehousingController extends BaseController{
 		int result = warehousingService.materialUpdate(pd);
 		pd1.put("PRODUCT_ID", pd.getString("ID"));
 		moneyService.editU(pd1);
-		/*if(result>0) {*/
+		if(result>0) {
 			mv.addObject("msg","success");
-		/*}else {
+		}else {
 			mv.addObject("msg","fail");
-		}*/
+		}
 		mv.setViewName("save_result");
 		return mv;
 	}
@@ -296,11 +279,12 @@ public class WarehousingController extends BaseController{
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		int result = warehousingService.materialDelete(pd);
+		int result = warehousingService.findBymaterialCount(pd);
 		if(result>0) {
-			out.write("success");
-		}else {
 			out.write("fail");
+		}else {
+			warehousingService.materialDelete(pd);
+			out.write("success");
 		}
 		out.close();
 	}
@@ -317,13 +301,22 @@ public class WarehousingController extends BaseController{
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		String DATA_IDS = pd.getString("DATA_IDS");
+		int result = 0;
 		if(null != DATA_IDS && !"".equals(DATA_IDS)){
 			String ArrayDATA_IDS[] = DATA_IDS.split(",");
 			for(int i=0; i<ArrayDATA_IDS.length; i++) {
 				pd.put("ID", ArrayDATA_IDS[i]);
-				warehousingService.materialDelete(pd);
+				result += warehousingService.findBymaterialCount(pd);
 			}
-			out.write("success");
+			if(result>0) {
+				out.write("fail");
+			}else {
+				for(int i=0; i<ArrayDATA_IDS.length; i++) {
+					pd.put("ID", ArrayDATA_IDS[i]);
+					warehousingService.materialDelete(pd);
+				}
+				out.write("success");
+			}
 		}else {
 			out.write("fail");
 		}
@@ -411,7 +404,6 @@ public class WarehousingController extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		//pd.put("STATE", "0");
 		page.setPd(pd);
 		List<Materials_information> list = warehousingService.findBymaterialAll(page);
 		mv.setViewName("fhdb/output_storage/elect_materials");
@@ -539,7 +531,7 @@ public class WarehousingController extends BaseController{
 	@RequestMapping(value="/checkoutAdd")
 	public ModelAndView checkoutAdd()throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"检验新增");
-		if(!Jurisdiction.buttonJurisdiction(menuUrls, "add")){return null;} //校验权限
+		if(!Jurisdiction.buttonJurisdiction(menuUrls, "sms")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -566,7 +558,7 @@ public class WarehousingController extends BaseController{
 	@RequestMapping(value="/returncheckoutAdd")
 	public ModelAndView returncheckoutAdd()throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"检验新增");
-		if(!Jurisdiction.buttonJurisdiction(returnmenuUrl, "add")){return null;} //校验权限
+		if(!Jurisdiction.buttonJurisdiction(returnmenuUrl, "sms")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();

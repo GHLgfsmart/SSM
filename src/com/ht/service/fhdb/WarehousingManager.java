@@ -87,6 +87,14 @@ public interface WarehousingManager {
 	
 	/**
 	 * @author Mr.Lin
+	 * 根据物资id查询出入库表的数量
+	 * @param pd
+	 * @throws Exception
+	 * */
+	public int findBymaterialCount(PageData pd)throws Exception;
+	
+	/**
+	 * @author Mr.Lin
 	 * 根据id查询出入库信息
 	 * @param pd
 	 * @throws Exception
@@ -223,11 +231,36 @@ public interface WarehousingManager {
 	
 	/**
 	 * @author Mr.Lin
+	 * 拣货单和出库计划单保存
+	 * @param pd
+	 * @throws Exception
+	 * */
+	public int outstorage_pickingSave(PageData pd)throws Exception;
+	
+	/**
+	 * @author Mr.Lin
 	 * 根据id查询拣货单信息
 	 * @param pd
 	 * @throws Exception
 	 * */
 	public PageData findBypickingId(PageData pd) throws Exception;
+	
+	/**
+	 * @author Mr.Lin
+	 * 查询拣货单详细信息
+	 * @param page
+	 * @throws Exception
+	 * */
+	public List<PageData> findBypickingDetailed(Page page)throws Exception;
+	
+	/**
+	 * @author Mr.Lin
+	 * 拣货单和出库计划单id删除
+	 * @param pd
+	 * @throws Exception
+	 * */
+	public int outstorage_pickingDelete(PageData pd)throws Exception;
+	
 	/**
 	 * @author Su
 	 * IQC查询出入库数量
@@ -236,6 +269,7 @@ public interface WarehousingManager {
 	 * @throws Exception
 	 */
 	public int cknumber(PageData pd) throws Exception;
+	
 	/**统计当前时间前15天的数据
 	 * @return
 	 * @throws Exception

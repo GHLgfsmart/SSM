@@ -20,7 +20,7 @@
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 </head>
-<body class="no-skin">
+<body class="no-skin" onload="onloadname();">
 	
 	<div class="main-container" id="main-container">
 		<!-- /section:basics/sidebar -->
@@ -31,7 +31,7 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="warehousing/electMaterialsPage.do" method="post" name="Form" id="Form">
+						<form action="warehousing/electMaterialsPage.do?STATE=${pd.STATE }" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
@@ -61,6 +61,7 @@
 									<th class="center">物资名称</th>
 									<th class="center">供应商</th>
 									<th class="center">商品数量</th>
+									<th class="center">状态</th>
 								</tr>
 							</thead>
 													
@@ -69,7 +70,7 @@
 							<c:choose>
 								<c:when test="${not empty varList}">
 									<c:forEach items="${varList}" var="var" varStatus="vs">
-										<tr>
+										<tr id="t${vs.index+1}">
 											<td class='center'>
 												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
 											</td>
@@ -77,8 +78,17 @@
 											<td class='center'>${var.BIANHAO}</td>
 											<td class='center'>${var.BAR_CODE}</td>
 											<td class='center'><label><input type='hidden' name='name' value="${var.NAME}" class="ace" /></label>${var.NAME}</td>
-											<td class='center'>${var.supplier.NAME}</td>
+											<td class='center'>${var.supplier.SUPNAME}</td>
 											<td class='center'>${var.COUNT}</td>
+											<c:if test="${var.STATE eq 0}">
+												<td class='center'><span class="label label-default">待入库</span></td>
+											</c:if>
+											<c:if test="${var.STATE eq 1}">
+												<td class='center'><span class="label label-primary">已入库</span></td>
+											</c:if>
+											<c:if test="${var.STATE eq 2}">
+												<td class='center'><span class="label label-success">已出库</span></td>
+											</c:if>
 										</tr>
 									
 									</c:forEach>
@@ -132,6 +142,21 @@ function tosearch(){
 	top.jzts();
 	$("#Form").submit();
 }
+var supp=window.parent.window.mid;
+function onloadname(){
+	var strs= new Array(); //定义一数组 
+	strs=supp.split(";"); //字符分割 
+	var fir = document.getElementsByName("ids");
+	for(var i=0;i < fir.length;i++){
+		for(var j=0;j<strs.length ;j++ ){			
+			if(document.getElementsByName('ids')[i].value == strs[j]){		
+				document.getElementById("t"+(i+1)).style.color="#f00";
+				fir[i].disabled = "disabled";
+			}
+		}
+	}
+}
+
 //选择
 function elect(msg){
 	var xid = '';
@@ -164,6 +189,9 @@ function elect(msg){
 		window.parent.window.jBox.close();
 	}
 }
-
+$(function() {
+	//日期框
+	$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
+})
 </script>
 </html>

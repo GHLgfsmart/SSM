@@ -15,18 +15,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
-
+<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="static/ace/css/sweetalert.css">
 </head>
 <body>
 	<div id="zhongxin"></div>
 	<script type="text/javascript">
 		var msg = "${msg}";
 		if(msg=="success" || msg==""){
-			document.getElementById('zhongxin').style.display = 'none';
-			top.Dialog.close();
+			swal({   
+				title: "系统提示",
+				text: "操作成功!", 
+				type: "success",
+				confirmButtonText: "OK" },function(){
+					document.getElementById('zhongxin').style.display = 'none';
+					top.Dialog.close();
+				});
 		}else{
-			alert("失败");
-			top.Dialog.close();
+			swal({   
+				title: "系统提示",
+				text: "操作失败!", 
+				type: "error",
+				confirmButtonText: "OK" },function(){
+					top.Dialog.close();
+				});
 		}
 	</script>
 </body>

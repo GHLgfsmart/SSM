@@ -20,7 +20,7 @@
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 </head>
-<body class="no-skin">
+<body class="no-skin" onload="onloadname();">
 	
 	<div class="main-container" id="main-container">
 		<!-- /section:basics/sidebar -->
@@ -31,7 +31,7 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="warehousing/electMaterialsPage.do" method="post" name="Form" id="Form">
+						<form action="outstorage/electOutstoragePage.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
@@ -60,6 +60,7 @@
 									<th class="center">物资名称</th>
 									<th class="center">仓库名称</th>
 									<th class="center">出入库类型</th>
+									<th class="center">物资数量</th>
 									<th class="center">状态</th>
 								</tr>
 							</thead>
@@ -69,7 +70,7 @@
 							<c:choose>
 								<c:when test="${not empty varList}">
 									<c:forEach items="${varList}" var="var" varStatus="vs">
-										<tr>
+										<tr id="t${vs.index+1}">
 											<td class='center'>
 												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
 											</td>
@@ -78,6 +79,7 @@
 											<td class='center'>${var.materials.NAME}</td>
 											<td class='center'>${var.warehouse.WARNAME}</td>
 											<td class='center'>${var.output_put.OPTNAME}</td>
+											<td class='center'><label><input type='hidden' name='count' value="${var.materials.COUNT}" class="ace" /></label>${var.materials.COUNT}</td>
 											<c:if test="${var.STATE eq 0}">
 												<td class='center'>检验中</td>
 											</c:if>
@@ -140,16 +142,34 @@ function tosearch(){
 	top.jzts();
 	$("#Form").submit();
 }
+var supp=window.parent.window.outname;
+function onloadname(){
+	var strs= new Array(); //定义一数组 
+	strs=supp.split(";"); //字符分割 
+	var fir = document.getElementsByName("ids");
+	for(var i=0;i < fir.length;i++){
+		for(var j=0;j<strs.length ;j++ ){			
+			if(document.getElementsByName('name')[i].value == strs[j]){		
+				document.getElementById("t"+(i+1)).style.color="#f00";
+				fir[i].disabled = "disabled";
+			}
+		}
+	}
+}
 //选择
 function elect(msg){
 	var xid = '';
 	var xname = '';
+	var c = 0;
+	var count = 0;
 	for(var i=0;i < document.getElementsByName('ids').length;i++){
 	  if(document.getElementsByName('ids')[i].checked){
 	  	if(xid=='') xid += document.getElementsByName('ids')[i].value;
 	  	else xid += ';' + document.getElementsByName('ids')[i].value;
 	  	if(xname=='') xname += document.getElementsByName('name')[i].value;
 	  	else xname += ';' + document.getElementsByName('name')[i].value;
+	  	count += parseInt(document.getElementsByName('count')[i].value);
+	  	c+=1;
 	  }
 	}
 	if(xid==''){
@@ -160,13 +180,10 @@ function elect(msg){
 		});
 		return;
 	}else {
-		if(';' != supp.charAt(supp.length - 1) && supp!=''){
-			window.parent.window.outname +=";"+ xname;
-			window.parent.window.outid +=";"+ xid;
-		}else{
-			window.parent.window.outname = xname;
-			window.parent.window.outid = xid;
-		}
+		window.parent.window.outname +=xname+ ";";
+		window.parent.window.outid +=xid+ ";";
+		window.parent.window.outcount += c;
+		window.parent.window.count += count;
 		window.parent.window.jBox.close();
 	}
 }
