@@ -109,10 +109,10 @@
 											<td class="center">${dar.USERNAME}</td>
 											<td class="center">${dar.DRAWING_INST}</td>
 											<c:if test="${dar.STATE eq 0}">
-												<td class="center" style="color:red;font-size: 12px;"><b>未审核</b></td>
+												<td class="center" style="font-size: 12px;"><span class="label label-danger">未审核</span></td>
 											</c:if>
 											<c:if test="${dar.STATE eq 1}">
-												<td class="center" style="color:green;font-size: 12px;"><b>已审核</b></td>
+												<td class="center" style="font-size: 12px;"><span class="label label-success">已审核</span></td>
 											</c:if>
 											<td class="center">${dar.INSPECTOR}</td>
 											<td class="center">${dar.AUDITOR}</td>
@@ -125,8 +125,8 @@
 												</c:if>
 												<div class="hidden-sm hidden-xs btn-group">
 													<c:if test="${QX.edit == 1 }">
-													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${dar.ID}','${dar.STATE }');">
-														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
+													<a class="btn btn-xs btn-success" title="修改" onclick="edit('${dar.ID}','${dar.STATE }');">
+														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="修改"></i>
 													</a>
 													</c:if>
 													<c:if test="${QX.del == 1 }">
@@ -144,6 +144,52 @@
 														<i class="ace-icon fa fa-times-circle bigger-120" title="去审"></i>
 													</a>
 													</c:if>
+												</div>
+												<div class="hidden-md hidden-lg">
+													<div class="inline pos-rel">
+														<button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
+															<i class="ace-icon fa fa-cog icon-only bigger-110"></i>
+														</button>
+														<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+												
+															<c:if test="${QX.edit == 1 }">
+															<li>
+																<a style="cursor:pointer;" onclick="edit('${dar.ID}','${dar.STATE }');" class="tooltip-success" data-rel="tooltip" title="修改">
+																	<span class="blue">
+																		<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
+																	</span>
+																</a>
+															</li>
+															</c:if>
+															<c:if test="${QX.del == 1 }">
+															<li>
+																<a style="cursor:pointer;" onclick="del('${dar.ID}','${dar.STATE }');" class="tooltip-error" data-rel="tooltip" title="删除">
+																	<span class="red">
+																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
+																	</span>
+																</a>
+															</li>
+															</c:if>
+															<c:if test="${QX.edit == 1 }">
+															<li>
+																<a style="cursor:pointer;" onclick="auditing('${dar.ID}','${dar.STATE}');" class="tooltip-success" data-rel="tooltip" title="审核">
+																	<span class="blue">
+																		<i  class="ace-icon fa fa-check-circle bigger-120"></i>
+																	</span>
+																</a>
+															</li>
+															</c:if>
+															<c:if test="${QX.edit == 1 }">
+															<li>
+																<a style="cursor:pointer;" onclick="abolish('${dar.ID}','${dar.STATE}');" class="tooltip-success" data-rel="tooltip" title="去审">
+																	<span class="red">
+																		<i class="ace-icon fa fa-times-circle bigger-120"></i>
+																	</span>
+																</a>
+															</li>
+															</c:if>
+														</ul>
+													</div>
 												</div>
 											</td>
 										</tr>
