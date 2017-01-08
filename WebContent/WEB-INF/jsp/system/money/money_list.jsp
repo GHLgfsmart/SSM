@@ -127,14 +127,14 @@
 			}
 			if(arr[1]==null){
 				if('${pd.boos}'=='true'){
-					document.getElementById("money").innerHTML =""+arr[0]+"上半年收益为";
+					document.getElementById("money").innerHTML =""+arr[0]+"上半年收益为"+'${pd.MONEYS}';
 				}else if('${pd.boos}'=='false'){
-					document.getElementById("money").innerHTML =""+arr[0]+"下半年收益为";
+					document.getElementById("money").innerHTML =""+arr[0]+"下半年收益为"+'${pd.MONEYS}';
 				}else{
-					document.getElementById("money").innerHTML =""+arr[0]+"全年收益为";
+					document.getElementById("money").innerHTML =""+arr[0]+"全年收益为"+'${pd.MONEYS}';
 				}
 			}else{
-				document.getElementById("money").innerHTML =""+arr[0]+arr[1]+"月份收益为";
+				document.getElementById("money").innerHTML =""+arr[0]+arr[1]+"月份收益为"+'${pd.MONEYS}';
 			}
 			
 		}

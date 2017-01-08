@@ -2,7 +2,6 @@ package com.ht.controller.fhoa;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -50,12 +49,8 @@ public class WarehouseController extends BaseController{
 	@RequestMapping("/barChar")
 	public ModelAndView barChar(HttpSession session) throws Exception {
 		ModelAndView mv = this.getModelAndView();
-		
-		List<Warehouse>	list =warehouseService.barChar();//列出仓库列表
-		if (list.size()==0) {
-			mv.setViewName("404");
-			return mv;
-		}else{
+		try{
+			List<Warehouse>	list =warehouseService.barChar();//列出仓库列表
 			Iterator<Warehouse> iterator = list.iterator();
 			double [][] data= new double[list.size()][4];
 			double [][] data1= new double[list.size()][4];
@@ -131,8 +126,11 @@ public class WarehouseController extends BaseController{
 			mv.addObject("fileName",fileName);
 			System.out.println(fileName);
 			/*mv.addObject("list", list);*/
-			return mv;
+		}catch(Exception e){
+			e.getStackTrace();
+			mv.setViewName("404");
 		}
+		return mv;
 	}
 
 }

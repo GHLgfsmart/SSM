@@ -14,6 +14,8 @@
 <base href="<%=basePath%>">
 <!-- 下拉框 -->
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
+<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="static/ace/css/sweetalert.css">
 <!-- jsp文件头和头部 -->
 <%@ include file="../index/top.jsp"%>
 </head>
@@ -34,12 +36,7 @@
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">角色:</td>
 											<td id="juese">
-											<select class="chosen-select form-control" name="ROLE_ID" id="role_id" data-placeholder="请选择角色" style="vertical-align:top;" style="width:98%;" >
-											<option value=""></option>
-											<c:forEach items="${roleList}" var="role">
-												<option value="${role.ROLE_ID }" <c:if test="${role.ROLE_ID == pd.ROLE_ID }">selected</c:if>>${role.ROLE_NAME }</option>
-											</c:forEach>
-											</select>
+											<input type="hidden" name="ROLE_ID" id="role_id" value="${pd.ROLE_ID}"/>
 											</td>
 										</tr>
 										</c:if>
@@ -52,7 +49,7 @@
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">编号:</td>
-											<td><input type="text" name="NUMBER" id="NUMBER" value="${pd.NUMBER }" maxlength="32" placeholder="这里输入编号" title="编号" onblur="hasN('${pd.USERNAME }')" style="width:98%;"/></td>
+											<td><input type="text" name="NUMBER" id="NUMBER" value="${pd.NUMBER }" maxlength="32" readonly="readonly" placeholder="这里输入编号" title="编号" style="width:98%;"/></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">密码:</td>
@@ -112,12 +109,12 @@
 </body>
 <script type="text/javascript">
 	$(top.hangge());
-	$(document).ready(function(){
+	/* $(document).ready(function(){
 		if($("#user_id").val()!=""){
 			$("#loginname").attr("readonly","readonly");
 			$("#loginname").css("color","gray");
 		}
-	});
+	}); */
 	//保存
 	function save(){
 		if($("#role_id").val()==""){
@@ -144,31 +141,7 @@
 		}else{
 			$("#loginname").val(jQuery.trim($('#loginname').val()));
 		}
-		
-		if($("#NUMBER").val()==""){
-			$("#NUMBER").tips({
-				side:3,
-	            msg:'输入编号',
-	            bg:'#AE81FF',
-	            time:3
-	        });
-			$("#NUMBER").focus();
-			return false;
-		}else{
-			$("#NUMBER").val($.trim($("#NUMBER").val()));
-		}
-		if($("#user_id").val()=="" && $("#password").val()==""){
-			$("#password").tips({
-				side:3,
-	            msg:'输入密码',
-	            bg:'#AE81FF',
-	            time:2
-	        });
-			$("#password").focus();
-			return false;
-		}
 		if($("#password").val()!=$("#chkpwd").val()){
-			
 			$("#chkpwd").tips({
 				side:3,
 	            msg:'两次密码不相同',
@@ -229,13 +202,9 @@
 			$("#EMAIL").focus();
 			return false;
 		}
-		if($("#user_id").val()==""){
-			hasU();
-		}else{
 			$("#userForm").submit();
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();
-		}
 	}
 	function ismail(mail){
 		return(new RegExp(/^(?:[a-zA-Z0-9]+[_\-\+\.]?)*[a-zA-Z0-9]+@(?:([a-zA-Z0-9]+[_\-]?)*[a-zA-Z0-9]+\.)+([a-zA-Z]{2,})+$/).test(mail));
@@ -286,28 +255,6 @@
 		});
 	}
 	
-	//判断编码是否存在
-	function hasN(USERNAME){
-		var NUMBER = $.trim($("#NUMBER").val());
-		$.ajax({
-			type: "POST",
-			url: '<%=basePath%>user/hasN.do',
-	    	data: {NUMBER:NUMBER,USERNAME:USERNAME,tm:new Date().getTime()},
-			dataType:'json',
-			cache: false,
-			success: function(data){
-				 if("success" != data.result){
-					 $("#NUMBER").tips({
-							side:3,
-				            msg:'编号 '+NUMBER+' 已存在',
-				            bg:'#AE81FF',
-				            time:3
-				        });
-					 $("#NUMBER").val('');
-				 }
-			}
-		});
-	}
 	$(function() {
 		//下拉框
 		if(!ace.vars['touch']) {

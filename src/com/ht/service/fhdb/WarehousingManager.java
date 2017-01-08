@@ -2,6 +2,7 @@ package com.ht.service.fhdb;
 
 import java.util.List;
 
+import com.ht.entity.Checkout;
 import com.ht.entity.Materials_information;
 import com.ht.entity.Output_storage;
 import com.ht.entity.Page;
@@ -235,4 +236,15 @@ public interface WarehousingManager {
 	 * @throws Exception
 	 */
 	public int cknumber(PageData pd) throws Exception;
+	/**统计当前时间前15天的数据
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Checkout> barChar1()throws Exception;
+	
+	/**统计当前时间后15天的数据
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Checkout> barChar2()throws Exception;
 }

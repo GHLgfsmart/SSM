@@ -2,7 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="CheckoutMapper">
+	<resultMap type="Checkout" id="checkResult">
+		<id property="ID" column="ID"/>
+		<result property="SOURCECODE" column="SOURCECODE"/>
+		<result property="TIME" column="TIME"/>
+		<result property="OUTPUT_TYPE_ID" column="OUTPUT_TYPE_ID"/>
+		<result property="QUANTITY" column="QUANTITY"/>
+		<result property="DAMAGEDQTY" column="DAMAGEDQTY"/>
+		<result property="DAMAGEDREASON" column="DAMAGEDREASON"/>
+		<result property="SHORTQTY" column="SHORTQTY"/>
+		<result property="SHORTREASON" column="SHORTREASON"/>
+		<result property="INSPECTOR" column="INSPECTOR"/>
+	</resultMap>
+	<!--表名 -->
+	<sql id="tableName2">
+		output_type
+	</sql>
 	
+	<!-- 字段 -->
+	<sql id="Field">
+		O.ID,
+		O.OPTNAME,
+		O.NOTE
+	</sql>
 	<!-- 字段 -->
 	<sql id="field">
 		CO.ID,
@@ -107,4 +129,39 @@
 			#{INSPECTOR}
 		)
 	</insert>
+	<!-- 前15天 -->
+	<select id="barChar1" resultMap="checkResult">
+		SELECT
+			CO.TIME,
+			SUM(co.QUANTITY) as QUANTITY,
+			SUM(co.DAMAGEDQTY) as DAMAGEDQTY,
+			SUM(co.SHORTQTY) as SHORTQTY,
+			O.OPTNAME
+		FROM
+			<include refid="tableName" /> CO
+		LEFT JOIN 
+		<include refid="tableName2" /> O ON CO.OUTPUT_TYPE_ID = O.ID
+		WHERE
+		O.ID LIKE 'RK%'
+		AND 
+			CO.TIME &gt;= DATE_SUB(NOW(),interval 30 day)
+		AND
+			CO.TIME &lt; DATE_SUB(NOW(),interval 15 day) 
+	</select>
+	<!-- 后15天 -->
+	<select id="barChar2" resultMap="checkResult">
+		SELECT
+			CO.TIME,
+			SUM(co.QUANTITY) as QUANTITY,
+			SUM(co.DAMAGEDQTY) as DAMAGEDQTY,
+			SUM(co.SHORTQTY) as SHORTQTY,
+			O.OPTNAME
+		FROM
+			<include refid="tableName" /> CO
+		LEFT JOIN 
+		<include refid="tableName2" /> O ON CO.OUTPUT_TYPE_ID = O.ID
+		WHERE
+		O.ID LIKE 'RK%'
+		AND CO.TIME &gt;= DATE_SUB(NOW(),interval 15 day)
+	</select>
 </mapper>

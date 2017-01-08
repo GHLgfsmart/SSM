@@ -231,6 +231,7 @@ public class FhsmsController extends BaseController {
 			pd.put("lastLoginEnd", lastLoginEnd+" 00:00:00");
 		} 
 		page.setPd(pd);
+		pd.put("userService", "userService");
 		List<PageData>	userList = userService.listUsers(page);	//列出用户列表
 		pd.put("ROLE_ID", "1");
 		List<Role> roleList = roleService.listAllRolesByPId(pd);//列出所有系统用户角色

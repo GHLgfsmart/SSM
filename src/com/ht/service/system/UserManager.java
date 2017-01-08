@@ -10,7 +10,12 @@ import com.ht.util.PageData;
 /** 用户接口类
  */
 public interface UserManager {
-	
+	/**查询所有权限
+	 * @WMF
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> allRolelist(String fid)throws Exception;
 	/**登录判断
 	 * @param pd
 	 * @return
@@ -115,5 +120,11 @@ public interface UserManager {
 	 * @throws Exception
 	 */
 	public PageData getUserCount(String value)throws Exception;
-	
+	public String numberMax() throws Exception ;
+	public int getCount(PageData pd)throws Exception;
+	/**获取总数
+	 * @param pd
+	 * @throws Exception
+	 */
+	public int WsCount(PageData pd)throws Exception;
 }

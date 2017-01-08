@@ -19,6 +19,7 @@
 <%@ include file="../index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
+<link rel="stylesheet" type="text/css" href="static/ace/css/sweetalert.css">
 </head>
 <body class="no-skin">
 
@@ -54,6 +55,11 @@
 									</c:forEach>
 								  	</select>
 								</td>
+								<td width="10px;"></td>
+								<td>
+									  <button type="button" class="btn btn-default btn-sm" onclick="cl()">重置</button>						
+								</td>
+								<td width="10px;"></td>
 								<c:if test="${QX.cha == 1 }">
 								<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
 								<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
@@ -228,10 +234,18 @@
 	<script src="static/ace/js/chosen.jquery.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
+	<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
 	</body>
 
 <script type="text/javascript">
 $(top.hangge());
+
+function cl(){
+	//$("select#role_ids").val("");
+	$("#nav-search-input").val("");
+	$("#lastLoginStart").val("");
+	$("#lastLoginEnd").val("");
+}
 
 //检索
 function searchs(){
@@ -246,7 +260,22 @@ function delUser(userId,msg){
 			top.jzts();
 			var url = "<%=basePath%>user/deleteU.do?USER_ID="+userId+"&tm="+new Date().getTime();
 			$.get(url,function(data){
-				nextPage(${page.currentPage});
+				$(top.hangge());//关闭加载状态
+				if(data == 'success'){
+					swal({   
+						title: "系统提示",
+						text: "删除成功!", 
+						type: "success",
+						confirmButtonText: "OK" },function(){
+							nextPage('${page.currentPage}');
+						});
+				}else if(data == 'fall'){
+					swal({   
+						title: "系统提示",
+						text: "删除失败!", 
+						type: "error",
+						confirmButtonText: "OK" });
+				}
 			});
 		};
 	});
@@ -260,7 +289,7 @@ function add(){
 	 diag.Title ="新增";
 	 diag.URL = '<%=basePath%>user/goAddU.do';
 	 diag.Width = 469;
-	 diag.Height = 510;
+	 diag.Height = 380;
 	 diag.CancelEvent = function(){ //关闭事件
 		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 			 if('${page.currentPage}' == '0'){
@@ -283,7 +312,7 @@ function editUser(user_id){
 	 diag.Title ="资料";
 	 diag.URL = '<%=basePath%>user/goEditU.do?USER_ID='+user_id;
 	 diag.Width = 469;
-	 diag.Height = 510;
+	 diag.Height = 420;
 	 diag.CancelEvent = function(){ //关闭事件
 		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 			nextPage(${page.currentPage});
@@ -374,20 +403,6 @@ function sendSms(phone){
 	 diag.show();
 }
 
-//去发送电子邮件页面
-function sendEmail(EMAIL){
-	 top.jzts();
-	 var diag = new top.Dialog();
-	 diag.Drag=true;
-	 diag.Title ="发送电子邮件";
-	 diag.URL = '<%=basePath%>head/goSendEmail.do?EMAIL='+EMAIL;
-	 diag.Width = 660;
-	 diag.Height = 486;
-	 diag.CancelEvent = function(){ //关闭事件
-		diag.close();
-	 };
-	 diag.show();
-}
 
 //发站内信
 function sendFhsms(username){

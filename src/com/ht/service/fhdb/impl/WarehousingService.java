@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.ht.dao.DaoSupport;
+import com.ht.entity.Checkout;
 import com.ht.entity.Materials_information;
 import com.ht.entity.Output_storage;
 import com.ht.entity.Page;
@@ -164,5 +165,16 @@ public class WarehousingService implements WarehousingManager{
 	@Override
 	public int cknumber(PageData pd) throws Exception{
 		return (int)dao.findForObject("CheckoutMapper.cknumber",pd);
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Checkout> barChar1() throws Exception {
+		return (List<Checkout>) dao.findForList("CheckoutMapper.barChar1","");
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Checkout> barChar2() throws Exception {
+		return (List<Checkout>) dao.findForList("CheckoutMapper.barChar2","");
 	}
 }

@@ -157,7 +157,9 @@
 							<tr>
 								<td style="vertical-align:top;">
 									<a title="批量发送站内信" class="btn btn-mini btn-info" onclick="makeAll('确定要给选中的用户发送站内信吗?');"><i class="ace-icon fa fa-envelope-o bigger-120"></i></a>
-									<a title="选择发送站内信" class="btn btn-mini btn-info" onclick="sendFhsms('')"><i class="ace-icon fa fa-envelope-o bigger-120"></i></a>
+									<a title="选择发送站内信" class="btn btn-mini btn-primary" onclick="sendFhsms('');">
+										<i class="ace-icon fa fa-envelope bigger-120"></i>
+									</a>
 									<a class="btn btn-mini btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
 								</td>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
@@ -319,11 +321,15 @@
 					  		var idss=document.getElementsByName('ids')[i].id; 
 					  		var strs= new Array(); //定义一数组 
 					  		strs=username.split(";"); //字符分割 
+					  		var a=0;
 					  		for (j=0;j<strs.length ;j++ ){ 
-					  			if(strs[j]!=idss && i==j+1){
-					  				username += ';'+idss;
+					  			if(strs[j]==idss){
+					  				a=a+1;
 					  			}
 					  		} 
+							if(a==0){
+								username += ';'+idss;
+					  		}
 					  	}
 					  }
 					}

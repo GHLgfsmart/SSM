@@ -39,7 +39,12 @@
 	<sql id="roleTableName">
 		SYS_ROLE
 	</sql>
-	
+	<sql id="scTableName">
+		supplier_customer
+	</sql>
+	<sql id="wsTableName">
+		warehouse
+	</sql>
 	<!-- 字段 -->
 	<sql id="Field">
 		USER_ID,
@@ -75,7 +80,30 @@
 		#{NUMBER},
 		#{PHONE}
 	</sql>
-	
+	<!-- 获取供应商总数 -->
+	<select id="getCount" parameterType="pd" resultType="int">
+		select 
+			count(USER_ID)
+		from 
+		<include refid="scTableName"></include>
+		where  USER_ID=#{ID}
+	</select>
+	<!-- 获取仓库总数 -->
+	<select id="wsCount" parameterType="pd" resultType="int">
+		select 
+			count(USER_ID)
+		from 
+		<include refid="wsTableName"></include>
+		where  USER_ID=#{ID}
+	</select>
+	<!-- 所有角色列表 -->
+	<select id="allRolelist" parameterType="string" resultType="pd">
+		select ROLE_ID,ROLE_NAME FROM <include refid="roleTableName"></include> where parent_id != #{fid}
+	</select>	
+	<!-- 编号最大列表 -->
+	<select id="numberMax" resultType="string">
+		select max(NUMBER) from <include refid="tableName"></include> where USERNAME != 'admin'
+	</select>	
 	<!-- 判断用户名和密码 -->
 	<select id="getUserInfo" parameterType="pd" resultType="pd">
 		select <include refid="Field"></include> from
@@ -162,8 +190,9 @@
 				r.ROLE_NAME
 		from <include refid="tableName"></include> u, <include refid="roleTableName"></include> r 
 		where u.ROLE_ID = r.ROLE_ID 
+		<if test="pd.userService != 'userService'">
 		and u.USERNAME != 'admin'
-		and r.PARENT_ID = '1'
+		</if>
 		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
 			and
 				(

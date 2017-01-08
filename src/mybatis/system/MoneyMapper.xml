@@ -42,23 +42,24 @@
 		#{UNLOADING_STATE}
 		
 	</sql>
-<!-- 	新增公告栏 -->
+<!-- 	新增 -->
 	<insert id="saveU" parameterType="pd" >
-		insert into <include refid="tableName"></include> (
+		insert into <include refid="moneyTableName"></include> (
 			<include refid="Field"></include>
 		) values (
 			<include refid="FieldValue"></include>
 		)
 	</insert>
-	<!-- 通过MSGID获取数据 -->
+	<!-- 通过PRODUCT_ID获取数据 -->
 	<select id="findById" parameterType="pd" resultType="pd" >
 		select 
 			<include refid="Field"></include>
 		from 
-			<include refid="tableName"></include>   
+			<include refid="moneyTableName"></include> 
+			where PRODUCT_ID = #{PRODUCT_ID}
 		
 	</select> 
-	<!-- 用户列表 -->
+	<!-- 列表 -->
 	<select id="mlistPage" parameterType="page" resultType="pd" >
 		select  ma.ID maID,
 		ma.BIANHAO,
@@ -69,10 +70,11 @@
 		m.PRODUCT_ID,
 		m.MO_TIME,
 		m.MONEY,
-				sc.ID scID,
+		sc.ID scID,
 		sc.SUPNAME,
 		cc.ID ccID,
-		cc.NAME ccNAME
+		cc.NAME ccNAME,
+		sum(m.MONEY) MONEYS
 		from <include refid="tableName"></include> ma,<include refid="moneyTableName"></include> m,
 			 <include refid="S_C_TableName"></include> sc,<include refid="C_C_TableName"></include> cc
 			 where ma.ID = m.PRODUCT_ID and ma.CUS_ID = sc.ID and sc.CATEGORIES_ID=cc.ID
@@ -90,10 +92,13 @@
 	</select>
 	<!-- 修改 -->
 	<update id="editU" parameterType="pd" >
-		<!-- update  <include refid="tableName"></include>
-			set MSGTITLE 					= #{MSGTITLE},
-				MSGCON 				= #{MSGCON}
-				where MSGID      =#{MSGID} -->
+		update  <include refid="moneyTableName"></include>
+			set MONEY 					= #{MONEY},
+				STORAGE_STATE 				= #{STORAGE_STATE},
+				RICHARD_STATE 				= #{RICHARD_STATE},
+				LOADING_STATE 				= #{LOADING_STATE},
+				UNLOADING_STATE 				= #{UNLOADING_STATE}
+				where PRODUCT_ID      =#{PRODUCT_ID} 
 	</update>
 	
 	<!-- 删除用-->

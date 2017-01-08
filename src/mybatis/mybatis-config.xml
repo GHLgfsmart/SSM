@@ -17,6 +17,7 @@
 		<typeAlias type="com.ht.entity.Role" alias="Role"/>
 		<typeAlias type="com.ht.entity.Menu" alias="Menu"/>
 		<typeAlias type="com.ht.entity.Msg" alias="Msg"/>
+		<typeAlias type="com.ht.entity.Checkout" alias="Checkout"/>
 		<typeAlias type="com.ht.entity.Price_Money" alias="Price_Money"/>
 		<typeAlias type="com.ht.entity.Output_type" alias="Output_type"/>
 		<typeAlias type="com.ht.entity.Output_storage" alias="Output_storage"/>

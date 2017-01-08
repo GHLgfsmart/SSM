@@ -26,7 +26,8 @@
 			}
 
 			function getNowFormatDate() {
-				moneytoo();
+				moneytoo();//洪青青
+				fname();//洪青青
 			    var date = new Date();
 			    var seperator1 = "-";
 			    var seperator2 = ":";
@@ -138,6 +139,7 @@
 								<td colspan="3">
 								<fieldset style="float: left; padding-right: 25px;">
 								<div class="checkbox checkbox-success">
+									<input type="hidden" name="ID1" id="ID1" value="${pd1.ID }" />
 									<input class="styled styled" id="STORAGE" name="STORAGE" value="${pd1.STORAGE}" type="checkbox" onclick="return false;" checked>
 									<label for="checkbox10">
 										存储费（<span style="color: #438EB9;">每<span style="color: red;" id="money">${pd1.STORAGE }</span>  &nbsp;共<span style="color: red;" id="moneys">0</span> </span>）/<i class="ace-icon fa fa-cny red"></i>
@@ -206,31 +208,31 @@
 			var COUNT=$("#COUNT").val();
 			var name=parseInt(COUNT);
 			if(!isNaN(name)){
-				 var STORAGE =eval('${pd1.STORAGE}') * name;//存储费
-				 var RICHARD =eval('${pd1.RICHARD}') * name;//理货费
-				 var LOADING =eval('${pd1.LOADING}') * name;//装车费
-				 var UNLOADING =eval('${pd1.UNLOADING}') * name;//卸车费
-				 $("#STORAGE").val(STORAGE);
-				 $("#RICHARD").val(RICHARD);
-				 $("#LOADING").val(LOADING);
-				 $("#UNLOADING").val(UNLOADING);
+				 var STORAGE =parseFloat('${pd1.STORAGE}') * name;//存储费
+				 var RICHARD =parseFloat('${pd1.RICHARD}') * name;//理货费
+				 var LOADING =parseFloat('${pd1.LOADING}') * name;//装车费
+				 var UNLOADING =parseFloat('${pd1.UNLOADING}') * name;//卸车费
+				 $("#STORAGE").val(STORAGE.toFixed(2));
+				 $("#RICHARD").val(RICHARD.toFixed(2));
+				 $("#LOADING").val(LOADING.toFixed(2));
+				 $("#UNLOADING").val(UNLOADING.toFixed(2));
 				 if((STORAGE+"").indexOf(".") > 0 ){
-					 window.document .getElementById ("moneys").innerHTML=STORAGE;
+					 window.document .getElementById ("moneys").innerHTML=STORAGE.toFixed(2);//四舍五入
 				 }else{
 					 window.document .getElementById ("moneys").innerHTML=STORAGE+".00";
 				 }
 				 if((RICHARD+"").indexOf(".") > 0 ){
-					 window.document .getElementById ("moneys1").innerHTML=RICHARD;
+					 window.document .getElementById ("moneys1").innerHTML=RICHARD.toFixed(2);//四舍五入
 				 }else{
 					 window.document .getElementById ("moneys1").innerHTML=RICHARD+".00";
 				 }
 				 if((LOADING+"").indexOf(".") > 0 ){
-					 window.document .getElementById ("moneys2").innerHTML=LOADING;
+					 window.document .getElementById ("moneys2").innerHTML=LOADING.toFixed(2);//四舍五入
 				 }else{
 					 window.document .getElementById ("moneys2").innerHTML=LOADING+".00";
 				 }
 				 if((UNLOADING+"").indexOf(".") > 0 ){
-					 window.document .getElementById ("moneys3").innerHTML=UNLOADING;
+					 window.document .getElementById ("moneys3").innerHTML=UNLOADING.toFixed(2);//四舍五入
 				 }else{
 					 window.document .getElementById ("moneys3").innerHTML=UNLOADING+".00";
 				 }
@@ -243,6 +245,20 @@
 		        });
 				$("#COUNT").focus();
 				return false;
+			}
+		}
+		//洪青青 取消复选框 勾选
+		function fname() {
+			if('${msg}' == 'materialsEdit'){
+				if('${pd2.RICHARD_STATE}' =='1'){
+					document.getElementById('RICHARD').checked=false;
+				}
+				if('${pd2.LOADING_STATE}' =='1'){
+					document.getElementById('LOADING').checked=false;
+				}
+				if('${pd2.UNLOADING_STATE}' =='1'){
+					document.getElementById('UNLOADING').checked=false;
+				}
 			}
 		}
 		//保存

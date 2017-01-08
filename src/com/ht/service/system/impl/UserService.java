@@ -17,7 +17,17 @@ import com.ht.util.PageData;
  */
 @Service("userService")
 public class UserService implements UserManager{
-
+	//所有角色列表 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PageData> allRolelist(String fid) throws Exception {
+		return (List<PageData>)dao.findForList("UserMapper.allRolelist", fid);
+	}
+	//编号最大列表 
+	@Override
+	public String numberMax() throws Exception {
+		return (String)dao.findForObject("UserMapper.numberMax", "");
+	}
 	@Resource(name = "daoSupport")
 	private DaoSupport dao;
 	
@@ -160,5 +170,18 @@ public class UserService implements UserManager{
 	public PageData getUserCount(String value)throws Exception{
 		return (PageData)dao.findForObject("UserMapper.getUserCount", value);
 	}
-	
+	/**获取总数
+	 * @param pd
+	 * @throws Exception
+	 */
+	public int getCount(PageData pd)throws Exception{
+		return (int)dao.findForObject("UserMapper.getCount", pd);
+	}
+	/**获取总数
+	 * @param pd
+	 * @throws Exception
+	 */
+	public int WsCount(PageData pd)throws Exception{
+		return (int)dao.findForObject("UserMapper.wsCount", pd);
+	}
 }

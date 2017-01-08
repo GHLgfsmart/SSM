@@ -81,8 +81,7 @@ public class UserController extends BaseController {
 		page.setPd(pd);
 		List<PageData>	userList = userService.listUsers(page);	//列出用户列表
 		pd.put("ROLE_ID", "1");
-		List<Role> roleList = roleService.listAllRolesByPId(pd);//列出所有系统用户角色
-		System.out.println("=========="+roleList);
+		List<PageData> roleList =userService.allRolelist("0");//列出所有用户角色
 		mv.setViewName("system/user/user_list");
 		mv.addObject("userList", userList);
 		mv.addObject("roleList", roleList);
@@ -101,8 +100,14 @@ public class UserController extends BaseController {
 		logBefore(logger, Jurisdiction.getUsername()+"删除user");
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		userService.deleteU(pd);
-		out.write("success");
+		int a=userService.getCount(pd);
+		int b=userService.WsCount(pd);
+		if(a==0 && b==0){
+			userService.deleteU(pd);
+			out.write("success");
+		}else{
+			out.write("fall");
+		}
 		out.close();
 	}
 	
@@ -116,8 +121,28 @@ public class UserController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		pd.put("ROLE_ID", "1");
-		List<Role> roleList = roleService.listAllRolesByPId(pd);//列出所有系统用户角色
+		List<PageData> roleList =userService.allRolelist("0");//列出所有用户角色
+		String numberMax=userService.numberMax();
+		int num=Integer.valueOf(numberMax)+1;
+		int num1=num;
+		int a = 0;
+		while(num1!=0){
+			num1 /=10;//获取位数
+		    a++;
+		}
+		String nums="";
+		if(a==1){
+			nums+="0000"+num;
+		}else if(a==2){
+			nums+="000"+num;
+		}else if(a==3){
+			nums+="00"+num;
+		}else if(a==4){
+			nums+="0"+num;
+		}else if(a==5){
+			nums+=""+num;
+		}
+		pd.put("NUMBER", nums);
 		mv.setViewName("system/user/user_edit");
 		mv.addObject("msg", "saveU");
 		mv.addObject("pd", pd);
@@ -141,8 +166,8 @@ public class UserController extends BaseController {
 		pd.put("IP", "");						//IP
 		pd.put("STATUS", "0");					//状态
 		pd.put("SKIN", "default");
-		pd.put("RIGHTS", "");		
-		pd.put("PASSWORD", new SimpleHash("SHA-1", pd.getString("USERNAME"), pd.getString("PASSWORD")).toString());	//密码加密
+		pd.put("RIGHTS", "");
+		pd.put("PASSWORD", new SimpleHash("SHA-1", pd.getString("USERNAME"), "123456").toString());	//密码加密
 		if(null == userService.findByUsername(pd)){	//判断用户名是否存在
 			userService.saveU(pd); 					//执行保存
 			mv.addObject("msg","success");
@@ -228,7 +253,8 @@ public class UserController extends BaseController {
 		pd = this.getPageData();
 		if("1".equals(pd.getString("USER_ID"))){return null;}		//不能修改admin用户
 		pd.put("ROLE_ID", "1");
-		List<Role> roleList = roleService.listAllRolesByPId(pd);	//列出所有系统用户角色
+		//List<Role> roleList = roleService.listAllRolesByPId(pd);	//列出所有系统用户角色
+		List<PageData> roleList =userService.allRolelist("0");
 		mv.addObject("fx", "user");
 		pd = userService.findById(pd);								//根据ID读取
 		mv.setViewName("system/user/user_edit");
@@ -249,9 +275,11 @@ public class UserController extends BaseController {
 		pd = this.getPageData();
 		mv.addObject("fx", "head");
 		pd.put("ROLE_ID", "1");
-		List<Role> roleList = roleService.listAllRolesByPId(pd);	//列出所有系统用户角色
+		//List<Role> roleList = roleService.listAllRolesByPId(pd);	//列出所有系统用户角色
+		List<PageData> roleList =userService.allRolelist("0");
 		pd.put("USERNAME", Jurisdiction.getUsername());
-		pd = userService.findByUsername(pd);						//根据用户名读取
+		
+		pd = userService.findByUsername(pd);//根据用户名读取
 		mv.setViewName("system/user/user_editMy");
 		mv.addObject("msg", "editU");
 		mv.addObject("pd", pd);

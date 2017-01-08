@@ -174,6 +174,7 @@ public class WarehousingController extends BaseController{
 		pd1.put("PRODUCT_ID", pd.getString("ID"));
 		pd1.put("MO_TIME", DateUtil.getTime().toString());
 		int result = warehousingService.materialSave(pd);
+		pd1.put("PRODUCT_ID", pd.getString("ID"));
 		moneyService.saveU(pd1);
 		//--------
 		if(result>0) {
@@ -214,6 +215,15 @@ public class WarehousingController extends BaseController{
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = warehousingService.findBymaterialId(pd);
+		//洪青青修改
+		PageData pd1=Moneytoo();
+		PageData pd2 = new PageData();
+		pd2.put("PRODUCT_ID", pd.getString("ID"));
+		System.out.println("--------"+pd.getString("ID"));
+		pd2=moneyService.findById(pd2);
+		mv.addObject("pd1", pd1);
+		mv.addObject("pd2", pd2);
+		//--------
 		mv.setViewName("fhdb/materials/materialsEdit");
 		mv.addObject("msg", "materialsEdit");
 		mv.addObject("pd", pd);
@@ -233,12 +243,44 @@ public class WarehousingController extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		int result = warehousingService.materialUpdate(pd);
-		if(result>0) {
-			mv.addObject("msg","success");
-		}else {
-			mv.addObject("msg","fail");
+		pd.put("ID", pd.getString("ID"));
+		//洪青青修改
+		PageData pd1 = new PageData();
+		pd1 = this.getPageData();
+		String STORAGE=pd1.getString("STORAGE");
+		String RICHARD=pd1.getString("RICHARD");
+		String LOADING=pd1.getString("LOADING");
+		String UNLOADING=pd1.getString("UNLOADING");
+		System.out.println("======"+STORAGE+"======="+RICHARD+"======="+LOADING+"======"+UNLOADING);
+		double MONEY=Double.valueOf(STORAGE);
+		pd1.put("STORAGE_STATE", '0');
+		if(RICHARD == null){
+			pd1.put("RICHARD_STATE", '1');
+		}else{
+			MONEY +=Double.valueOf(RICHARD);
+			pd1.put("RICHARD_STATE", '0');
 		}
+		if(LOADING == null){
+			pd1.put("LOADING_STATE", '1');
+		}else{
+			MONEY +=Double.valueOf(LOADING);
+			pd1.put("LOADING_STATE", '0');
+		}
+		if(UNLOADING == null){
+			pd1.put("UNLOADING_STATE", '1');
+		}else{
+			MONEY +=Double.valueOf(UNLOADING);
+			pd1.put("UNLOADING_STATE", '0');
+		}
+		pd1.put("MONEY", MONEY);
+		int result = warehousingService.materialUpdate(pd);
+		pd1.put("PRODUCT_ID", pd.getString("ID"));
+		moneyService.editU(pd1);
+		/*if(result>0) {*/
+			mv.addObject("msg","success");
+		/*}else {
+			mv.addObject("msg","fail");
+		}*/
 		mv.setViewName("save_result");
 		return mv;
 	}
