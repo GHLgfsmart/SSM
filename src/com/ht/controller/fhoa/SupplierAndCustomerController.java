@@ -17,6 +17,7 @@ import com.ht.entity.Page;
 import com.ht.service.fhoa.SupplierAndCustomerManager;
 import com.ht.service.fhoa.impl.CategoriesService;
 import com.ht.service.system.impl.UserService;
+import com.ht.util.AppUtil;
 import com.ht.util.Jurisdiction;
 import com.ht.util.ObjectExcelView;
 import com.ht.util.PageData;
@@ -31,7 +32,7 @@ public class SupplierAndCustomerController extends BaseController{
 	private CategoriesService categoriesService;
 	String menuUrl = "supplierAndcustomer/list.do"; //菜单地址(权限用)
 	
-	@Resource(name="supplierAndCustomerService")
+	@Resource()
 	private SupplierAndCustomerManager service;
 	
 	/**
@@ -63,6 +64,22 @@ public class SupplierAndCustomerController extends BaseController{
 		mv.setViewName("fhoa/supplierAndcustomer/list");
 		mv.addObject("QX",Jurisdiction.getHC());				//按钮权限
 		return mv;
+	}
+	
+	@RequestMapping(value="hasName")
+	public void hasName(PrintWriter out) throws Exception{
+		PageData pd = new PageData();
+		int n=0;
+		pd = this.getPageData();
+		if(pd.get("ck") != null && pd.get("ck")!= "" && "edit".equals(pd.get("ck"))){
+			n=1;
+		}else if(pd.get("ck") != null && pd.get("ck")!= "" && "save".equals(pd.get("ck").toString())){
+			n=0;
+		}
+		if(service.findByName(pd)>n){
+			out.write("error");
+		}
+		out.write("success");
 	}
 	
 	/**进入修改页面
@@ -176,10 +193,10 @@ public class SupplierAndCustomerController extends BaseController{
 	@RequestMapping(value="/goAdd")
 	public ModelAndView goAdd()throws Exception{
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
-		List<Customer_categories> categoriesList=categoriesService.findAllName();
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd.put("USERNAME", Jurisdiction.getUsername());
+		List<Customer_categories> categoriesList=categoriesService.findAllName();
 		mv.addObject("list",categoriesList);
 		mv.addObject("pd",pd);
 		mv.setViewName("fhoa/supplierAndcustomer/save");
@@ -252,7 +269,6 @@ public class SupplierAndCustomerController extends BaseController{
 				List<PageData> userList = service.findBy(pd);
 				List<PageData> varList = new ArrayList<PageData>();
 				for(int i=0;i<userList.size();i++){
-					System.out.println("USER.LIST.:"+userList.get(i).toString());
 					PageData vpd = new PageData();
 					vpd.put("var1", userList.get(i).getString("SUPNAME"));//1
 					vpd.put("var2", userList.get(i).getString("PINYIN"));//2

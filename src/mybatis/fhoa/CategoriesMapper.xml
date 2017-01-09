@@ -54,7 +54,7 @@
 		</where>
 	</select>
 	
-	<select id="findAllName" resultMap="categoriesResultMap">
+	<select id="findAllName" parameterType="string" resultMap="categoriesResultMap">
 		select ID,NAME from customer_categories
 	</select>
 	

@@ -223,14 +223,21 @@
 	<script type="text/javascript">
 	
 	$(top.hangge());//关闭加载状态
-		function listname(){
-			 var fir = document.getElementsByName("ids");
-			 for(var i=0;i < fir.length;i++){
-				var abc=fir[i].alt;//获取地址
-				var cze=abc.split(",");
+	//美化
+	function listname(){
+		 var fir = document.getElementsByName("ids");
+		 for(var i=0;i < fir.length;i++){
+			var abc=fir[i].alt;//获取地址
+			var cze=abc.split(",");
+			if(cze[2] ==null && cze[4] ==null){
+				document.getElementById("t"+i).innerHTML=cze[0];
+			}else if(cze[4] ==null){
+				document.getElementById("t"+i).innerHTML=cze[0]+cze[2];
+			}else{
 				document.getElementById("t"+i).innerHTML=cze[0]+cze[2]+cze[4];
-			 }
-		}
+			}
+		 }
+	}
 		//进入详细资料
 		function findByID(ID){
 			 top.jzts();
@@ -260,7 +267,7 @@
 			 diag.Title ="新增";
 			 diag.URL = '<%=basePath%>supplierAndcustomer/goAdd.do';
 			 diag.Width = 700;
-			 diag.Height = 550;
+			 diag.Height = 600;
 			 diag.CancelEvent = function(){ //关闭事件
 				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 					 if('${page.currentPage}' == '0'){
@@ -310,7 +317,7 @@
 			 diag.Title ="资料";
 			 diag.URL = '<%=basePath%>supplierAndcustomer/goUpdate.do?ID='+id;
 			 diag.Width = 700;
-			 diag.Height = 550;
+			 diag.Height = 620;
 			 diag.CancelEvent = function(){ //关闭事件
 				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 					nextPage(${page.currentPage});

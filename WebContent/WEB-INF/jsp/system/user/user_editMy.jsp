@@ -53,11 +53,11 @@
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">密码:</td>
-											<td><input type="password" name="PASSWORD" id="password"  maxlength="32" placeholder="输入密码" title="密码" style="width:98%;"/></td>
+											<td><input type="password" name="PASSWORD" id="password" value="${pd.PASSWORD }" maxlength="32" placeholder="输入密码" title="密码" style="width:98%;"/></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">确认密码:</td>
-											<td><input type="password" name="chkpwd" id="chkpwd"  maxlength="32" placeholder="确认密码" title="确认密码" style="width:98%;"/></td>
+											<td><input type="password" name="chkpwd" id="chkpwd" value="${pd.PASSWORD }"  maxlength="32" placeholder="确认密码" title="确认密码" style="width:98%;"/></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">姓名:</td>
@@ -203,6 +203,7 @@
 			return false;
 		}
 			$("#userForm").submit();
+			
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();
 	}

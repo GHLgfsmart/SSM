@@ -16,7 +16,6 @@
 		<link rel="stylesheet" rel="stylesheet" href="static/ace/css/sweetalert.css" />
 		<script type="text/javascript" src="static/ace/js/jquery-ui.js"></script>
 		<link href="static/ace/css/jquery-ui.css">
-		
 		<link href="static/SanJiLianDong/bootstrap.min.css" rel="stylesheet">
 		<link href="static/SanJiLianDong/main.css" rel="stylesheet">
 		<script src="static/SanJiLianDong/jquery-1.11.0.min.js" type="text/javascript"></script>
@@ -50,7 +49,7 @@
 								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">类型:</td>
 								<td colspan="9" id="type">
 									<select class="chosen-select form-control" name="CATEGORIES_ID" id="CATEGORIES_ID" data-placeholder="请选择类型" style="vertical-align:top;" style="width:98%;" >
-										<option value=""></option>
+										<option value="">请选择类型</option>
 										<c:forEach items="${list}" var="ls">
 											<option value="${ls.ID }" <c:if test="${ls.ID == obj.CATEGORIES_ID }">selected</c:if>>${ls.NAME}</option>
 										</c:forEach>
@@ -61,16 +60,16 @@
 								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">联系人:</td>
 								<td><input type="text" name="CONTACT" id="CONTACT" value="${obj.CONTACT}" maxlength="32" placeholder="这里输入联系人" title="联系人" style="width:66%;"/></td>
 								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">联系电话:</td>
-								<td><input type="text" name="PHONE" id="PHONE" value="${obj.PHONE}" maxlength="32" placeholder="这里输入联系电话" title="联系电话" style="width:98%;"/></td>
+								<td><input type="text" name="PHONE" id="PHONE" value="${obj.PHONE}" maxlength="32" placeholder="这里输入联系电话：12345678901" title="联系电话" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">传真:</td>
-								<td><input type="text" name="FAX_PHONE" id="FAX_PHONE" value="${obj.FAX_PHONE}" maxlength="32" placeholder="这里输入传真" title="传真" style="width:98%;"/></td>
+								<td><input type="text" name="FAX_PHONE" id="FAX_PHONE" value="${obj.FAX_PHONE}" maxlength="32" placeholder="这里输入传真：123-1234567" title="传真" style="width:98%;"/></td>
 								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">邮件:</td>
-								<td><input type="text" name="MAIL" id="MAIL" value="${obj.MAIL}" maxlength="32" placeholder="这里输入邮件" title="邮件" style="width:98%;"/></td>
+								<td><input type="text" name="MAIL" id="MAIL" value="${obj.MAIL}" maxlength="32" placeholder="这里输入邮件:123@cn.cm" title="邮件" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="height: 20px;text-align: right; color: black;">地址:</td>
+								<td style="height: 15px;text-align: right; color: black;">地址:</td>
 								<td colspan="9">
 									<input type="hidden" name="ADDRESS" id="ADDRESS" value="${obj.ADDRESS}" />
 									<div id="distpicker5" style="width:100%">
@@ -98,13 +97,16 @@
 								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">开户行:</td>
 								<td><input type="text" name="OPEN_ACCOUNT" id="OPEN_ACCOUNT" value="${obj.OPEN_ACCOUNT}" maxlength="32" placeholder="这里输入开户行址" title="开户行" style="width:98%;"/></td>
 								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">银行账号:</td>
-								<td><input type="text" name="BANK" id="BANK" value="${obj.BANK}" maxlength="32" placeholder="这里输入银行账号" title="银行账号" style="width:98%;"/></td>
+								<td><input type="text" name="BANK" id="BANK" value="${obj.BANK}" maxlength="32" placeholder="这里输入银行账号(16~19位)" title="银行账号" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">企业税号:</td>
-								<td><input type="text" name="EIN" id="EIN" value="${obj.EIN}" maxlength="32" placeholder="这里输入企业税号" title="企业税号" style="width:98%;"/></td>
+								<td colspan="9"><input type="text" name="EIN" id="EIN" value="${obj.EIN}" maxlength="32" placeholder="企业税号由15或者17或者18或者20位字母、数字组成" title="企业税号" style="width:100%;"/></td>
+							
+							</tr>
+							<tr>
 								<td style="width:70px;text-align: right;padding-top: 13px; color: black;">网站地址:</td>
-								<td><input type="text" name="SITE_ADDRESS" id="SITE_ADDRESS" value="${obj.SITE_ADDRESS}" maxlength="32" placeholder="这里输入网站地址" title="网站地址" style="width:98%;"/></td>
+								<td colspan="9"><input type="text" name="SITE_ADDRESS" id="SITE_ADDRESS" value="${obj.SITE_ADDRESS}" maxlength="32" placeholder="这里输入网站地址" title="网站地址" style="width:98%;"/></td>
 							
 							</tr>
 							<tr>
@@ -158,8 +160,9 @@
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript" src="static/js/common/brief_code.js"></script><!-- 引用拼音方法JS -->
 		<script type="text/javascript">
+		$(top.hangge());
 		 $(function(){
-			 $("#ENTRY_TIME").val(getCurrentDate());
+			 $(top.hangge());
 		 });
 		 function save_name(){
 			 if('${msg}' == 'edit'){
@@ -196,7 +199,7 @@
 		    var arrRslt = makePy(str);
 		    $("#PINYIN").val(arrRslt);
 		}
-		$(top.hangge());
+		
 		
 		//保存
 		function save(){
@@ -210,7 +213,7 @@
 				$("#SUPNAME").focus();
 				return false;
 			}
-			
+
 			if($("#CATEGORIES_ID").val()==""){
 				$("#type").tips({
 					side:3,
@@ -221,7 +224,7 @@
 				$("#CATEGORIES_ID").focus();
 				return false;
 			}
-			
+
 			if($("#CONTACT").val()==""){
 				$("#CONTACT").tips({
 					side:3,
@@ -232,7 +235,7 @@
 				$("#CONTACT").focus();
 				return false;
 			}
-			
+
 			var myreg = /^(((13[0-9]{1})|159)+\d{8})$/;//手机号格式检验
 			if($("#PHONE").val()==""){
 				$("#PHONE").tips({
@@ -253,6 +256,7 @@
 				$("#PHONE").focus();
 				return false;
 			}
+			
 			var fax= /^(\d{3,4}-)?\d{7,8}$/;		//传真格式检验
 			if(!fax.test($("#FAX_PHONE").val())){
 				$("#FAX_PHONE").tips({
@@ -264,6 +268,7 @@
 				$("#FAX_PHONE").focus();
 				return false;
 			}
+			
 		var mail=/^(?:[a-zA-Z0-9]+[_\-\+\.]?)*[a-zA-Z0-9]+@(?:([a-zA-Z0-9]+[_\-]?)*[a-zA-Z0-9]+\.)+([a-zA-Z]{2,})+$/;	//邮箱验证
 		if($("#MAIL").val()==""){
 			$("#MAIL").tips({
@@ -284,17 +289,18 @@
 			$("#MAIL").focus();
 			return false;
 		}
+		
 		if($("#SITE_ADDRESS").val()==""){
-				$("#SITE_ADDRESS").tips({
-					side:3,
-		            msg:'请输入网站地址',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#SITE_ADDRESS").focus();
+			$("#SITE_ADDRESS").tips({
+				side:3,
+	            msg:'请输入网站地址',
+	            bg:'#AE81FF',
+	            time:2
+	        });
+			$("#SITE_ADDRESS").focus();
 			return false;
 		}
-		
+
 		if($("#OPEN_ACCOUNT").val()==""){
 			$("#OPEN_ACCOUNT").tips({
 				side:3,
@@ -305,7 +311,7 @@
 			$("#OPEN_ACCOUNT").focus();
 			return false;
 		}
-		
+
 		var num = /^\d*$/;  //全数字
 		if($("#BANK").val()==""){
 			$("#BANK").tips({
@@ -326,15 +332,16 @@
 			$("#BANK").focus();
 			return false;
 		}
-			var sh=/^[A-Z0-9]{15}$|^[A-Z0-9]{17}$|^[A-Z0-9]{18}$|^[A-Z0-9]{20}$/;	// 验证税号   15或者17或者18或者20位字母、数字组成
-			if($("#EIN").val()==""){
-				$("#EIN").tips({
-					side:3,
-		            msg:'请输入企业税号',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#EIN").focus();
+		
+		var sh=/^[A-Z0-9]{15}$|^[A-Z0-9]{17}$|^[A-Z0-9]{18}$|^[A-Z0-9]{20}$/;	// 验证税号   15或者17或者18或者20位字母、数字组成
+		if($("#EIN").val()==""){
+			$("#EIN").tips({
+				side:3,
+	            msg:'请输入企业税号',
+	            bg:'#AE81FF',
+	            time:2
+	        });
+			$("#EIN").focus();
 			return false;
 		}else if(!sh.test($("#EIN").val())){
 			$("#EIN").tips({
@@ -346,34 +353,68 @@
 			$("#EIN").focus();
 			return false;
 		}
-			var select=document.getElementById("province10");  
-		    var lastIndex = select.selectedIndex; 
-		    var lastValue = select.options[lastIndex].value;
-		    
-		    var select1=document.getElementById("city10");  
-		    var lastIndex1 = select1.selectedIndex;
-		    var lastValue1 = select1.options[lastIndex].value;
-		    
-		    var select2=document.getElementById("district10");  
-		    var lastIndex2 = select2.selectedIndex;
-		    var lastValue2 = select2.options[lastIndex].value;
-			var ADDRESS=lastValue+","+lastIndex+","+lastValue1+","+lastIndex1+","+lastValue2+","+lastIndex2;
-			$("#ADDRESS").val(ADDRESS);
-			$("#Form").submit();
-			swal({
-		        title: "系统提示", 
-		        text: "操作成功！", 
-		        type: "success",
-		        /* showCancelButton: true, */
-		        timer: 5544400,
-		        showConfirmButton: false,
-		        confirmButtonColor: "#ec6c62"
-		    	});
-			$("#zhongxin").hide();
-			$("#zhongxin2").show();
-			
-		}
+
+		var select=document.getElementById("province10");  
+	    var lastIndex = select.selectedIndex; 
+	    var lastValue = select.options[lastIndex].value;
+
+	    var select1=document.getElementById("city10");  
+	    var lastIndex1 = select1.selectedIndex;
+	    var lastValue1 = select1.options[lastIndex1].value;
+
+	    var select2=document.getElementById("district10");  
+	    var lastIndex2 = select2.selectedIndex;
+	    var lastValue2 = select2.options[lastIndex2].value;
 		
+	    var ADDRESS=lastValue+","+lastIndex+","+lastValue1+","+lastIndex1+","+lastValue2+","+lastIndex2;
+		
+	    $("#ADDRESS").val(ADDRESS);
+		checkName();
+	}
+		function checkName(){
+			var SUPNAME = $.trim($("#SUPNAME").val());
+			ID='${obj.ID}';
+			var ck='${msg}';
+			var url = "<%=basePath%>supplierAndcustomer/hasName.do?SUPNAME="+SUPNAME+"&& ck="+ck;
+			if(ck == 'edit'){
+				$.get(url,function(data){
+					$(top.hangge());//关闭加载状态
+					if(data == 'success'){
+						$("#Form").submit();
+						$("#zhongxin").hide();
+						$("#zhongxin2").show();
+					}else {
+						 $("#SUPNAME").tips({
+								side:3,
+					            msg:'该供应商已存在',
+					            bg:'#AE81FF',
+					            time:2
+					        });
+							$("#SUPNAME").focus();
+							return false;
+					}
+				});
+			}else if(ck == 'save'){
+				$.get(url,function(data){
+					$(top.hangge());//关闭加载状态
+					if(data == 'success'){
+						$("#Form").submit();
+						$("#zhongxin").hide();
+						$("#zhongxin2").show();
+					}else {
+						 $("#SUPNAME").tips({
+								side:3,
+					            msg:'该供应商已存在',
+					            bg:'#AE81FF',
+					            time:2
+					        });
+							$("#SUPNAME").focus();
+							return false;
+					}
+				});
+				return false;
+			}
+		}
 		</script>
 </body>
 </html>

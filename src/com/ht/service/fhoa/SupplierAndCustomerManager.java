@@ -44,6 +44,13 @@ public interface SupplierAndCustomerManager {
 	public List<PageData> findBy(PageData pd)throws Exception;
 	
 	/**
+	 * 通过supname查询
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public int findByName(PageData pd)throws Exception;
+	/**
 	 * 批量删除
 	 * @param ID
 	 * @throws Exception

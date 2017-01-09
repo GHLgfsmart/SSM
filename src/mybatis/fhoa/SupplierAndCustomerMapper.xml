@@ -60,7 +60,10 @@
 	</delete>
 	
 	<update id="edit" parameterType="pd">
-		update supplier_customer set SUPNAME = #{SUPNAME},PINYIN = #{PINYIN},CATEGORIES_ID = #{CATEGORIES_ID},CONTACT = #{CONTACT},USER_ID = #{USER_ID},PHONE = #{PHONE},ADDRESS = #{ADDRESS},UPDATE_TIME = #{UPDATE_TIME},FAX_PHONE = #{FAX_PHONE},MAIL = #{MAIL},OPEN_ACCOUNT = #{OPEN_ACCOUNT},SITE_ADDRESS = #{SITE_ADDRESS},BANK = #{BANK},EIN = #{EIN},NOTE = #{NOTE},STATE = #{STATE} where ID=#{ID}
+		update supplier_customer set SUPNAME = #{SUPNAME},PINYIN = #{PINYIN},CATEGORIES_ID = #{CATEGORIES_ID},
+		CONTACT = #{CONTACT},USER_ID = #{USER_ID},PHONE = #{PHONE},ADDRESS = #{ADDRESS},UPDATE_TIME = #{UPDATE_TIME},
+		FAX_PHONE = #{FAX_PHONE},MAIL = #{MAIL},OPEN_ACCOUNT = #{OPEN_ACCOUNT},SITE_ADDRESS = #{SITE_ADDRESS},
+		BANK = #{BANK},EIN = #{EIN},NOTE = #{NOTE},STATE = #{STATE} where ID=#{ID}
 	</update>
 	
 	<select id="datalistPage" parameterType="page" resultType="pd">
@@ -100,6 +103,9 @@
 			<if test="STATE != NULL">
 				and STATE=#{STATE}
 			</if>
+	</select>
+	<select id="findByName" parameterType="pd" resultType="int">
+		select count(*) from supplier_customer where SUPNAME=#{SUPNAME} 
 	</select>
 	<select id="findByID" parameterType="pd" resultType="pd">
 		select <include refid="field"></include> from supplier_customer S inner join SYS_USER U inner join customer_categories C where S.ID=#{ID} AND S.CATEGORIES_ID=C.ID AND S.USER_ID=U.USER_ID

@@ -8,6 +8,8 @@ import com.ht.entity.Page;
 import com.ht.service.fhoa.SupplierAndCustomerManager;
 import com.ht.util.PageData;
 
+import oracle.net.aso.p;
+
 @Service("supplierAndCustomerService")
 public class SupplierAndCustomerService implements SupplierAndCustomerManager{
 
@@ -56,6 +58,11 @@ public class SupplierAndCustomerService implements SupplierAndCustomerManager{
 	@Override
 	public List<PageData> checkID(PageData pd) throws Exception {
 		return (List<PageData>)dao.findForList("SupplierAndCustomerMapper.checkID", pd);
+	}
+
+	@Override
+	public int findByName(PageData pd) throws Exception {
+		return (Integer)dao.findForObject("SupplierAndCustomerMapper.findByName", pd);
 	}
 	
 	
