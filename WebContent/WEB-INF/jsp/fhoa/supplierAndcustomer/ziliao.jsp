@@ -19,7 +19,7 @@
 	</style>
 	
 </head>
-<body class="no-skin" background="">
+<body class="no-skin">
 
 	<div class="col-sm-4" style="width:100%;height:100%;margin-top:10px;">
         <div class="panel panel-info">
@@ -66,7 +66,7 @@
 						<td style="text-align: center;padding-top: 13px;">备注:</td>
 					</tr>
 					<tr>
-						<td class='center' style="text-align: center;"> ${obj.ADDRESS }</td>
+						<td class='center' style="text-align: center;"> ${address}</td>
 						<td class='center' style="text-align: center;"> ${obj.SITE_ADDRESS }</td>
 						<td class='center' style="text-align: center;"> ${obj.OPEN_ACCOUNT }</td>
 						<td class='center' style="text-align: center;"> ${obj.BANK }</td>
@@ -87,6 +87,7 @@
 	<script>
 		$(top.hangge());//关闭加载状态
 		$(document).ready(function(){ 
+			$(top.hangge());//关闭加载状态
 			$(top.hangge());//关闭加载状态
 		}); 
 	</script>

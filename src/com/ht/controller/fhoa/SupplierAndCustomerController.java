@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+
 import javax.annotation.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -189,7 +191,17 @@ public class SupplierAndCustomerController extends BaseController{
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		PageData zl=service.findById(pd);
+		String address=zl.getString("ADDRESS");
+		String ad[]=address.split(",");
+		String adok="";
+		Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");    
+		for(int i=0;i<ad.length;i++){
+			if(ad[i] != null && ad[i] != "" && !pattern.matcher(ad[i]).matches()){
+				adok+=ad[i];
+			}
+		}
 		mv.addObject("obj",zl);
+		mv.addObject("address",adok);
 		mv.setViewName("fhoa/supplierAndcustomer/ziliao");
 		return mv;
 	}
