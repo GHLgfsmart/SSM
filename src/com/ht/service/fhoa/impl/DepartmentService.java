@@ -97,6 +97,11 @@ public class DepartmentService implements DepartmentManager{
 		}
 		return departmentList;
 	}
+
+	@Override
+	public String numberMax() throws Exception {
+		return (String) dao.findForObject("DepartmentMapper.numberMax", null);
+	}
 	
 }
 

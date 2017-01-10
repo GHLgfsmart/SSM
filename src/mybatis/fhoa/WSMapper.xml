@@ -85,7 +85,7 @@
 	
 	<select id="findById" parameterType="pd" resultType="pd">
 	select
-	w.ID,
+				w.ID,
 				w.WARNAME,
 				w.SIZE,
 				w.UPPER_LIMIT,
@@ -95,11 +95,11 @@
 				w.ENTRY_TIME,
 				w.UPDATE_TIME,
 				w.NOTE,
-				w.STATE,user.USERNAME
-	from
-	<include refid="tableName"></include> w,<include refid="userTableName"></include> user
+				u.USERNAME,
+				w.USER_ID
+	from <include refid="tableName"></include> w,<include refid="userTableName"></include> u
 	where
-		ID = #{ID} and w.USER_ID = user.USER_ID
+		ID = #{ID} and w.USER_ID = u.USER_ID
 	</select>
 	
 	<!-- 新增仓库 -->
@@ -124,10 +124,9 @@
 			ADDRESS				=#{ADDRESS},
 			ENTRY_TIME			=#{ENTRY_TIME},
 			UPDATE_TIME			=#{UPDATE_TIME},
-			NOTE				=#{NOTE},
-			STATE				=#{STATE}
+			NOTE				=#{NOTE}
 		where
-			ID		=	#{ID}
+			ID = #{ID}
 		
 	</update>
 	<!-- 修改仓库 -->
@@ -135,9 +134,9 @@
 		update 
 		<include refid="tableName"></include>
 		set
-			STATE				=#{STATE}
+			STATE = #{STATE}
 		where
-			ID		=	#{ID}
+			ID = #{ID}
 		
 	</update>
 	<!-- 获取总数 -->

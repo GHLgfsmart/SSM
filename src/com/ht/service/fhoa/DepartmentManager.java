@@ -66,5 +66,11 @@ public interface DepartmentManager{
 	 */
 	public List<Department> listAllDepartment(String parentId) throws Exception;
 	
+	/**
+	 * 查找最大编号
+	 * @return
+	 * @throws Exception
+	 */
+	public String numberMax()throws Exception;
 }
 

@@ -20,11 +20,7 @@
 <%@ include file="../index/top.jsp"%>
 </head>
 <body class="no-skin">
-<%-- 	session：${pd.USERNAME}
-	session:<%=session.getAttribute("user")%> --%>
-	<!-- /section:basics/navbar.layout -->
-	<div class="main-container" id="main-container">
-		<!-- /section:basics/sidebar -->
+	<div class="main-container" id="main-container" style="margin-top:100px;">
 		<div class="main-content">
 			<div class="main-content-inner">
 				<div class="page-content">

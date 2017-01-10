@@ -51,6 +51,27 @@ public class DepartmentController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.put("DEPARTMENT_ID", this.get32UUID());	//主键
+		String numberMax=departmentService.numberMax();
+		int num=Integer.valueOf(numberMax)+1;
+		int num1=num;
+		int a = 0;
+		while(num1!=0){
+			num1 /=10;//获取位数
+		    a++;
+		}
+		String nums=pd.getString("JM");
+		if(a==1){
+			nums+="0000"+num;
+		}else if(a==2){
+			nums+="000"+num;
+		}else if(a==3){
+			nums+="00"+num;
+		}else if(a==4){
+			nums+="0"+num;
+		}else if(a==5){
+			nums+=""+num;
+		}
+		pd.put("BIANMA", nums);
 		departmentService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");

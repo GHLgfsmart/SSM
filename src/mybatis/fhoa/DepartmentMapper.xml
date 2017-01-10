@@ -77,6 +77,11 @@
 		DEPARTMENT_ID = #{DEPARTMENT_ID}
 	</update>
 	
+	<!-- 编号最大列表 -->
+	<select id="numberMax" resultType="string">
+		select max(BIANMA) from <include refid="tableName"></include>
+	</select>	
+	
 	<!-- 通过ID获取数据 -->
 	<select id="findById" parameterType="pd" resultType="pd">
 		select 

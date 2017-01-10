@@ -289,6 +289,8 @@
 		        "选择", 750, 400,
 		        {buttons: {}, iframeScrolling: 'yes', showClose: true,
 		            closed:function (){
+		            	alert(supplier);
+		            	alert("user_id:"+supid);
 		                $("#USERNAME").val(supplier);
 		                $("#USER_ID").val(supid);
 		            }

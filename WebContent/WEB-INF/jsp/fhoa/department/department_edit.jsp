@@ -17,7 +17,7 @@
 </head>
 <body class="no-skin">
 <!-- /section:basics/navbar.layout -->
-<div class="main-container" id="main-container">
+<div class="main-container" id="main-container" style="margin-top:15px;">
 	<!-- /section:basics/sidebar -->
 	<div class="main-content">
 		<div class="main-content-inner">
@@ -28,6 +28,7 @@
 					<form action="department/${msg }.do" name="Form" id="Form" method="post">
 						<input type="hidden" name="DEPARTMENT_ID" id="DEPARTMENT_ID" value="${pd.DEPARTMENT_ID}"/>
 						<input type="hidden" name="PARENT_ID" id="PARENT_ID" value="${null == pd.PARENT_ID ? DEPARTMENT_ID:pd.PARENT_ID}"/>
+						<input type="hidden" name="JM" id="JM" />
 						<div id="zhongxin">
 						<table id="table_report" class="table table-striped table-bordered table-hover">
 							<tr>
@@ -45,10 +46,6 @@
 							<tr>
 								<td style="width:70px;text-align: right;padding-top: 13px;">英文:</td>
 								<td><input type="text" name="NAME_EN" id="NAME_EN" value="${pd.NAME_EN}" maxlength="50" placeholder="这里输入英文" title="英文" style="width:98%;"/></td>
-							</tr>
-							<tr>
-								<td style="width:70px;text-align: right;padding-top: 13px;">编码:</td>
-								<td><input type="text" name="BIANMA" id="BIANMA" value="${pd.BIANMA}" maxlength="32" placeholder="这里输入编码 (不重复, 禁止修改)" title="编码" style="width:76%;" onblur="hasBianma();" <c:if test="${null != pd.BIANMA}">readonly="readonly"</c:if>/></td>
 							</tr>
 							<tr>
 								<td style="width:70px;text-align: right;padding-top: 13px;">负责人:</td>
@@ -101,6 +98,8 @@
 
 	<!-- 页面底部js¨ -->
 	<%@ include file="../../system/index/foot.jsp"%>
+	<!-- 引用拼音方法JS -->
+	<script type="text/javascript" src="static/js/common/brief_code.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 		<script type="text/javascript">
@@ -158,7 +157,10 @@
 			$("#TEL").focus();
 			return false;
 		}
-
+		var str = $("#NAME").val(); 
+	    var arrRslt = makePy(str);
+	    $("#JM").val(arrRslt);
+	    
 			$("#Form").submit();
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();

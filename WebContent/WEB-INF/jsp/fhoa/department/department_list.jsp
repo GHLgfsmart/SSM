@@ -72,7 +72,7 @@
 									<c:forEach items="${varList}" var="var" varStatus="vs">
 										<tr>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class='center'><a href="javascript:goSondict('${var.DEPARTMENT_ID }')"><i class="ace-icon fa fa-share bigger-100"></i>&nbsp;${var.NAME}</a></td>
+											<td class='center'><a href="javascript:goSondict('${var.DEPARTMENT_ID }')">${var.NAME}</a></td>
 											<td class='center'><a href="javascript:goSondict('${var.DEPARTMENT_ID }')">${var.NAME_EN}</a></td>
 											<td class='center'>${var.BIANMA}</td>
 											<td class='center'>${var.HEADMAN}</td>

@@ -5,14 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.ht.controller.base.BaseController;
 import com.ht.entity.Page;
 import com.ht.entity.Warehouse;
@@ -23,8 +20,6 @@ import com.ht.util.DateUtil;
 import com.ht.util.Jurisdiction;
 import com.ht.util.ObjectExcelView;
 import com.ht.util.PageData;
-
-import javafx.scene.control.Alert;
 
 /**
  * 说明： 仓库
