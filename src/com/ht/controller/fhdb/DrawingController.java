@@ -1,4 +1,5 @@
 package com.ht.controller.fhdb;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +19,7 @@ import com.ht.service.fhdb.impl.DrawingServiceImpl;
 import com.ht.util.Jurisdiction;
 import com.ht.util.ObjectExcelView;
 import com.ht.util.PageData;
+import com.sun.xml.internal.bind.v2.model.core.ID;
 
 @Controller
 @RequestMapping(value = "/Drawing")
@@ -71,7 +73,6 @@ public class DrawingController extends BaseController {
 	}
 	
 	/**
-	 * @author Mr.Lin
 	 * 调拨新增
 	 * @throws Exception
 	 * @return
@@ -81,11 +82,17 @@ public class DrawingController extends BaseController {
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
 		logBefore(logger, Jurisdiction.getUsername()+"新增调拨单");
 		ModelAndView mv = this.getModelAndView();
+		//修改数量
+		PageData pds = new PageData();
+		pds = this.getPageData();
+		pds.get("COUNT");
+		pds.getString("MATERIALS_ID");
+		drawingServiceImpl.reduce(pds);
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.put("ID", this.get32UUID());	//主键
 		pd.get("ENTRY_TIME");
-		System.out.println("添加单的时间:"+pd.get("ENTRY_TIME"));
+		pd.get("COUNT");
 		pd.getString("INSPECTOR");
 		pd.getString("BIANHAO");
 		pd.get("BusinessDate");
@@ -95,8 +102,12 @@ public class DrawingController extends BaseController {
 		pd.getString("DRAWING_INST");
 		pd.getString("MATERIALS_ID");
 		//执行添加语句
-		drawingServiceImpl.DrawingSave(pd);
-		mv.addObject("pd", pd);
+		int result=  drawingServiceImpl.DrawingSave(pd);
+		if(result>0) {
+			mv.addObject("msg","success");
+		}else {
+			mv.addObject("msg","fail");
+		}
 		mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
 		mv.setViewName("save_result");
 		return mv;
@@ -128,18 +139,22 @@ public class DrawingController extends BaseController {
 		 mv.addObject("pd", pd);
 		 mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
 		 mv.addObject("updatetime",updatetime);
+		 mv.addObject("At", "Audit");
+		 mv.addObject("As","Abolish");
 		 mv.setViewName("fhdb/Drawing/ListDrawing");
 		 return mv;
 	}
 	
+
 	/**
 	 * 审核
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/Audit")
-	public ModelAndView Audits(HttpServletResponse response) throws Exception{
+	public ModelAndView Audits() throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"审核");
+		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.getString("ID");
@@ -147,8 +162,9 @@ public class DrawingController extends BaseController {
 		pd.getString("AUDITOR");
 		pd.get("UPDATE_TIME");
 		drawingServiceImpl.Audit(pd);
-		response.sendRedirect("/SSM/Drawing/ListDrawing.do");
-		return null;
+		mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
+		mv.setViewName("save_result");
+		return mv;
 	}
 	
 	/**
@@ -157,8 +173,9 @@ public class DrawingController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/Abolish")
-	public ModelAndView Abolish(HttpServletResponse response) throws Exception{
+	public ModelAndView Abolish() throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"去审");
+		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.getString("ID");
@@ -166,29 +183,57 @@ public class DrawingController extends BaseController {
 		pd.getString("AUDITOR");
 		pd.get("UPDATE_TIME");
 		drawingServiceImpl.Audit(pd);
-		response.sendRedirect("/SSM/Drawing/ListDrawing.do");
-		return null;
+		mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
+		mv.setViewName("save_result");
+		return mv;
 	}
+	/**
+	 * 删除
+	 * @param out
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/singleDel")
+	public void singleDel(PrintWriter out) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"调拨删除");
+		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd.getString("ID");
+		int result = drawingServiceImpl.delDraeing(pd);
+		if(result>0) {
+			out.write("success");
+		}else {
+			out.write("fail");
+		}
+		out.close();
+	}
+	
 	
 	/**批量删除
 	 * @param out
 	 * @throws Exception 
 	 */
 	@RequestMapping(value="/deletewar")
-	public void delete(HttpServletResponse response) throws Exception{
+	public void delete(PrintWriter out) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"调拨删除");
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
 		logBefore(logger, Jurisdiction.getUsername()+"删除");
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		String ID=pd.getString("ID");
-		ID = ID.replace(" ", "");
-		String[] idsStr = ID.split(",");
-		for (int i = 0; i < idsStr.length; i++) {
-			drawingServiceImpl.delDraeing(idsStr[i]);
+		String DATA_IDS=pd.getString("ID");
+		if(null != DATA_IDS && !"".equals(DATA_IDS)){
+			String ArrayDATA_IDS[] = DATA_IDS.split(",");
+			for(int i=0; i<ArrayDATA_IDS.length; i++) {
+				pd.put("ID", ArrayDATA_IDS[i]);
+				drawingServiceImpl.delDraeing(pd);
+			}
+			out.write("success");
+		}else {
+			out.write("fail");
 		}
-		response.sendRedirect("/SSM/Drawing/ListDrawing.do");
+		out.close();
 	}
-	
+
 	/**
 	 * @author Mr.Lin
 	 * 弹出调拨修改界面
@@ -196,22 +241,51 @@ public class DrawingController extends BaseController {
 	 * @return
 	 * */
 	@RequestMapping(value="/DrawingByid")
-	public ModelAndView DrawingByid()throws Exception{
+	public ModelAndView DrawingByid(Page page)throws Exception{
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "edit")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
-		PageData pd = new PageData();
-		pd = this.getPageData();
+		PageData pdda = new PageData();
+		pdda = this.getPageData();
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String updatetime = df.format(new Date());
-		String ID=pd.getString("ID");
-		pd= drawingServiceImpl.DraeingById(ID);
-		//查询经手人
-		Page page=null;
-		List<PageData> goAddPage = drawingServiceImpl.ListWAndU(page);
+		String ID=pdda.getString("ID");
+		//根据id查询出业务日期,经手人,调拨说明,单据编号,业务日期  
+		PageData paa= drawingServiceImpl.DraeingById(ID);
+		//查询出全部的经手人
+		Page pa=null;
+		List<PageData> goAddPage = drawingServiceImpl.ListWAndU(pa);
+		//查询出当前的仓库名称
+		PageData pds=drawingServiceImpl.DraeingBywname(ID);
+		//查询出所有的仓库名
+		List<PageData> ListWA = drawingServiceImpl.ListWA(pa);
+		
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		String ckID = pd.getString("ckID");
+		if(null != ckID && !"".equals(ckID)){
+			pd.put("ckID", ckID.trim());
+		}
+		String mi=pd.getString("MATERIALS_ID");
+		if(null != mi && !"".equals(mi)){
+			pd.put("MATERIALS_ID", mi.trim());
+		}
+		page.setPd(pd);
+		//根据MATERIALS_ID查询出所在仓库里的物资
+		PageData pdID=drawingServiceImpl.byIDPage(page);
+		
+		//根据ID查询出所在仓库里的所有已入库的物资
+		List<PageData> walist = drawingServiceImpl.ListProduct(page);
+		
+		mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
 		mv.addObject("updatetime",updatetime);
+		mv.addObject("pd", paa);
+		mv.addObject("pds", pds);
+		mv.addObject("ListWA", ListWA);
 		mv.addObject("goAddPage", goAddPage);
-		mv.addObject("pd", pd);
+		mv.addObject("pdID", pdID);
+		mv.addObject("walist", walist);
 		mv.addObject("amend", "updatewar");
+		mv.addObject("update", "updatewar");
 		mv.setViewName("fhdb/Drawing/DrawingByid");
 		return mv;
 	}
@@ -226,14 +300,30 @@ public class DrawingController extends BaseController {
 	public ModelAndView update() throws Exception{
 		ModelAndView mv = this.getModelAndView();
 		logBefore(logger, Jurisdiction.getUsername()+"编辑单据");
+		//修改数量
+		PageData pds = new PageData();
+		pds = this.getPageData();
+		pds.get("COUNT");
+		pds.getString("MATERIALS_ID");
+		drawingServiceImpl.reduce(pds);
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.getString("ID");
-		pd.get("BusinessDate");
+		pd.getString("BusinessDate");
 		pd.getString("DRAWING_INST");
-		pd.get("UPDATE_TIME");
-		pd.get("JINGSHUO_ID");
-		drawingServiceImpl.updateDraeing(pd);
+		pd.getString("UPDATE_TIME");
+		pd.getString("WAREHOUSE_OUT_ID");
+		pd.getString("WAREHOUSE_PUT_ID");
+		pd.getString("MATERIALS_ID");
+		pd.getString("JINGSHUO_ID");
+		pd.get("COUNT");
+		int result=  drawingServiceImpl.updateDraeing(pd); 
+		if(result>0) {
+			mv.addObject("msg","success");
+		}else {
+			mv.addObject("msg","fail");
+		}
+		mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
 		mv.setViewName("save_result");
 		return mv;
 	}

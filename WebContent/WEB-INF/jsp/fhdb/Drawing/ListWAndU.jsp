@@ -16,10 +16,11 @@
 <!-- 下拉框 -->
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
 <!-- jsp文件头和头部 -->
-		<%@ include file="/WEB-INF/jsp/system/index/top.jsp"%>
-		<link rel="stylesheet" href="static/js/common/jbox.css" />
-		<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
-		<script type="text/javascript" src="static/js/common/brief_code.js"></script><!-- 引用拼音方法JS -->
+<%@ include file="/WEB-INF/jsp/system/index/top.jsp"%>
+<!-- 日期框 -->
+<link rel="stylesheet" href="static/ace/css/datepicker.css" />
+<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="static/ace/css/sweetalert.css">
 </head>
 <body class="no-skin">
 
@@ -112,7 +113,7 @@
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
 											<td class="center">${sp.BIANHAO }</td>
 											<td class="center">${sp.NAME }</td>
-											<td class="center">${sp.COUNT}</td>
+											<td style="text-align:center;"><input type="text" name="COUNT" id="COUNT" value="${sp.COUNT}" style="border:none;outline:medium;text-align:center;width:100px;" /></td>
 											<td class="center">${sp.UNIT}</td>
 											<td class="center">${sp.NOTE}</td>
 										</tr>
@@ -159,6 +160,7 @@
 	<%@ include file="/WEB-INF/jsp/system/index/foot.jsp"%>
 	<!-- 删除时确认窗口 -->
 	<script src="static/ace/js/bootbox.js"></script>
+	<!-- ace scripts -->
 	<script src="static/ace/js/ace/ace.js"></script>
 	<!-- 日期框 -->
 	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
@@ -166,19 +168,29 @@
 	<script src="static/ace/js/chosen.jquery.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
-	<!-- 页面底部js¨ -->
-	<!--提示框-->
-	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
-	<script type="text/javascript" src="static/js/common/jquery.jBox-2.3.min.js"></script>
-	<script type="text/javascript" src="static/js/common/jquery.jBox-zh-CN.js"></script>
 	</body>
 
 <script type="text/javascript">
 $(top.hangge());
 
 //保存数据
-function save(){
-	
+function save(msg){
+	var MATERIALS_ID = "";
+ 	for(var i=0;i < document.getElementsByName('MATERIALS_ID').length;i++)
+ 		{
+ 				if(document.getElementsByName('MATERIALS_ID')[i].checked){
+ 				  if(MATERIALS_ID=='') MATERIALS_ID += document.getElementsByName('MATERIALS_ID')[i].value;
+ 				  else MATERIALS_ID += ',' + document.getElementsByName('MATERIALS_ID')[i].value;
+ 				 }
+ 		 }
+ 		if(MATERIALS_ID==''){
+ 			bootbox.dialog({
+ 				message: "<span class='bigger-110'>您没有选择任何内容!</span>",
+ 				buttons: 			
+ 				{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+ 			});
+ 			return;
+ 		}
 	if($("#DRAWING_INST").val()==""){
 		$("#DRAWING_INST").tips({
 			side:3,
@@ -218,27 +230,11 @@ function save(){
         });
 		$("#WAREHOUSE_PUT_ID").focus();
 	return false;
-	}
- 	var MATERIALS_ID = "";
- 	for(var i=0;i < document.getElementsByName('MATERIALS_ID').length;i++)
- 		{
- 				if(document.getElementsByName('MATERIALS_ID')[i].checked){
- 				  if(MATERIALS_ID=='') MATERIALS_ID += document.getElementsByName('MATERIALS_ID')[i].value;
- 				  else MATERIALS_ID += ',' + document.getElementsByName('MATERIALS_ID')[i].value;
- 				 }
- 		 }
- 		if(MATERIALS_ID==''){
- 			bootbox.dialog({
- 				message: "<span class='bigger-110'>您没有选择任何内容!</span>",
- 				buttons: 			
- 				{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
- 			});
- 			return;
- 		}else{
+	}else{
  			$("#Form").submit();
  			$("#zhongxin").hide();
  			$("#zhongxin2").show();
- 		}
+ 	}
 }
 //搜索此仓库下的产品
 /* var WAREHOUSE_OUT_ID = ""; */

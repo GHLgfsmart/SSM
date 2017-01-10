@@ -25,7 +25,7 @@
 	<!-- 查询出所有警报及数据导出 -->
 	<select id="datalistPage" parameterType="page" resultType="pd">
 		select
-		ID,SIZE,WARNAME,UPPER_LIMIT,LOWER_LIMIT,PRACTICAl,ADDRESS
+			SIZE,WARNAME,UPPER_LIMIT,LOWER_LIMIT,PRACTICAl,ADDRESS
 		from
 		<include refid="tableName"></include>
 		where (PRACTICAL > UPPER_LIMIT or PRACTICAL &lt; LOWER_LIMIT) and STATE=0

@@ -19,6 +19,8 @@
 <%@ include file="/WEB-INF/jsp/system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
+<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="static/ace/css/sweetalert.css">
 </head>
 <body class="no-skin">
 
@@ -59,15 +61,22 @@
 								  	</select>
 								</td>
 								<c:if test="${QX.cha == 1 }">
+									<td style="padding-left:2px;"><input type="reset" id="cz" value="刷新"></td>
 									<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
-									<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="ExcelData();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
+									<c:if test="${QX.toExcel == 1 }">
+										<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="ExcelData();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
+									<c:if test="${QX.toExcel == 1 }">
+										<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="printls();" title="打印"><i id="nav-search-icon" class="ace-icon fa fa-print bigger-150 nav-search-icon blue "></i></a></td>
+									</c:if>
+										
 								</c:if>
 							</tr>
 						</table>
 							
 						<!-- 检索  -->
-					
+					<div id="printData">
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
+						
 							<thead>
 								<tr>
 									<th class="center" style="width:35px;">
@@ -85,18 +94,18 @@
 									<th class="center">审核人</th>
 									<th class="center">调出仓库</th>
 									<th class="center">调入仓库</th>
+									<th class="center">单据数量</th>
 									<th class="center">操作</th>
 								</tr>
 							</thead>
 													
 							<tbody>
 								
-							<!-- 开始循环 -->	
+							<!-- 开始循环 -->	 
 							<c:choose>
 								<c:when test="${not empty darList}">
 								<c:if test="${QX.cha == 1}">
 									<c:forEach items="${darList}" var="dar" varStatus="vs">
-												
 										<tr>
 											<td class='center' style="width: 30px;">
 												<label><input type='checkbox' name="ID" id="ID"  value="${dar.ID }"  alt="${dar.STATE }"/><span class="lbl"></span></label>
@@ -118,19 +127,19 @@
 											<td class="center">${dar.AUDITOR}</td>
 											<td class="center">${dar.chu}</td>
 											<td class="center">${dar.ru}</td>
-											
+											<td class="center">${dar.NUMBER_OF}</td>
 												<td class="center">
 												<c:if test="${QX.edit != 1}">
 												<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
 												</c:if>
 												<div class="hidden-sm hidden-xs btn-group">
 													<c:if test="${QX.edit == 1 }">
-													<a class="btn btn-xs btn-success" title="修改" onclick="edit('${dar.ID}','${dar.STATE }');">
+													<a class="btn btn-xs btn-success" title="修改" onclick="edit('${dar.ID}','${dar.STATE }','${dar.MATERIALS_ID }');">
 														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="修改"></i>
 													</a>
 													</c:if>
 													<c:if test="${QX.del == 1 }">
-													<a class="btn btn-xs btn-danger" onclick="del('${dar.ID}','${dar.STATE }');">
+													<a class="btn btn-xs btn-danger" onclick="singleDel('${dar.ID}','${dar.STATE }');">
 														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 													</a>
 													</c:if>
@@ -154,7 +163,7 @@
 												
 															<c:if test="${QX.edit == 1 }">
 															<li>
-																<a style="cursor:pointer;" onclick="edit('${dar.ID}','${dar.STATE }');" class="tooltip-success" data-rel="tooltip" title="修改">
+																<a style="cursor:pointer;" onclick="edit('${dar.ID}','${dar.STATE }','${dar.MATERIALS_ID }');" class="tooltip-success" data-rel="tooltip" title="修改">
 																	<span class="blue">
 																		<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
 																	</span>
@@ -163,7 +172,7 @@
 															</c:if>
 															<c:if test="${QX.del == 1 }">
 															<li>
-																<a style="cursor:pointer;" onclick="del('${dar.ID}','${dar.STATE }');" class="tooltip-error" data-rel="tooltip" title="删除">
+																<a style="cursor:pointer;" onclick="singleDel('${dar.ID}','${dar.STATE }');" class="tooltip-error" data-rel="tooltip" title="删除">
 																	<span class="red">
 																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
 																	</span>
@@ -209,6 +218,7 @@
 							</c:choose>
 							</tbody>
 						</table>
+						</div>
 							<div class="page-header position-relative">
 						<table style="width:100%;">
 							<tr>
@@ -246,6 +256,7 @@
 	<%@ include file="/WEB-INF/jsp/system/index/foot.jsp"%>
 	<!-- 删除时确认窗口 -->
 	<script src="static/ace/js/bootbox.js"></script>
+	<!-- ace scripts -->
 	<script src="static/ace/js/ace/ace.js"></script>
 	<!-- 日期框 -->
 	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>
@@ -259,6 +270,18 @@
 $(top.hangge());
 
 
+//打印
+function  printls(){
+	var headstr = "<html><head><title></title></head><body>";  
+	var footstr = "</body>";
+	var printDatad = document.getElementById("printData").innerHTML; 
+	var oldstr = document.body.innerHTML;  
+	document.body.innerHTML = headstr+printDatad+footstr; 
+	window.print();  
+	document.body.innerHTML = oldstr; 
+	return false;
+}
+	
 
 //导出excel
 function ExcelData(){
@@ -276,7 +299,7 @@ function searchs(){
 }
 
 //修改
-function edit(Id,STATE){
+function edit(ID,STATE,MATERIALS_ID){
 	if (STATE==1) {
 			bootbox.dialog({
 				message: "<span class='bigger-110'>此单据已审核,请去审核后编辑!</span>",
@@ -290,9 +313,9 @@ function edit(Id,STATE){
 	 var diag = new top.Dialog();
 	 diag.Drag=true;
 	 diag.Title ="编辑";
-	 diag.URL = '<%=basePath%>Drawing/DrawingByid.do?ID='+Id;
-	 diag.Width = 500;
-	 diag.Height = 400;
+	 diag.URL = '<%=basePath%>Drawing/DrawingByid.do?ID='+ID+'&MATERIALS_ID='+MATERIALS_ID;
+	 diag.Width = 900;
+	 diag.Height = 600;
 	 diag.CancelEvent = function(){ //关闭事件
 		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 			 nextPage(${page.currentPage});
@@ -329,81 +352,145 @@ function add(){
  * 审核
  */
 function auditing(ID,STATE) {
-	var AUDITOR=$("#AUDITOR").val();
- 	var UPDATE_TIME=$("#updatetime").val();
- 	var sh=$("#sh").val();
- 	if (STATE==1) {
- 			bootbox.dialog({
-					message: "<span class='bigger-110'>此单据已审核,不能重复审核!</span>",
-					buttons: 			
-					{ "button":{"className":"btn-sm btn-success","label":"确定"}}
-				});
-			return;
+		var AUDITOR=$("#AUDITOR").val();
+	 	var UPDATE_TIME=$("#updatetime").val();
+	 	var sh=$("#sh").val();
+	 	if (STATE==1) {
+	 			bootbox.dialog({
+						message: "<span class='bigger-110'>此单据已审核,不能重复审核!</span>",
+						buttons: 			
+						{ "button":{"className":"btn-sm btn-success","label":"确定"}}
+					});
+				return false;
 		}else{
-			top.jzts();
- 			window.location.href='<%=basePath%>Drawing/Audit.do?ID='+ID+'&STATE='+sh+'&AUDITOR='+AUDITOR+'&UPDATE_TIME='+UPDATE_TIME;
- 		}
+			var url = '<%=basePath%>Drawing/${At}.do?ID='+ID+'&STATE='+sh+'&AUDITOR='+AUDITOR+'&UPDATE_TIME='+UPDATE_TIME;
+	 		$.get(url,function(data){
+	 				$(top.hangge());//关闭加载状态
+	 					swal({   
+	 						title: "系统提示",
+	 						text: "审核成功!", 
+	 						type: "success",
+	 						confirmButtonText: "OK" },function(){
+	 							nextPage('${page.currentPage}');
+	 						});	
+	 		});
+	 	
+		}
 }
 
 /**
  * 去审
  */
  function abolish(ID,STATE) {
-	 var AUDITOR=$("#qshr").val();
-	 var UPDATE_TIME=$("#updatetime").val();
-	 var qs=$("#qs").val();
-	 if (STATE==0) {
-			bootbox.dialog({
-					message: "<span class='bigger-110'>此单据已去核,不能重复去审!</span>",
-					buttons: 			
-					{ "button":{"className":"btn-sm btn-success","label":"确定"}}
-				});
-			return;
-		}else{
-			top.jzts();
- 			window.location.href='<%=basePath%>Drawing/Abolish.do?ID='+ID+'&STATE='+qs+'&AUDITOR='+AUDITOR+'&UPDATE_TIME='+UPDATE_TIME;
- 		}
+		 var AUDITOR=$("#qshr").val();
+		 var UPDATE_TIME=$("#updatetime").val();
+		 var qs=$("#qs").val();
+		 if (STATE==0) {
+				bootbox.dialog({
+						message: "<span class='bigger-110'>此单据已去核,不能重复去审!</span>",
+						buttons: 			
+						{ "button":{"className":"btn-sm btn-success","label":"确定"}}
+					});
+				return false;
+			}else{
+				 var url = '<%=basePath%>Drawing/${As}.do?ID='+ID+'&STATE='+qs+'&AUDITOR='+AUDITOR+'&UPDATE_TIME='+UPDATE_TIME;
+			 		$.get(url,function(data){
+			 				$(top.hangge());//关闭加载状态
+			 					swal({   
+			 						title: "系统提示",
+			 						text: "去审成功!", 
+			 						type: "success",
+			 						confirmButtonText: "OK" },function(){
+			 							nextPage('${page.currentPage}');
+			 						});	
+			 	});
+			}
 	}
-
-/**
- * 批量删除
- */
- function makeAll(msg){
- 	bootbox.confirm(msg, function(result) {
+	
+//删除
+ function singleDel(ID){
+ 	bootbox.confirm("确定要删除吗?", function(result) {
  		if(result) {
- 			var ID = '';
- 			var STATE='';
- 			for(var i=0;i < document.getElementsByName('ID').length;i++)
- 			{
- 				  if(document.getElementsByName('ID')[i].checked){
- 				  	if(ID=='') ID += document.getElementsByName('ID')[i].value;
- 				  	else ID += ',' + document.getElementsByName('ID')[i].value;
- 				  	if(STATE=='') STATE += document.getElementsByName('ID')[i].alt;
- 				  	else STATE += ',' + document.getElementsByName('ID')[i].alt;
- 				  }
- 			}
- 			if(ID==''){
- 				bootbox.dialog({
- 					message: "<span class='bigger-110'>您没有选择任何内容!</span>",
- 					buttons: 			
- 					{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
- 				});
- 				return;
- 			}
- 			if(STATE==1){
- 				bootbox.dialog({
- 					message: "<span class='bigger-110'>您选中的单据已审核,请去审核后删除!</span>",
- 					buttons: 			
- 					{ "button":{"className":"btn-sm btn-success","label":"确定"}}
- 				});
- 				
- 				return;
- 			}
- 				window.location.href='<%=basePath%>Drawing/deletewar.do?ID='+ID
+ 			top.jzts();
+ 			var url = '<%=basePath%>Drawing/singleDel.do?ID='+ID;
+ 			$.get(url,function(data){
+ 				$(top.hangge());//关闭加载状态
+ 				if(data == 'success'){
+ 					swal({   
+ 						title: "系统提示",
+ 						text: "删除成功!", 
+ 						type: "success",
+ 						confirmButtonText: "OK" },function(){
+ 							nextPage('${page.currentPage}');
+ 						});
+ 				}else {
+ 					swal({   
+ 						title: "系统提示",
+ 						text: "删除失败!", 
+ 						type: "error",
+ 						confirmButtonText: "OK" });
+ 				}
+ 			});
  		}
  	});
  }
- 
+
+
+//批量操作
+ function makeAll(msg){
+	 var ID = '';
+	 var STATE='';
+	 for(var i=0;i < document.getElementsByName('ID').length;i++)
+		{
+			  if(document.getElementsByName('ID')[i].checked){
+			  	if(ID=='') ID += document.getElementsByName('ID')[i].value;
+			  	else ID += ',' + document.getElementsByName('ID')[i].value;
+			  	if(STATE=='') STATE += document.getElementsByName('ID')[i].alt;
+			  	else STATE += ',' + document.getElementsByName('ID')[i].alt;
+			  }
+		}if(ID==''){
+  				bootbox.dialog({
+  					message: "<span class='bigger-110'>您没有选择任何内容!</span>",
+  					buttons: 			
+  					{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+  				});
+  				return;
+  			}
+  			if(STATE==1){
+  				bootbox.dialog({
+  					message: "<span class='bigger-110'>您选中的单据已审核,请去审核后删除!</span>",
+  					buttons: 			
+  					{ "button":{"className":"btn-sm btn-success","label":"确定"}}
+  				});
+  				
+  				return;
+  			}else {
+ 			bootbox.confirm(msg, function(result) {
+ 			if(result) {
+ 				top.jzts();
+ 				var url = '<%=basePath%>Drawing/deletewar.do?ID='+ID;
+ 				$.get(url,function(data){
+ 					$(top.hangge());//关闭加载状态
+ 					if(data == 'success'){
+ 						swal({   
+ 							title: "系统提示",
+ 							text: "删除成功!", 
+ 							type: "success",
+ 							confirmButtonText: "OK" },function(){
+ 								nextPage('${page.currentPage}');
+ 							});
+ 					}else {
+ 						swal({   
+ 							title: "系统提示",
+ 							text: "删除失败!", 
+ 							type: "error",
+ 							confirmButtonText: "OK" });
+ 					}
+ 				});
+ 			}
+ 		});
+ 	}
+ }
 //删除
  function del(ID,STATE){
  	bootbox.confirm("确定要删除吗?", function(result) {

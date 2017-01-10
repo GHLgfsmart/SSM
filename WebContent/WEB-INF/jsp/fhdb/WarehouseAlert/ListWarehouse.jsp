@@ -45,12 +45,17 @@
 								</td>
 								<c:if test="${QX.cha == 1 }">
 									<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
-									<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
+									<c:if test="${QX.toExcel == 1 }">
+									<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td>
+									</c:if>
+									<c:if test="${QX.toExcel == 1 }">
+										<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="printls();" title="打印"><i id="nav-search-icon" class="ace-icon fa fa-print bigger-150 nav-search-icon blue "></i></a></td>
+									</c:if>
 								</c:if>
 							</tr>
 						</table>
 						<!-- 检索  -->
-					
+						<div id="printData">
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">
 							<thead>
 								<tr>
@@ -58,11 +63,10 @@
 									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
 									</th>
 									<th class="center">序号</th>
-									<th class="center">编号</th>
 									<th class="center">仓库名称</th>
 									<th class="center">仓库大小</th>
-									<th class="center">上限</th>
-									<th class="center">下限</th>
+									<th class="center">仓库上限</th>
+									<th class="center">仓库下限</th>
 									<th class="center">实际库存</th>
 									<th class="center">仓库地址</th>
 								</tr>
@@ -77,16 +81,15 @@
 												
 										<tr>
 											<td class='center' style="width: 30px;">
-												<label><input type='checkbox'  value="${war.ID }"/><span class="lbl"></span></label>
+												<label><input type='checkbox' style="color: red;" value="${war.ID }"/><span class="lbl"></span></label>
 											</td>
 											<td class='center' style="width: 60px;">${vs.index+1}</td>
-											<td class="center">${war.ID }</td>
-											<td class="center">${war.NAME }</td>
-											<td class="center">${war.SIZE }</td>
-											<td class="center">${war.UPPER_LIMIT }</td>
-											<td class="center">${war.LOWER_LIMIT}</td>
-											<td class="center"><font color="red">${war.PRACTICAl}</font> </td>
-											<td class="center">${war.ADDRESS}</td>
+											<td class="center"><font color="red">${war.WARNAME }</font></td>
+											<td class="center"><font color="red">${war.SIZE }</font></td>
+											<td class="center"><font color="red">${war.UPPER_LIMIT }</font></td>
+											<td class="center"><font color="red">${war.LOWER_LIMIT}</font></td>
+											<td class="center"><font color="red"><b>${war.PRACTICAl}</b></font> </td>
+											<td class="center"><font color="red">${war.ADDRESS}</font></td>
 										</tr>
 									
 									</c:forEach>
@@ -99,6 +102,7 @@
 							</c:choose>
 							</tbody>
 						</table>
+							</div>
 							<div class="page-header position-relative">
 						<table style="width:100%;">
 							<tr>
@@ -138,6 +142,18 @@
 
 <script type="text/javascript">
 $(top.hangge());
+
+//打印
+function  printls(){
+	var headstr = "<html><head><title></title></head><body>";  
+	var footstr = "</body>";
+	var printDatad = document.getElementById("printData").innerHTML; 
+	var oldstr = document.body.innerHTML;  
+	document.body.innerHTML = headstr+printDatad+footstr; 
+	window.print();  
+	document.body.innerHTML = oldstr; 
+	return false;
+}
 
 //检索
 function searchs(){

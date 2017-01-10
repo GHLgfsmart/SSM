@@ -7,7 +7,6 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import com.ht.dao.DaoSupport;
-import com.ht.entity.Drawing;
 import com.ht.entity.Page;
 import com.ht.service.fhdb.DrawingService;
 import com.ht.util.PageData;
@@ -64,15 +63,12 @@ public class DrawingServiceImpl implements DrawingService{
 	
 	/**
 	 * 审核
+	 * @throws Exception 
 	 */
 	@Override
-	public void Audit(PageData pd) {
-		try {
-			ds.update("DrawingMapper.Audit", pd);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public void Audit(PageData pd) throws Exception {
 		
+		ds.update("DrawingMapper.Audit", pd);
 	}
 	
 	/**
@@ -90,27 +86,21 @@ public class DrawingServiceImpl implements DrawingService{
 	
 	/**
 	 * 批量删除
+	 * @throws Exception 
 	 */
 	@Override
-	public void delDraeing(String ID) {
-		try {
-			ds.delete("DrawingMapper.delDraeing", ID);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public int delDraeing(PageData pd) throws Exception {
+			
+		return (Integer)ds.delete("DrawingMapper.delDraeing", pd);
 	
 		/**
-		 * 修改
-		 */
+		 * 修改	 
+		 * */
 	}
 	@Override
-	public void updateDraeing(PageData pd) {
-		try {
-			ds.update("DrawingMapper.updateDraeing", pd);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public int updateDraeing(PageData pd) throws Exception {
 		
+		return (Integer)ds.update("DrawingMapper.updateDraeing", pd);
 	}
 	
 	/**
@@ -129,10 +119,18 @@ public class DrawingServiceImpl implements DrawingService{
 	public List<PageData> notSuppliesList(PageData pd) throws Exception {
 		return (List<PageData>) ds.findForList("ProductMapper.notSuppliesList", pd);
 	}
-
-	/*@SuppressWarnings("unchecked")
+	
 	@Override
-	public List<PageData> hasSuppliesList() throws Exception {
-		return (List<PageData>) ds.findForList("ProductMapper.hasSuppliesList","");
-	}*/
+	public PageData DraeingBywname(String MATERIALS_ID) throws Exception {
+		return (PageData) ds.findForObject("DrawingMapper.DraeingBywname", MATERIALS_ID);
+	}
+	
+	public PageData byIDPage(Page page)throws Exception{
+		return (PageData)ds.findForObject("DrawingMapper.idlistPage", page);
+		
+	}
+	@Override
+	public void reduce(PageData pd) throws Exception {
+		ds.update("DrawingMapper.reduce", pd);
+	};
 }

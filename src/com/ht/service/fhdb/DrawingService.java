@@ -50,8 +50,9 @@ public interface DrawingService {
 	/**
 	 * 审核
 	 * @param pd
+	 * @throws Exception 
 	 */
-	public void Audit(PageData pd);
+	public void Audit(PageData pd) throws Exception;
 	
 	/**
 	 * 去审
@@ -63,8 +64,9 @@ public interface DrawingService {
 	 * 删除
 	 * @param pd
 	 * @return
+	 * @throws Exception 
 	 */
-	public void delDraeing(String ID);
+	public int delDraeing(PageData pd) throws Exception;
 	
 	/**
 	 * 根据id获取数据
@@ -75,11 +77,16 @@ public interface DrawingService {
 	
 	public PageData DraeingById(String ID) throws Exception;
 	
+	public PageData DraeingBywname(String MATERIALS_ID) throws Exception;
+	
+
+	public PageData byIDPage(Page page)throws Exception;
 	/**
 	 * 修改
 	 * @param ID
+	 * @throws Exception 
 	 */
-	public void updateDraeing(PageData pd);
+	public int updateDraeing(PageData pd) throws Exception;
 	
 	/**
 	 * 统计待入库的物资报表
@@ -89,11 +96,6 @@ public interface DrawingService {
 	 */
 	public List<PageData> notSuppliesList(PageData pd) throws Exception;
 	
-	/**
-	 * 统计已入库的物资报表
-	 * @param pd
-	 * @return
-	 * @throws Exception 
-	 */
-	/*public List<PageData> hasSuppliesList() throws Exception;*/
+	public void reduce(PageData pd) throws Exception;
+	
 }
