@@ -223,6 +223,11 @@
 	<script type="text/javascript">
 	
 	$(top.hangge());//关闭加载状态
+	
+	$(document).ready(function(){ 
+		$(top.hangge());//关闭加载状态
+	}); 
+	
 	//美化
 	function listname(){
 		 var fir = document.getElementsByName("ids");
@@ -243,10 +248,10 @@
 			 top.jzts();
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
-			 diag.Title ="详细资料";
+			/*  diag.Title ="详细资料"; */
 			 diag.URL = '<%=basePath%>supplierAndcustomer/gofindByID.do?ID='+ID;
-			 diag.Width = 660;
-			 diag.Height = 486;
+			 diag.Width = 1200;
+			 diag.Height = 360;
 			 diag.CancelEvent = function(){ //关闭事件
 				diag.close();
 			 };
@@ -274,7 +279,7 @@
 						 top.jzts();
 						 setTimeout("self.location=self.location",100);
 					 }else{
-						 nextPage(${page.currentPage});
+						 nextPage('${page.currentPage}');
 					 }
 				}
 				diag.close();
@@ -320,7 +325,7 @@
 			 diag.Height = 620;
 			 diag.CancelEvent = function(){ //关闭事件
 				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					nextPage(${page.currentPage});
+					nextPage('${page.currentPage}');
 				}
 				diag.close();
 			 };
@@ -395,9 +400,7 @@
 				});
 			}
 		}
-		
 	</script>
-
 
 </body>
 </html>

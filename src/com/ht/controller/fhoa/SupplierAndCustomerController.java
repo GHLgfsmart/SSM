@@ -66,15 +66,23 @@ public class SupplierAndCustomerController extends BaseController{
 		return mv;
 	}
 	
+	/**
+	 * 检查重名
+	 * @param out
+	 * @throws Exception
+	 */
 	@RequestMapping(value="hasName")
 	public void hasName(PrintWriter out) throws Exception{
 		PageData pd = new PageData();
-		int n=0;
 		pd = this.getPageData();
-		if(pd.get("ck") != null && pd.get("ck")!= "" && "edit".equals(pd.get("ck"))){
-			n=1;
-		}else if(pd.get("ck") != null && pd.get("ck")!= "" && "save".equals(pd.get("ck").toString())){
-			n=0;
+		int n=0;
+		String ckes=pd.getString("ckes");
+		if( ckes != null && ckes != ""){
+			if(ckes.equals("edit")){
+				n=1;
+			}else if(ckes.equals("save")){
+				n=0;
+			}
 		}
 		if(service.findByName(pd)>n){
 			out.write("error");
@@ -182,7 +190,7 @@ public class SupplierAndCustomerController extends BaseController{
 		pd = this.getPageData();
 		PageData zl=service.findById(pd);
 		mv.addObject("obj",zl);
-		mv.setViewName("fhoa/supplierAndcustomer/zl");
+		mv.setViewName("fhoa/supplierAndcustomer/ziliao");
 		return mv;
 	}
 	

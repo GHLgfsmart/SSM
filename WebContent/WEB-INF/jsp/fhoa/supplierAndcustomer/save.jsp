@@ -374,46 +374,25 @@
 		function checkName(){
 			var SUPNAME = $.trim($("#SUPNAME").val());
 			ID='${obj.ID}';
-			var ck='${msg}';
-			var url = "<%=basePath%>supplierAndcustomer/hasName.do?SUPNAME="+SUPNAME+"&& ck="+ck;
-			if(ck == 'edit'){
-				$.get(url,function(data){
-					$(top.hangge());//关闭加载状态
-					if(data == 'success'){
-						$("#Form").submit();
-						$("#zhongxin").hide();
-						$("#zhongxin2").show();
-					}else {
-						 $("#SUPNAME").tips({
-								side:3,
-					            msg:'该供应商已存在',
-					            bg:'#AE81FF',
-					            time:2
-					        });
-							$("#SUPNAME").focus();
-							return false;
-					}
-				});
-			}else if(ck == 'save'){
-				$.get(url,function(data){
-					$(top.hangge());//关闭加载状态
-					if(data == 'success'){
-						$("#Form").submit();
-						$("#zhongxin").hide();
-						$("#zhongxin2").show();
-					}else {
-						 $("#SUPNAME").tips({
-								side:3,
-					            msg:'该供应商已存在',
-					            bg:'#AE81FF',
-					            time:2
-					        });
-							$("#SUPNAME").focus();
-							return false;
-					}
-				});
-				return false;
-			}
+			var ckes='${msg}';
+			var url = "<%=basePath%>supplierAndcustomer/hasName.do?SUPNAME="+SUPNAME+"&ckes="+ckes;
+			$.get(url,function(data){
+				$(top.hangge());//关闭加载状态
+				if(data == 'success'){
+					$("#Form").submit();
+					$("#zhongxin").hide();
+					$("#zhongxin2").show();
+				}else {
+					 $("#SUPNAME").tips({
+							side:3,
+				            msg:'该供应商已存在',
+				            bg:'#AE81FF',
+				            time:2
+				        });
+						$("#SUPNAME").focus();
+						return false;
+				}
+			});
 		}
 		</script>
 </body>

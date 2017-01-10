@@ -31,7 +31,7 @@
 	
 	<update id="edit" parameterType="pd">
 		update customer_categories set 
-		ID = #{ID},NAME = #{NAME},UID = #{UID},NOTE = #{NOTE},
+		NAME=#{NAME},UID=#{UID},NOTE=#{NOTE} where ID=#{ID}
 	</update>
 	
 	<select id="findByID" parameterType="string" resultType="pd">
@@ -40,6 +40,10 @@
 	
 	<select id="findSublevel" parameterType="string" resultMap="categoriesResultMap">
 		select <include refid="all"></include> from customer_categories where UID=#{uid} order by NAME
+	</select>
+	
+	<select id="findByName" parameterType="pd" resultType="int">
+		select count(*) from customer_categories where NAME=#{NAME}
 	</select>
 	
 	<select id="findBy" parameterType="pd" resultMap="categoriesResultMap">

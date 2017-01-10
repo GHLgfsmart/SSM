@@ -44,7 +44,6 @@
 								<td>&nbsp;
 									<select name="ID" id="ID">
 										<option value="" <c:if test="${ID == ''}">selected</c:if>>全部</option>
-										<option value="${ID}" <c:if test="${ID != '0' && ID !=''}">selected</c:if>>本级</option>
 										<option value="0" <c:if test="${ID == '0'}">selected</c:if>>首级</option>
 									</select>
 								</td>
@@ -64,7 +63,7 @@
 								<tr>
 									<th class="center" style="width:50px;">序号</th>
 									<th class="center">名称</th>
-									<th class="center">类型</th>
+									<th class="center">备注</th>
 									<th class="center">操作</th>
 								</tr>
 							</thead>
@@ -215,7 +214,7 @@
 			 diag.Title ="新增";
 			 diag.URL = '<%=basePath%>categories/goAdd.do?UID='+ID;
 			 diag.Width = 400;
-			 diag.Height = 300;
+			 diag.Height = 350;
 			 diag.CancelEvent = function(){ //关闭事件
 				 if('none' == diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display){
 					 parent.location.href="<%=basePath%>categories/listtree.do?ID=${ID}&dnowPage=${page.currentPage}";
@@ -225,6 +224,7 @@
 			 diag.show();
 		}
 		
+		//删除
 		function del(ID){
 			bootbox.confirm("确定要删除该记录吗?", function(result) {
 				if(result) {
@@ -232,14 +232,13 @@
 					var url = "<%=basePath%>categories/del.do?ID="+ID;
 					$.get(url,function(data){
 						if(data=="success"){
-							swal({
-						        title: "系统提示", 
-						        text: "操作成功！", 
-						        type: "success",
-						        timer: 55444000,
-						        showConfirmButton: false,
-						        confirmButtonColor: "#ec6c62"
-						    });
+							swal({   
+								title: "系统提示",
+								text: "删除成功!", 
+								type: "success",
+								confirmButtonText: "OK" },function(){
+									nextPage('${page.currentPage}');
+								});
 							parent.location.href="<%=basePath%>categories/listtree.do?ID=${ID}&dnowPage=${page.currentPage}";
 						}else{
 							top.hangge();
@@ -267,8 +266,8 @@
 			 diag.Drag=true;
 			 diag.Title ="编辑";
 			 diag.URL = '<%=basePath%>categories/goEdit.do?ID='+Id;
-			 diag.Width = 700;
-			 diag.Height = 546;
+			 diag.Width = 400;
+			 diag.Height = 350;
 			 diag.CancelEvent = function(){ //关闭事件
 				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 					 parent.location.href="<%=basePath%>categories/listtree.do?ID=${ID}&dnowPage=${page.currentPage}";

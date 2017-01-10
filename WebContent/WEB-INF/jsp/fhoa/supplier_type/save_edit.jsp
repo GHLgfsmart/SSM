@@ -12,8 +12,9 @@
 		<base href="<%=basePath%>">
 		<!-- jsp文件头和头部 -->
 		<%@ include file="../../system/index/top.jsp"%>
-		
-	
+		<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
+		<link rel="stylesheet" rel="stylesheet" href="static/ace/css/sweetalert.css" />
+		<script type="text/javascript" src="static/ace/js/jquery-ui.js"></script>
 </head>
 <body class="no-skin">
 <!-- /section:basics/navbar.layout -->
@@ -23,10 +24,13 @@
 		<div class="main-content-inner">
 			<div class="page-content">
 				<div class="row">
-					<div class="col-xs-12" style="margin-top:30px;">
+					<div class="col-xs-12" style="margin-top:80px;">
 					
 					<form action="categories/${msg }.do" name="Form" id="Form" method="post">
 						<input type="hidden" name="UID" id="UID" value="${null == UID ? ID : UID}"/>
+						<c:if test="${msg == 'edit' }">
+							<input type="hidden" name="ID" id="ID" value="${pd.ID }">
+						</c:if>
 						<div id="zhongxin">
 						<table id="table_report" class="table table-striped table-bordered table-hover">
 							<tr>
@@ -49,13 +53,8 @@
 								<td><input type="text" name="NAME" id="NAME" value="${pd.NAME}" maxlength="50" placeholder="这里输入名称" title="名称" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:70px;text-align: right;padding-top: 13px;">类型:</td>
-								<td id="type">
-									<select name="NOTE" id="NOTE" data-placeholder="请输入类型" style="vertical-align:top;" style="width:98%;" >
-											<option value="供应商" <c:if test="${pd.NOTE == '供应商' }">selected</c:if>>供应商</option>
-											<option value="客户" <c:if test="${pd.NOTE == '客户' }">selected</c:if>>客户</option>
-									</select>
-								</td>
+								<td style="width:70px;text-align: right;padding-top: 13px;">备注:</td>
+								<td><input type="text" name="NOTE" id="NOTE" value="${pd.NOTE}" maxlength="50" placeholder="这里输入名称" title="名称" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td class="center" colspan="10" >
@@ -65,12 +64,8 @@
 							</tr>
 						</table>
 						</div>
-						
 						<div id="zhongxin2" class="center" style="display:none"><br/><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green">提交中...</h4></div>
-						
 					</form>
-	
-					<div id="zhongxin2" class="center" style="display:none"><img src="static/images/jzx.gif" style="width: 50px;" /><br/><h4 class="lighter block green"></h4></div>
 					</div>
 				</div>
 			</div>
@@ -95,8 +90,8 @@
 		            time:2
 		        });
 				$("#NAME").focus();
-			return false;
-		}
+				return false;
+			}
 			if($("#NOTE").val()==""){
 				$("#type").tips({
 					side:3,
@@ -107,21 +102,30 @@
 				$("#NOTE").focus();
 				return false;
 			}
-			
-			$("#Form").submit();
-			swal({
-		        title: "系统提示", 
-		        text: "操作成功！", 
-		        type: "success",
-		        timer: 55444000,
-		        showConfirmButton: false,
-		        confirmButtonColor: "#ec6c62"
-		    });
-			$("#zhongxin").hide();
-			$("#zhongxin2").show();
-			
+			checkName();
 		}
-		
+		function checkName(){
+			var NAME=$("#NAME").val();
+			var ckes='${msg}';
+			var url = '<%=basePath%>categories/checkName.do?NAME='+NAME+'&ckes='+ckes;
+			$.get(url,function(data){
+				$(top.hangge());//关闭加载状态
+				if(data == 'success'){
+					$("#Form").submit();
+					$("#zhongxin").hide();
+					$("#zhongxin2").show();
+				}else {
+					$("#NAME").tips({
+						side:3,
+			            msg:'该供应商类型已存在！',
+			            bg:'#AE81FF',
+			            time:2
+			        });
+					$("#NAME").focus();
+					return false;
+				}
+			});
+		}
 		</script>
 </body>
 </html>

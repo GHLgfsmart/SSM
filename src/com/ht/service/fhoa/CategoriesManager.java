@@ -66,4 +66,11 @@ public interface CategoriesManager {
 	 * @throws Exception
 	 */
 	public List<Customer_categories> findAllName() throws Exception;
+	
+	/**
+	 * 查询是否重名
+	 * @return
+	 * @throws Exception
+	 */
+	public int checkName(PageData pd) throws Exception;
 }

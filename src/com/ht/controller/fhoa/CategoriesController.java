@@ -22,6 +22,11 @@ public class CategoriesController extends BaseController{
 	@Resource(name="categoriesService")
 	private CategoriesService categoriesService;
 
+	/**
+	 * 删除
+	 * @param out
+	 * @throws Exception
+	 */
 	@RequestMapping(value="del")
 	public void delete(PrintWriter out) throws Exception{
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "del")){return;} //校验权限
@@ -36,6 +41,30 @@ public class CategoriesController extends BaseController{
 		}
 		out.close();
 		
+	}
+	
+	/**
+	 * 检查重名
+	 * @param pw
+	 * @throws Exception
+	 */
+	@RequestMapping(value="checkName")
+	public void checkName(PrintWriter pw) throws Exception{
+		PageData pd=new PageData();
+		pd=this.getPageData();
+		int n=0;
+		String ckes=pd.getString("ckes");
+		if( ckes != null && ckes != ""){
+			if(ckes.equals("edit")){
+				n=1;
+			}else if(ckes.equals("save")){
+				n=0;
+			}
+		}
+		if(categoriesService.checkName(pd)>n){
+			pw.write("error");
+		}
+		pw.write("success");
 	}
 	
 	/**
@@ -60,6 +89,11 @@ public class CategoriesController extends BaseController{
 		return mv;
 	}
 	
+	/**
+	 * 修改
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value="edit")
 	public ModelAndView update() throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"修改供应商客户分类");
@@ -67,12 +101,18 @@ public class CategoriesController extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		System.out.println("--------------PD:"+pd.toString());
 		categoriesService.edit(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");
 		return mv;
 	}
 	
+	/**
+	 * 入添加界面
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value="goAdd")
 	public ModelAndView goAdd() throws Exception{
 		ModelAndView mv = this.getModelAndView();
@@ -88,6 +128,11 @@ public class CategoriesController extends BaseController{
 		return mv;
 	}
 	
+	/**
+	 * 保存添加
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value="save")
 	public ModelAndView save() throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"新增供应商类型");

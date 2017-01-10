@@ -27,7 +27,7 @@ public class CategoriesService implements CategoriesManager{
 
 	@Override
 	public void edit(PageData pd) throws Exception {
-		dao.update("CategoriesMapper.update",pd);
+		dao.update("CategoriesMapper.edit",pd);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -67,5 +67,10 @@ public class CategoriesService implements CategoriesManager{
 	@Override
 	public List<Customer_categories> findAllName() throws Exception {
 		return (List<Customer_categories>)dao.findForList("CategoriesMapper.findAllName",null);
+	}
+
+	@Override
+	public int checkName(PageData pd) throws Exception {
+		return (Integer)dao.findForObject("CategoriesMapper.findByName",pd);
 	}
 }
