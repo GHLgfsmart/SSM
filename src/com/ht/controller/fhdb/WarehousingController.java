@@ -1104,6 +1104,56 @@ public class WarehousingController extends BaseController{
 	}
 	
 	/**
+	 * @author 洪青青
+	 * 判断退货数量不能大于实际数量
+	 * @throws Exception
+	 * @return
+	 */
+	@RequestMapping(value="/numbers")
+	public void numbers(PrintWriter out) throws Exception{
+		try{
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		int numbers=moneyService.numbers(pd);
+		pd=moneyService.countsum(pd);
+		int number=Integer.valueOf(pd.get("ID").toString());
+		if(number!=0){
+			out.write(""+numbers+";"+pd.get("ID")+";"+pd.get("COUNT"));
+		}else{
+			out.write(""+numbers);
+		}
+		}catch(Exception e){
+			out.write("fall");
+			e.getStackTrace();
+		}
+		out.close();
+	}
+	/**
+	 * @author 洪青青
+	 * 查询所有出库信息
+	 * @param page
+	 * @return
+	 * @throws Exception 
+	 * */
+	@RequestMapping(value="/OUTlist")
+	private ModelAndView OUTlist(Page page) throws Exception {
+		logBefore(logger, Jurisdiction.getUsername()+"列表OUTlist");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();	
+		String keywords = pd.getString("keywords");			//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		pd.put("TYPE", "2");
+		page.setPd(pd);
+		List<Output_storage> list = warehousingService.findByOutput_storageAll(page);
+		mv.setViewName("fhdb/sales_return/outlist");
+		mv.addObject("varList", list);
+		mv.addObject("pd", pd);
+		return mv;
+	}
+	/**
 	 * @author Mr.Lin
 	 * 退货单弹出新增界面
 	 * @throws Exception
@@ -1116,6 +1166,10 @@ public class WarehousingController extends BaseController{
 		pd = this.getPageData();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String dj = "TH"+sdf.format(new Date());
+		//洪青青修改
+		PageData pd1=Moneytoo();
+		mv.addObject("pd1", pd1);
+		//--------
 		mv.setViewName("fhdb/sales_return/sales_returnEdit");
 		mv.addObject("dj", dj);
 		mv.addObject("msg", "sales_returnAdd");
@@ -1137,8 +1191,42 @@ public class WarehousingController extends BaseController{
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.put("ID", this.get32UUID());	//主键
+		//洪青青修改
+		PageData pd1 = new PageData();
+		pd1 = this.getPageData();
+		String STORAGE=pd1.getString("STORAGE");
+		String RICHARD=pd1.getString("RICHARD");
+		String LOADING=pd1.getString("LOADING");
+		String UNLOADING=pd1.getString("UNLOADING");
+		double MONEY=Double.valueOf(STORAGE);
+		pd1.put("ID", this.get32UUID());	//主键
+		pd1.put("STORAGE_STATE", '0');
+		if(RICHARD == null){
+			pd1.put("RICHARD_STATE", '1');
+		}else{
+			MONEY +=Double.valueOf(RICHARD);
+			pd1.put("RICHARD_STATE", '0');
+		}
+		if(LOADING == null){
+			pd1.put("LOADING_STATE", '1');
+		}else{
+			MONEY +=Double.valueOf(LOADING);
+			pd1.put("LOADING_STATE", '0');
+		}
+		if(UNLOADING == null){
+			pd1.put("UNLOADING_STATE", '1');
+		}else{
+			MONEY +=Double.valueOf(UNLOADING);
+			pd1.put("UNLOADING_STATE", '0');
+		}
+		pd1.put("STATE", "0");
+		pd1.put("MONEY", MONEY);
+		pd1.put("MO_TIME", DateUtil.getTime().toString());
 		int result = warehousingService.salesreturnSave(pd);
-		if(result>0) {
+		pd1.put("PRODUCT_ID", pd.getString("ID"));
+		int result1=moneyService.totalsaveU(pd1);
+		//--------
+		if(result>0 ||result1>0) {
 			mv.addObject("msg","success");
 		}else {
 			mv.addObject("msg","fail");
@@ -1159,6 +1247,14 @@ public class WarehousingController extends BaseController{
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = warehousingService.findBysalesreturnId(pd);
+		//洪青青修改
+		PageData pd1=Moneytoo();
+		PageData pd2 = new PageData();
+		pd2.put("PRODUCT_ID", pd.getString("ID"));
+		pd2=moneyService.findById(pd2);
+		mv.addObject("pd1", pd1);
+		mv.addObject("pd2", pd2);
+		//--------
 		mv.setViewName("fhdb/sales_return/sales_returnEdit");
 		mv.addObject("msg", "sales_returnEdit");
 		mv.addObject("pd", pd);
@@ -1178,34 +1274,45 @@ public class WarehousingController extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		//洪青青修改
+		PageData pd1 = new PageData();
+		pd1 = this.getPageData();
+		String STORAGE=pd1.getString("STORAGE");
+		String RICHARD=pd1.getString("RICHARD");
+		String LOADING=pd1.getString("LOADING");
+		String UNLOADING=pd1.getString("UNLOADING");
+		double MONEY=Double.valueOf(STORAGE);
+		pd1.put("STORAGE_STATE", '0');
+		if(RICHARD == null){
+			pd1.put("RICHARD_STATE", '1');
+		}else{
+			MONEY +=Double.valueOf(RICHARD);
+			pd1.put("RICHARD_STATE", '0');
+		}
+		if(LOADING == null){
+			pd1.put("LOADING_STATE", '1');
+		}else{
+			MONEY +=Double.valueOf(LOADING);
+			pd1.put("LOADING_STATE", '0');
+		}
+		if(UNLOADING == null){
+			pd1.put("UNLOADING_STATE", '1');
+		}else{
+			MONEY +=Double.valueOf(UNLOADING);
+			pd1.put("UNLOADING_STATE", '0');
+		}
+		pd1.put("MONEY", MONEY);
 		int result = warehousingService.salesreturnUpdate(pd);
-		if(result>0) {
+		pd1.put("PRODUCT_ID", pd.getString("ID"));
+		int result1 =  moneyService.totaleditU(pd1);
+		//-------------
+		if(result>0 || result1>0) {
 			mv.addObject("msg","success");
 		}else {
 			mv.addObject("msg","fail");
 		}
 		mv.setViewName("save_result");
 		return mv;
-	}
-	
-	/**
-	 * @author Mr.Lin
-	 * 退货单删除操作
-	 * @throws Exception 
-	 * */
-	@RequestMapping(value="/sales_returnDel")
-	public void sales_returnDel(PrintWriter out) throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"退货单删除");
-		if(!Jurisdiction.buttonJurisdiction(returnmenuUrl, "del")){return;} //校验权限
-		PageData pd = new PageData();
-		pd = this.getPageData();
-		int result = warehousingService.salesreturnDelete(pd);
-		if(result>0) {
-			out.write("success");
-		}else {
-			out.write("fail");
-		}
-		out.close();
 	}
 	
 	/**
