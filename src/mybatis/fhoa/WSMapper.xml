@@ -68,10 +68,16 @@
   		<if test="pd.keywords != null and pd.keywords != ''">
 			and
 				(
-				 NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				 WARNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 				 or
 				 ADDRESS LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
 				)
+		</if>
+		<if test="pd.STATE != null and pd.STATE != ''"><!-- 状态检索 -->
+				and w.STATE=#{pd.STATE} 
+		</if>
+		<if test="pd.WNAME != null and pd.WNAME != ''"><!-- 状态检索 -->
+				and w.WARNAME!=#{pd.WNAME} 
 		</if>
 		order by w.ENTRY_TIME desc
 	</select> 

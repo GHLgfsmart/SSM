@@ -200,4 +200,9 @@ public class WarehousingService implements WarehousingManager{
 	public List<Checkout> barChar2() throws Exception {
 		return (List<Checkout>) dao.findForList("CheckoutMapper.barChar2","");
 	}
+
+	@Override
+	public int findBypickingCount(PageData pd) throws Exception {
+		return (Integer)dao.delete("PickingMapper.pickingByCount", pd);
+	}
 }

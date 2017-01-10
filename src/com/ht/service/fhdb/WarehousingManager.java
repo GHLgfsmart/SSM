@@ -281,4 +281,12 @@ public interface WarehousingManager {
 	 * @throws Exception
 	 */
 	public List<Checkout> barChar2()throws Exception;
+	
+	/**
+	 * @author Mr.Lin
+	 * 根据id查询拣货单数量
+	 * @param pd
+	 * @throws Exception
+	 * */
+	public int findBypickingCount(PageData pd)throws Exception;
 }

@@ -14,17 +14,15 @@ public class Checkout {
 	private int DAMAGEDQTY;// 坏货数量
 	private String DAMAGEDREASON;// 坏货原因
 	private int SHORTQTY;// 缺货数量
-	private int SHORTREASON;// 缺货原因
+	private String SHORTREASON;// 缺货原因
 	private String INSPECTOR;// 检测员
+	private int STATE; //状态  1检验合格   2不合格
 
 	public Checkout() {
 
 	}
-
-	
-
 	public Checkout(String iD, String sOURCECODE, String tIME, String oUT_PUT_TYPE, int qUANTITY, int dAMAGEDQTY,
-			String dAMAGEDREASON, int sHORTQTY, int sHORTREASON, String iNSPECTOR) {
+			String dAMAGEDREASON, int sHORTQTY, String sHORTREASON, String iNSPECTOR, int sTATE) {
 		ID = iD;
 		SOURCECODE = sOURCECODE;
 		TIME = tIME;
@@ -35,6 +33,7 @@ public class Checkout {
 		SHORTQTY = sHORTQTY;
 		SHORTREASON = sHORTREASON;
 		INSPECTOR = iNSPECTOR;
+		STATE = sTATE;
 	}
 
 	
@@ -133,13 +132,13 @@ public class Checkout {
 
 
 
-	public int getSHORTREASON() {
+	public String getSHORTREASON() {
 		return SHORTREASON;
 	}
 
 
 
-	public void setSHORTREASON(int sHORTREASON) {
+	public void setSHORTREASON(String sHORTREASON) {
 		SHORTREASON = sHORTREASON;
 	}
 
@@ -157,6 +156,12 @@ public class Checkout {
 
 
 
+	public int getSTATE() {
+		return STATE;
+	}
+	public void setSTATE(int sTATE) {
+		STATE = sTATE;
+	}
 	@Override
 	public String toString() {
 		return "Checkout [ID=" + ID + ", SOURCECODE=" + SOURCECODE + ", TIME=" + TIME + ", OUT_PUT_TYPE=" + OUTPUT_TYPE_ID

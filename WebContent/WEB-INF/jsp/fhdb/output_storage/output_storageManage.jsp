@@ -19,8 +19,8 @@
 <%@ include file="/WEB-INF/jsp/system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
-<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
 <link rel="stylesheet" type="text/css" href="static/ace/css/sweetalert.css">
+<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
 </head>
 <body class="no-skin">
 
@@ -56,7 +56,7 @@
 								</td>
 								<c:if test="${QX.cha == 1 }">
 									<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
-									<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-cloud-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
+									<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-cloud-download bigger-110 nav-search-icon blue"></i>导出</a></td></c:if>
 								</c:if>
 							</tr>
 						</table>
@@ -80,7 +80,6 @@
 									<!-- <th class="center">最后修改时间</th> -->
 									<th class="center">状态</th>
 									<th class="center">操作员</th>
-									<th class="center">审核人</th>
 									<th class="center">备注</th>
 									<th class="center">操作</th>
 								</tr>
@@ -117,12 +116,6 @@
 												<td class='center'><span class="label label-danger">不合格</span></td>
 											</c:if>
 											<td class='center'>${var.user.USERNAME}</td>
-											<c:if test="${empty var.AUDITOR}">
-												<td class='center'>暂无</td>
-											</c:if>
-											<c:if test="${!empty var.AUDITOR}">
-												<td class='center'>${var.AUDITOR}</td>
-											</c:if>
 											<td class='center'>${var.NOTE}</td>
 											<td class="center">
 												<c:if test="${QX.edit != 1 && QX.del != 1 }">
@@ -130,7 +123,7 @@
 												</c:if>
 												<div class="hidden-sm hidden-xs btn-group">
 													<c:if test="${QX.edit == 1 }">
-													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.ID}');">
+													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.ID}','${var.STATE}');">
 														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
 													</a>
 													</c:if>
@@ -154,7 +147,7 @@
 														<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
 															<c:if test="${QX.edit == 1 }">
 															<li>
-																<a style="cursor:pointer;" onclick="edit('${var.ID}');" class="tooltip-success" data-rel="tooltip" title="修改">
+																<a style="cursor:pointer;" onclick="edit('${var.ID}','${var.STATE}');" class="tooltip-success" data-rel="tooltip" title="修改">
 																	<span class="green">
 																		<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
 																	</span>
@@ -206,7 +199,7 @@
 							<tr>
 								<td style="vertical-align:top;">
 									<c:if test="${QX.add == 1 }">
-									<a class="btn btn-sm btn-success" onclick="add();">新增</a>
+									<a class="btn btn-sm btn-success" onclick="add();">新开单</a>
 									</c:if>
 									<c:if test="${QX.del == 1 }">
 									<a class="btn btn-sm btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
@@ -250,6 +243,15 @@ $(top.hangge());//关闭加载状态
 function tosearch(){
 	top.jzts();
 	$("#Form").submit();
+}
+
+//导出excel
+function toExcel(){
+	var keywords = $("#keywords").val();
+	var lastLoginStart = $("#lastLoginStart").val();
+	var lastLoginEnd = $("#lastLoginEnd").val();
+	var STATE = $("#STATE").val();
+	window.location.href='<%=basePath%>warehousing/output_storageExcel.do?keywords='+keywords+'&lastLoginStart='+lastLoginStart+'&lastLoginEnd='+lastLoginEnd+'&STATE='+STATE+'&TYPE=1';
 }
 
 //新增
@@ -332,7 +334,7 @@ function del(Id){
 				}else {
 					swal({   
 						title: "系统提示",
-						text: "删除失败!正在拣货中，无法删除!!!", 
+						text: "正在拣货处理中或已处理完成，无法删除!!!", 
 						type: "error",
 						confirmButtonText: "OK" });
 				}
@@ -342,21 +344,30 @@ function del(Id){
 }
 
 //修改
-function edit(Id){
-	 top.jzts();
-	 var diag = new top.Dialog();
-	 diag.Drag=true;
-	 diag.Title ="编辑";
-	 diag.URL = '<%=basePath%>warehousing/output_storageEditPage.do?ID='+Id;
-	 diag.Width = 850;
-	 diag.Height = 500;
-	 diag.CancelEvent = function(){ //关闭事件
-		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-			 nextPage(${page.currentPage});
-		}
-		diag.close();
-	 };
-	 diag.show();
+function edit(Id,state){
+	if(state==1) {
+		bootbox.dialog({
+			message: "<span class='bigger-110'>已检验完成，不能修改!</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		return;
+	}else {
+		top.jzts();
+		 var diag = new top.Dialog();
+		 diag.Drag=true;
+		 diag.Title ="编辑";
+		 diag.URL = '<%=basePath%>warehousing/output_storageEditPage.do?ID='+Id;
+		 diag.Width = 850;
+		 diag.Height = 500;
+		 diag.CancelEvent = function(){ //关闭事件
+			 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
+				 nextPage('${page.currentPage}');
+			}
+			diag.close();
+		 };
+		 diag.show();
+	}
 }
 //批量操作
 function makeAll(msg){
@@ -398,7 +409,7 @@ function makeAll(msg){
 					}else {
 						swal({   
 							title: "系统提示",
-							text: "删除失败!正在拣货中，无法删除!!!", 
+							text: "正在拣货处理中或已处理完成，无法删除!!!", 
 							type: "error",
 							confirmButtonText: "OK" });
 					}

@@ -31,7 +31,7 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="warehousing/output_storageList.do" method="post" name="Form" id="Form">
+						<form action="warehousing/findput_storage_checkoutListAll.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
@@ -69,7 +69,6 @@
 									<!-- <th class="center">最后修改时间</th> -->
 									<th class="center">状态</th>
 									<th class="center">操作员</th>
-									<th class="center">审核人</th>
 									<th class="center">备注</th>
 									<th class="center">操作</th>
 								</tr>
@@ -96,21 +95,15 @@
 											<td class='center'>${var.ENTRY_TIME}</td>
 											<%-- <td class='center'>${var.UPDATE_TIME}</td> --%>
 											<c:if test="${var.STATE eq 0}">
-												<td class='center'>检验中</td>
+												<td class='center'><span class="label label-default">待检验</span></td>
 											</c:if>
 											<c:if test="${var.STATE eq 1}">
-												<td class='center'>已检验</td>
+												<td class='center'><span class="label label-success">已检验</span></td>
 											</c:if>
 											<c:if test="${var.STATE eq 2}">
-												<td class='center'>不合格</td>
+												<td class='center'><span class="label label-danger">不合格</span></td>
 											</c:if>
 											<td class='center'>${var.user.USERNAME}</td>
-											<c:if test="${empty var.AUDITOR}">
-												<td class='center'>暂无</td>
-											</c:if>
-											<c:if test="${!empty var.AUDITOR}">
-												<td class='center'>${var.AUDITOR}</td>
-											</c:if>
 											<td class='center'>${var.NOTE}</td>
 											<td class="center">
 												<c:if test="${QX.edit != 1 && QX.del != 1 }">
@@ -118,7 +111,7 @@
 												</c:if>
 												<div class="hidden-sm hidden-xs btn-group">
 													<c:if test="${QX.edit == 1 }">
-													<a class="btn btn-xs btn-info" title="分配" onclick="distribute('${var.ID}');">
+													<a class="btn btn-xs btn-info" title="分配" onclick="distribute('${var.ID}','${var.warehouse.WARNAME}');">
 														<i class="ace-icon fa fa-share-square-o bigger-120" title="分配"></i>
 													</a>
 													</c:if>
@@ -205,21 +198,30 @@ function tosearch(){
 }
 
 //修改
-function distribute(Id){
-	 top.jzts();
-	 var diag = new top.Dialog();
-	 diag.Drag=true;
-	 diag.Title ="分配";
-	 diag.URL = '<%=basePath%>warehousing/distribute_warehousePage.do?ID='+Id;
-	 diag.Width = 850;
-	 diag.Height = 500;
-	 diag.CancelEvent = function(){ //关闭事件
-		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-			 nextPage(${page.currentPage});
-		}
-		diag.close();
-	 };
-	 diag.show();
+function distribute(Id,warname){
+	if(warname!='Stage区') {
+		bootbox.dialog({
+			message: "<span class='bigger-110'>您已分配仓库，如需再次分配请到仓库调拨进行处理!</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		return;
+	}else {
+		 top.jzts();
+		 var diag = new top.Dialog();
+		 diag.Drag=true;
+		 diag.Title ="分配";
+		 diag.URL = '<%=basePath%>warehousing/distribute_warehousePage.do?ID='+Id;
+		 diag.Width = 850;
+		 diag.Height = 500;
+		 diag.CancelEvent = function(){ //关闭事件
+			 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
+				 nextPage(${page.currentPage});
+			}
+			diag.close();
+		 };
+		 diag.show();
+	}
 }
 
 $(function() {

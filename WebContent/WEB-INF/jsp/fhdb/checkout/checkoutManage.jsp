@@ -19,6 +19,8 @@
 <%@ include file="/WEB-INF/jsp/system/index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
+<link rel="stylesheet" type="text/css" href="static/ace/css/sweetalert.css">
+<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
 </head>
 <body class="no-skin">
 
@@ -46,13 +48,14 @@
 								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginEnd" name="lastLoginEnd"  value="${pd.lastLoginEnd}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="最近登录结束"/></td>
 								<td style="vertical-align:top;padding-left:2px;">
 								 	<select class="chosen-select form-control" name="STATE" id="STATE" data-placeholder="请选择状态" style="vertical-align:top;width: 120px;">
-										<option value="0">检验中</option>
-										<option value="1">已检验</option>
+										<option value=""></option>
+										<option value="1">检验合格</option>
 										<option value="2">不合格</option>
 								  	</select>
 								</td>
 								<c:if test="${QX.cha == 1 }">
-								<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+									<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+									<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-cloud-download bigger-110 nav-search-icon blue"></i>导出</a></td></c:if>
 								</c:if>
 							</tr>
 						</table>
@@ -72,6 +75,7 @@
 									<th class="center">坏货原因</th>
 									<th class="center">缺货数量</th>
 									<th class="center">缺货原因</th>
+									<th class="center">状态</th>
 									<th class="center">检测时间</th>
 									<th class="center">检测员</th>
 									<th class="center">操作</th>
@@ -96,6 +100,12 @@
 											<td class='center'>${var.DAMAGEDREASON}</td>
 											<td class='center'>${var.SHORTQTY}</td>
 											<td class='center'>${var.SHORTREASON}</td>
+											<c:if test="${var.STATE eq 1 }">
+												<td class="center"><span class="label label-success">检验合格</span></td>
+											</c:if>
+											<c:if test="${var.STATE eq 2 }">
+												<td class="center"><span class="label label-danger">不合格</span></td>
+											</c:if>
 											<td class='center'>${var.TIME}</td>
 											<td class='center'>${var.INSPECTOR}</td>
 											<td class="center">
@@ -209,6 +219,15 @@ function tosearch(){
 	$("#Form").submit();
 }
 
+//导出excel
+function toExcel(){
+	var keywords = $("#keywords").val();
+	var lastLoginStart = $("#lastLoginStart").val();
+	var lastLoginEnd = $("#lastLoginEnd").val();
+	var STATE = $("#STATE").val();
+	window.location.href='<%=basePath%>warehousing/checkoutExcel.do?keywords='+keywords+'&lastLoginStart='+lastLoginStart+'&lastLoginEnd='+lastLoginEnd+'&STATE='+STATE;
+}
+
 //删除
 function del(Id){
 	bootbox.confirm("确定要删除吗?", function(result) {
@@ -216,12 +235,22 @@ function del(Id){
 			top.jzts();
 			var url = '<%=basePath%>warehousing/checkoutDel.do?ID='+Id;
 			$.get(url,function(data){
+				$(top.hangge());//关闭加载状态
 				if(data == 'success'){
-					alert("成功");
+					swal({   
+						title: "系统提示",
+						text: "删除成功!", 
+						type: "success",
+						confirmButtonText: "OK" },function(){
+							nextPage('${page.currentPage}');
+						});
 				}else {
-					alert("失败");
+					swal({   
+						title: "系统提示",
+						text: "正在拣货处理中或已处理完成，无法删除!!!", 
+						type: "error",
+						confirmButtonText: "OK" });
 				}
-				nextPage(${page.currentPage});
 			});
 		}
 	});
@@ -273,11 +302,20 @@ function makeAll(msg){
 				var url = '<%=basePath%>warehousing/checkoutBatchDel.do?DATA_IDS='+str;
 				$.get(url,function(data){
 					if(data == 'success'){
-						alert("成功");
+						swal({   
+							title: "系统提示",
+							text: "删除成功!", 
+							type: "success",
+							confirmButtonText: "OK" },function(){
+								nextPage('${page.currentPage}');
+							});
 					}else {
-						alert("失败");
+						swal({   
+							title: "系统提示",
+							text: "正在拣货处理中或已处理完成，无法删除!!!", 
+							type: "error",
+							confirmButtonText: "OK" });
 					}
-					nextPage(${page.currentPage});
 				});
 			}
 		});

@@ -129,4 +129,9 @@
 		OUTPUT_STORAGE OS ON (PO.OID=OS.ID) LEFT JOIN MATERIALS_INFORMATION MI ON (OS.MATERIALS_ID=MI.ID) 
 		LEFT JOIN WAREHOUSE WAR ON (OS.WAREHOUSE_ID=WAR.ID) WHERE PI.ID=#{pd.ID};
 	</select>
+	
+	<select id="pickingByCount" parameterType="pd" resultType="int">
+		SELECT COUNT(ID) FROM PICKING_OUTSTORAGE WHERE OID=#{ID};
+	</select>
+	
 </mapper>

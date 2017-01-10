@@ -55,9 +55,9 @@
 								  	</select>
 								</td>
 								<c:if test="${QX.cha == 1 }">
-									<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
-									<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-cloud-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
-									<c:if test="${QX.FromExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="fromExcel();" title="从EXCEL导入"><i id="nav-search-icon" class="ace-icon fa fa-cloud-upload bigger-110 nav-search-icon blue"></i></a></td></c:if>
+									<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="tosearch();" title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+									<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-cloud-download bigger-110 nav-search-icon blue"></i>导出</a></td></c:if>
+									<c:if test="${QX.FromExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="fromExcel();" title="从EXCEL导入"><i id="nav-search-icon" class="ace-icon fa fa-cloud-upload bigger-110 nav-search-icon blue"></i>导入</a></td></c:if>
 								</c:if>
 							</tr>
 						</table>
@@ -290,7 +290,7 @@ function del(Id,STATE){
 function edit(Id,state){
 	if(state!=0) {
 		bootbox.dialog({
-			message: "<span class='bigger-110'>物资正在处理中，不能修改!</span>",
+			message: "<span class='bigger-110'>物资信息已处理完成或处理中，不能修改!</span>",
 			buttons: 			
 			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
 		});
@@ -361,6 +361,16 @@ function makeAll(msg){
 		});
 	}
 }
+
+//导出excel
+function toExcel(){
+	var keywords = $("#keywords").val();
+	var lastLoginStart = $("#lastLoginStart").val();
+	var lastLoginEnd = $("#lastLoginEnd").val();
+	var STATE = $("#STATE").val();
+	window.location.href='<%=basePath%>warehousing/materialsexcel.do?keywords='+keywords+'&lastLoginStart='+lastLoginStart+'&lastLoginEnd='+lastLoginEnd+'&STATE='+STATE;
+}
+
 $(function() {
 	//日期框
 	$('.date-picker').datepicker({autoclose: true,todayHighlight: true});

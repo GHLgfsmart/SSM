@@ -13,6 +13,7 @@
 		<result property="SHORTQTY" column="SHORTQTY"/>
 		<result property="SHORTREASON" column="SHORTREASON"/>
 		<result property="INSPECTOR" column="INSPECTOR"/>
+		<result property="STATE" column="STATE"/>
 	</resultMap>
 	<!--表名 -->
 	<sql id="tableName2">
@@ -37,6 +38,7 @@
 		CO.SHORTQTY,
 		CO.SHORTREASON,
 		CO.INSPECTOR,
+		CO.STATE,
 		OPT.OPTNAME
 	</sql>
 	
@@ -72,6 +74,9 @@
 			</if>
 			<if test="pd.lastLoginEnd!=null and pd.lastLoginEnd!=''"><!-- 登录时间检索 -->
 				and CO.TIME &lt;= #{pd.lastLoginEnd} 
+			</if>
+			<if test="pd.STATE!=null and pd.STATE!=''"><!-- 登录时间检索 -->
+				and CO.STATE &lt;= #{pd.STATE} 
 			</if>
 		</where>
 			ORDER BY CO.TIME DESC
@@ -111,6 +116,9 @@
 			<if test="SHORTREASON!=null and SHORTREASON!='' ">
 				SHORTREASON=#{SHORTREASON},
 			</if>
+			<if test="STATE!=null and STATE!='' ">
+				STATE=#{STATE},
+			</if>
 		</set>
 		WHERE ID=#{ID}
 	</update>
@@ -126,7 +134,8 @@
 			#{DAMAGEDREASON},
 			#{SHORTQTY},
 			#{SHORTREASON},
-			#{INSPECTOR}
+			#{INSPECTOR},
+			#{STATE}
 		)
 	</insert>
 	<!-- 前15天 -->

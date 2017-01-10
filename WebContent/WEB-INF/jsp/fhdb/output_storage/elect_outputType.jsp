@@ -31,7 +31,7 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="warehousing/distribute_warehousePage.do" method="post" name="Form" id="Form">
+						<form action="warehousing/electMaterialsPage.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
@@ -55,11 +55,7 @@
 									</th>
 									<th class="center" style="width:50px;">序号</th>
 									<th class="center">仓库名称</th>
-									<th class="center">仓库大小(单位m<sup>2</sup>)</th>
-									<th class="center">仓库上限</th>
-									<th class="center">仓库下限</th>
-									<th class="center">仓库实际库存</th>
-									<th class="center">仓库管理员</th>
+									<th class="center">备注</th>
 								</tr>
 							</thead>
 													
@@ -73,12 +69,8 @@
 												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
 											</td>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class='center'><label><input type='hidden' name='name' value="${var.WARNAME}" class="ace" /></label>${var.WARNAME}</td>
-											<td class='center'>${var.SIZE}</td>
-											<td class='center'>${var.UPPER_LIMIT}</td>
-											<td class='center'>${var.LOWER_LIMIT}</td>
-											<td class='center'>${var.PRACTICAL}</td>
-											<td class='center'>${var.USERNAME}</td>
+											<td class='center'><label><input type='hidden' name='name' value="${var.OPTNAME}" class="ace" /></label>${var.OPTNAME}</td>
+											<td class='center'>${var.NOTE}</td>
 										</tr>
 									
 									</c:forEach>
@@ -159,8 +151,8 @@ function elect(msg){
 		});
 		return;
 	}else {
-		window.parent.window.warname = xname;
-		window.parent.window.warid = xid;
+		window.parent.window.optname = xname;
+		window.parent.window.optid = xid;
 		window.parent.window.jBox.close();
 	}
 }

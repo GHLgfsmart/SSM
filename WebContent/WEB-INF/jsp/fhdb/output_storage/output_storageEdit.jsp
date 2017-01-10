@@ -90,10 +90,10 @@
 								</td>
 								<td style="width:79px;text-align: left;padding-top: 13px;">出入库类型:</td>
 								<td>
-									<input type="hidden" id="OUTPUT_TYPE_ID" name="OUTPUT_TYPE_ID" value="001"/>
-									<input type="text" name="OPTNAME" id="OPTNAME" value="${pd.OPTNAME}" maxlength="30" placeholder="这里选择出入库类型" title="出入库类型" style="width:80%;"/>
+									<input type="hidden" id="OUTPUT_TYPE_ID" name="OUTPUT_TYPE_ID" value="${pd.OUTPUT_TYPE_ID }"/>
+									<input type="text" name="OPTNAME" id="OPTNAME" value="${pd.OPTNAME}" readonly maxlength="30" placeholder="这里选择出入库类型" title="出入库类型" style="width:80%;"/>
 									<button class="btn btn-mini radius" onclick="optelect();" type="button">选择</button>
-									<input type="hidden" id="WAREHOUSE_ID" name="WAREHOUSE_ID" value="001"/>
+									<input type="hidden" id="WAREHOUSE_ID" name="WAREHOUSE_ID" value="23702a39949744679b4ad0d09eb3f7f2"/>
 									<input type="hidden" value="0" id="STATE" name="STATE"/>
 									<input type="hidden" value="1" id="TYPE" name="TYPE"/>
 								</td>
@@ -253,6 +253,22 @@
 		            closed:function (){
 		                $("#NAME").val(materials);
 		                $("#MATERIALS_ID").val(matid);
+		            }
+		        }
+		    );
+		} 
+
+		
+		var optid = $("#OUTPUT_TYPE_ID").val();
+		var optname = $("#OPTNAME").val();
+		function optelect(){
+		    jBox.open(
+		        "iframe:<%=basePath%>warehousing/electOutPutTypePage.do",
+		        "选择", 750, 400,
+		        {buttons: {}, iframeScrolling: 'yes', showClose: true,
+		            closed:function (){
+		            	$("#OUTPUT_TYPE_ID").val(optid);
+		            	$("#OPTNAME").val(optname);
 		            }
 		        }
 		    );

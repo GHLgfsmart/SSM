@@ -76,7 +76,7 @@
 									</c:if>
 								</td>
 								<td style="width:79px;text-align: right;padding-top: 13px;">原始单号:</td>
-								<td><input type="text" name="RAW_NUMBER" id="RAW_NUMBER" value="${pd.RAW_NUMBER}" maxlength="30" placeholder="这里输入原始单号" title="原始单号" style="width:98%;"/></td>
+								<td><input type="text" name="RAW_NUMBER" id="RAW_NUMBER" value="${pd.RAW_NUMBER}" readonly="readonly" maxlength="30" placeholder="这里输入原始单号" title="原始单号" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">物资:</td>
@@ -86,19 +86,18 @@
 								</td>
 								<td style="width:79px;text-align: left;padding-top: 13px;">出入库类型:</td>
 								<td>
-									<input type="hidden" id="OUTPUT_TYPE_ID" name="OUTPUT_TYPE_ID" value="001"/>
-									<input type="text" name="OPTNAME" id="OPTNAME" value="${pd.OPTNAME}" maxlength="30" placeholder="这里选择出入库类型" title="出入库类型" style="width:80%;"/>
+									<input type="text" name="OPTNAME" id="OPTNAME" value="${pd.OPTNAME}" maxlength="30" readonly placeholder="这里选择出入库类型" title="出入库类型" style="width:80%;"/>
 								</td>
 							</tr>
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">数量:</td>
 								<td>
- 									<input type="number" name="COUNT" id="COUNT" value="${pd.COUNT}" maxlength="30" placeholder="这里输入数量" title="入库数量" style="width:98%;"/>
+ 									<input type="number" name="COUNT" id="COUNT" value="${pd.COUNT}" maxlength="30" readonly placeholder="这里输入数量" title="入库数量" style="width:98%;"/>
 								</td>
 								<td style="width:79px;text-align: right;padding-top: 13px;">仓库:</td>
 								<td>
-									<input type="hidden" id="WAREHOUSE_ID" name="WAREHOUSE_ID" value="002"/>
-									<input type="text" name="WARNAME" id="WARNAME" value="${pd.WARNAME}" maxlength="30" placeholder="这里选择仓库" title="仓库" style="width:80%;"/>
+									<input type="hidden" id="WAREHOUSE_ID" name="WAREHOUSE_ID" value="${pd.WAREHOUSE_ID }"/>
+									<input type="text" name="WARNAME" id="WARNAME" value="${pd.WARNAME}" readonly maxlength="30" placeholder="这里选择仓库" title="仓库" style="width:80%;"/>
 									<button class="btn btn-mini radius" onclick="warelect();" type="button">选择</button>
 								</td>
 							</tr>
@@ -135,7 +134,7 @@
 		//保存
 		function save(){
 			
-			if($("#WARNAME").val()=="" || $("#WAREHOUSE_ID").val()==1){
+			if($("#WARNAME").val()=="" || $("#WARNAME").val()=='Stage区'){
 				$("#WARNAME").tips({
 					side:3,
 		            msg:'请选择仓库',
@@ -149,17 +148,17 @@
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();
 		}
-		/**选择供应商*/
-		var materials = "";
-		var matid = "";
+		/**选择仓库*/
+		var warid = $("#WAREHOUSE_ID").val();
+		var warname = $("#WARNAME").val();
 		function warelect(){
 		    jBox.open(
-		        "iframe:<%=basePath%>warehousing/distribute_warehousePage.do",
+		        "iframe:<%=basePath%>warehousing/elect_warehousePage.do",
 		        "选择", 750, 400,
 		        {buttons: {}, iframeScrolling: 'yes', showClose: true,
 		            closed:function (){
-		                $("#NAME").val(materials);
-		                $("#MATERIALS_ID").val(matid);
+		                $("#WAREHOUSE_ID").val(warid);
+		                $("#WARNAME").val(warname);
 		            }
 		        }
 		    );
