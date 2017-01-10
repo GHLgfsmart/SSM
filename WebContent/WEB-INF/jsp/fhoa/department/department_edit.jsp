@@ -137,6 +137,28 @@
 				$("#BIANMA").focus();
 			return false;
 		}
+		var myreg = /^(((13[0-9]{1})|159)+\d{8})$/;
+		if($("#TEL").val()==""){
+			
+			$("#TEL").tips({
+				side:3,
+	            msg:'输入手机号',
+	            bg:'#AE81FF',
+	            time:3
+	        });
+			$("#TEL").focus();
+			return false;
+		}else if($("#TEL").val().length != 11 && !myreg.test($("#TEL").val())){
+			$("#TEL").tips({
+				side:3,
+	            msg:'手机号格式不正确',
+	            bg:'#AE81FF',
+	            time:3
+	        });
+			$("#TEL").focus();
+			return false;
+		}
+
 			$("#Form").submit();
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();

@@ -176,7 +176,7 @@ a:hover{
 														  </c:if>
 														  <c:if test="${QX.del == 1 }">
 															<li>
-																<a style="cursor:pointer;" onclick="delUser('${inventory.ID }');" class="tooltip-error" data-rel="tooltip" title="删除">
+																<a style="cursor:pointer;" onclick="delInventory('${inventory.ID }');" class="tooltip-error" data-rel="tooltip" title="删除">
 																	<span class="red">
 																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
 																	</span>

@@ -74,6 +74,7 @@ public class InventoryController extends BaseController{
 		mv.setViewName("system/inventory/inventory_list");
 		mv.addObject("pd", pd);
 		mv.addObject("inventoryList", inventoryList);
+		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
 	}
 	/**

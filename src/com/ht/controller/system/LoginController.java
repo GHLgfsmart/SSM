@@ -263,6 +263,7 @@ public class LoginController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd.put("msgs", "msgs");
+		try{
 		pd = msgService.findById(pd);	//列出用户列表
 		String shijian=pd.getString("MSGTIME");
 		String shi[]=shijian.split(" ");
@@ -302,7 +303,11 @@ public class LoginController extends BaseController {
         		 shijian3+=""+times[i]+"秒";
         	 }
         }
-	    pd.put("shijain3", shijian3);  
+	    pd.put("shijain3", shijian3); 
+		}catch(Exception e){
+			e.printStackTrace();
+			pd.put("shijain3", 0); 
+		}
 		mv.addObject("pd",pd);
 		mv.setViewName("system/index/default");
 		return mv;

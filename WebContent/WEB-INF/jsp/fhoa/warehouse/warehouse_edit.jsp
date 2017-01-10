@@ -16,11 +16,12 @@
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
 <!-- jsp文件头和头部 -->
 <%@ include file="../../system/index/top.jsp"%>
+<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
 <link rel="stylesheet" href="static/js/common/jbox.css" />
 <!-- --三级联动 -->
 <link href="static/SanJiLianDong/bootstrap.min.css" rel="stylesheet">
 <link href="static/SanJiLianDong/main.css" rel="stylesheet">
-<script src="static/SanJiLianDong/jquery-1.11.0.min.js" type="text/javascript"></script>
+
 <script src="static/SanJiLianDong/bootstrap.min.js"></script>
 <script src="static/SanJiLianDong/distpicker.data.js"></script>
 <script src="static/SanJiLianDong/distpicker.js"></script>
@@ -151,7 +152,7 @@
 	 }
 	 function sanji(){
 		 if('${msg}' == 'editWare'){
-				var abc='${obj.ADDRESS}';//获取地址
+				var abc='${pd.ADDRESS}';//获取地址
 				var cze=abc.split(",");
 				var province10=parseInt(cze[1]);
 				$('#cityhqq').hide();
@@ -264,37 +265,24 @@
 			$("#PRACTICAL").focus();
 			return false;
 		}
-		if($("#ADDRESS").val()==""){
-			$("#ADDRESS").tips({
-				side:3,
-	            msg:'请输入仓库地址',
-	            bg:'#AE81FF',
-	            time:3
-	        });
-			$("#ADDRESS").focus();
-			return false;
-		}else{
-			var select=document.getElementById("province10");  
-		    var lastIndex = select.selectedIndex; 
-		    var lastValue = select.options[lastIndex].value;
-		    
-		    var select1=document.getElementById("city10");  
-		    var lastIndex1 = select1.selectedIndex;
-		    var lastValue1 = select1.options[lastIndex].value;
-		    
-		    var select2=document.getElementById("district10");  
-		    var lastIndex2 = select2.selectedIndex;
-		    var lastValue2 = select2.options[lastIndex].value;
-			var ADDRESS=lastValue+","+lastIndex+","+lastValue1+","+lastIndex1+","+lastValue2+","+lastIndex2;
-			$("#ADDRESS").val(ADDRESS);
-			$("#pdForm").submit();
-			$("#zhongxin").hide();
-			$("#zhongxin2").show();
-		}
+		var select=document.getElementById("province10");  
+	    var lastIndex = select.selectedIndex; 
+	    var lastValue = select.options[lastIndex].value;
+	    var select1=document.getElementById("city10");  
+	    var lastIndex1 = select1.selectedIndex;
+	    var lastValue1 = select1.options[lastIndex1].value;
+	    var select2=document.getElementById("district10");  
+	    var lastIndex2 = select2.selectedIndex;
+	    var lastValue2 = select2.options[lastIndex2].value;
+		var ADDRESS=lastValue+","+lastIndex+","+lastValue1+","+lastIndex1+","+lastValue2+","+lastIndex2;
+		$("#ADDRESS").val(ADDRESS);
+		$("#pdForm").submit();
+		$("#zhongxin").hide();
+		$("#zhongxin2").show();
 	}
 	
-	var supplier = "";
-	var supid = "";
+	var supplier =  $("#USERNAME").val();
+	var supid =  $("#USER_ID").val();
 	function select(){
 		jBox.open(
 		        "iframe:<%=basePath%>warehouse/testPage.do",

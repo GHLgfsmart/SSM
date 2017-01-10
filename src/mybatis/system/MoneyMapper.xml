@@ -19,6 +19,18 @@
 	<sql id="C_C_TableName">
 		customer_categories
 	</sql>
+	<!-- 出入库表  -->
+	<sql id="O_TableName">
+		output_storage
+	</sql>
+	<!-- 退货入库表  -->
+	<sql id="s_TableName">
+		sales_return
+	</sql>
+	<!-- 退货费用表  -->
+	<sql id="moneytotal_TableName">
+		money_total
+	</sql>
 	<!-- 	费用字段 -->
 	<sql id="Field">
 		ID,
@@ -42,6 +54,36 @@
 		#{UNLOADING_STATE}
 		
 	</sql>
+	<!-- 	新增 退货费用表-->
+	<insert id="totalsaveU" parameterType="pd">
+		insert into <include refid="moneytotal_TableName"></include> (
+			<include refid="Field"></include>, STATE
+		) values (
+			<include refid="FieldValue"></include>,#{STATE}
+		)
+	</insert>
+	<!-- 修改 退货费用表-->
+	<update id="totaleditU" parameterType="pd" >
+		update  <include refid="moneytotal_TableName"></include>
+			set MONEY 					= #{MONEY},
+				STORAGE_STATE 				= #{STORAGE_STATE},
+				RICHARD_STATE 				= #{RICHARD_STATE},
+				LOADING_STATE 				= #{LOADING_STATE},
+				UNLOADING_STATE 				= #{UNLOADING_STATE}
+				where PRODUCT_ID      =#{PRODUCT_ID} 
+	</update>
+	<!--出入库查询实际库存 -->
+	<select id="numbers" parameterType="pd" resultType="int" >
+		select 
+			m.COUNT
+		from 
+			<include refid="O_TableName"></include> o,<include refid="tableName"></include> m
+			where o.BIANHAO = #{OUT_CODE} and o.MATERIALS_ID=m.ID
+	</select> 
+	<!-- 查询退货个数和数量 -->
+	<select id="countsum" parameterType="pd" resultType="pd" >
+		select count(ID) ID, SUM(COUNT) COUNT from <include refid="s_TableName"></include> where OUT_CODE=#{OUT_CODE}
+	</select> 
 <!-- 	新增 -->
 	<insert id="saveU" parameterType="pd" >
 		insert into <include refid="moneyTableName"></include> (

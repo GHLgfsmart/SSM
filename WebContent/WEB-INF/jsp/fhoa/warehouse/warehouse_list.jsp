@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 <link rel="stylesheet" type="text/css" href="static/ace/css/sweetalert.css">
 </head>
-<body class="no-skin">
+<body class="no-skin" onload="listname();">
 
 	<!-- /section:basics/navbar.layout -->
 	<div class="main-container" id="main-container">
@@ -77,14 +77,14 @@
 									<c:if test="${QX.cha == 1 }">
 									<c:forEach items="${warehouseList}" var="ware" varStatus="vs">
 										<tr>
-											<td class='center' style="width: 30px;">${vs.index+1}</td>
+											<td class='center' style="width: 30px;"><input type="hidden" name='ids' value="${ware.ADDRESS }" class="ace"/>${vs.index+1}</td>
 											<td class='center'>${ware.WARNAME}</td>
 											<td class='center'>${ware.USERNAME}</td>
 											<td class='center'>${ware.SIZE}</td>
 											<td class='center'>${ware.UPPER_LIMIT}</td>
 											<td class='center'>${ware.LOWER_LIMIT }</td>
 											<td class='center'>${ware.PRACTICAL }</td>
-											<td class='center'>${ware.ADDRESS }<input type="hidden" id="ENTRY_TIME" name="ENTRY_TIME" value="${ware.ENTRY_TIME }"/></td>
+											<td class='center'><span id="t${vs.index }"></span><input type="hidden" id="ENTRY_TIME" name="ENTRY_TIME" value="${ware.ENTRY_TIME }"/></td>
 											<td class='center' style="height: 20px;">
 												<label>
 													<input name="STATE" id="STATE" onclick="STATEname('${ware.ID}');" value="${ware.STATE }" class="ace ace-switch ace-switch-3"  <c:if test="${ware.STATE==0 }">checked="checked"</c:if>  type="checkbox" >
@@ -200,6 +200,21 @@
 	<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
 	<script type="text/javascript">
 		$(top.hangge());//关闭加载状态
+		//美化
+		function listname(){
+			 var fir = document.getElementsByName("ids");
+			 for(var i=0;i < fir.length;i++){
+				var abc=fir[i].value;//获取地址
+				var cze=abc.split(",");
+				if(cze[2] ==null && cze[4] ==null){
+					document.getElementById("t"+i).innerHTML=cze[0];
+				}else if(cze[4] ==null){
+					document.getElementById("t"+i).innerHTML=cze[0]+cze[2];
+				}else{
+					document.getElementById("t"+i).innerHTML=cze[0]+cze[2]+cze[4];
+				}
+			 }
+		}
 		//检索
 		function gsearch(){
 			top.jzts();

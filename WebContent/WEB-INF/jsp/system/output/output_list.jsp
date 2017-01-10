@@ -122,7 +122,7 @@
 																</a>
 															</li>
 															<li>
-																<a style="cursor:pointer;" onclick="delUser('${output.ID }');" class="tooltip-error" data-rel="tooltip" title="删除">
+																<a style="cursor:pointer;" onclick="delInventory('${output.ID }');" class="tooltip-error" data-rel="tooltip" title="删除">
 																	<span class="red">
 																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
 																	</span>

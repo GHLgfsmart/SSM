@@ -34,7 +34,16 @@ public interface MoneyManager {
 	 * @throws Exception
 	 */
 	public void saveU(PageData pd)throws Exception;
-	
+	/**保存退货费用
+	 * @param pd
+	 * @throws Exception
+	 */
+	public int totalsaveU(PageData pd)throws Exception;
+	/**修改退货费用
+	 * @param pd
+	 * @throws Exception
+	 */
+	public int totaleditU(PageData pd)throws Exception;
 	/**删除费用
 	 * @param pd
 	 * @throws Exception
@@ -47,4 +56,14 @@ public interface MoneyManager {
 	 */
 	public void deleteAllU(String[] MSGID)throws Exception;
 	
+	/**判断退货数量不能大于实际数量
+	 * @param USER_IDS
+	 * @throws Exception
+	 */
+	public int numbers(PageData pd) throws Exception;
+	/**查询退货个数和数量
+	 * @param USER_IDS
+	 * @throws Exception
+	 */
+	public PageData countsum(PageData pd) throws Exception;
 }

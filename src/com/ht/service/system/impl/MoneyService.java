@@ -47,7 +47,20 @@ public class MoneyService implements MoneyManager{
 	public void saveU(PageData pd)throws Exception{
 		dao.save("MoneyMapper.saveU", pd);
 	}
-	 
+	/**保存退货费用
+	 * @param pd
+	 * @throws Exception
+	 */
+	public int totalsaveU(PageData pd)throws Exception{
+		return(Integer) dao.save("MoneyMapper.totalsaveU", pd);
+	}
+	/**修改退货费用
+	 * @param pd
+	 * @throws Exception
+	 */
+	public int totaleditU(PageData pd)throws Exception{
+		return(Integer) dao.save("MoneyMapper.totaleditU", pd);
+	}
 	/**修改
 	 * @param pd
 	 * @throws Exception
@@ -70,5 +83,21 @@ public class MoneyService implements MoneyManager{
 	 */
 	public void deleteAllU(String[] MSGID)throws Exception{
 		dao.delete("MoneyMapper.deleteAllU", MSGID);
+	}
+	/**判断退货数量不能大于实际数量
+	 * @param USER_IDS
+	 * @throws Exception
+	 */
+	@Override
+	public int numbers(PageData pd) throws Exception{
+		return(int)dao.findForObject("MoneyMapper.numbers",pd);
+	}
+	/**查询退货个数和数量
+	 * @param USER_IDS
+	 * @throws Exception
+	 */
+	@Override
+	public PageData countsum(PageData pd) throws Exception{
+		return (PageData)dao.findForObject("MoneyMapper.countsum",pd);
 	}
 }
