@@ -33,8 +33,7 @@
 							<thead>
 								<tr>
 									<th class="center" style="width:50px;">序号</th>
-									<th class="center">单据编号</th>
-									<th class="center">名称</th>
+									<th class="center">产品名称</th>
 									<th class="center">供应商名称</th>
 									<th class="center">供应商分类</th>
 									<th class="center">数量&nbsp;/个</th>
@@ -50,7 +49,6 @@
 									<c:forEach items="${varList}" var="var" varStatus="vs">
 										<tr>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class='center'>${var.BIANHAO}</td>
 											<td class='center'>${var.maNAME}</td>
 											<td class='center'>${var.SUPNAME}</td>
 											<td class='center'>${var.ccNAME}</td>
