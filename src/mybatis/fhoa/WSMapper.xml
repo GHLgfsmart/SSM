@@ -176,4 +176,12 @@
 		order by u.LAST_LOGIN desc
 		
 	</select>
+	
+	<update id="WarehouseCountadd" parameterType="pd">
+		update warehouse set PRACTICAL=PRACTICAL+#{COUNT} where id=#{ID}
+	</update>
+	
+	<update id="WarehouseCountreduce" parameterType="pd">
+		update warehouse set PRACTICAL=PRACTICAL-#{COUNT} where id=#{ID}
+	</update>
 </mapper>

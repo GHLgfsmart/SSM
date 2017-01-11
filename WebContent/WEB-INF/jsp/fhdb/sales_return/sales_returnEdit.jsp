@@ -88,13 +88,13 @@
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">出库仓库:</td>
 								<td>
-									<input type="hidden" id="WAREHOUSE_OUT_ID" name="WAREHOUSE_OUT_ID" value="001"/>
+									<input type="hidden" id="WAREHOUSE_OUT_ID" name="WAREHOUSE_OUT_ID" value="${pd.WAREHOUSE_OUT_ID}"/>
 									<input type="text" name="OTNAME" id="OTNAME" readonly value="${pd.OTNAME}" maxlength="30" placeholder="这里选择出库仓库" title="出库仓库" style="width:80%;"/>
-									<button class="btn btn-mini radius" onclick="otelect();" type="button">选择</button>
+									<!-- <button class="btn btn-mini radius" onclick="otelect();" type="button">选择</button> -->
 								</td>
 								<td style="width:79px;text-align: left;padding-top: 13px;">入库仓库:</td>
 								<td>
-									<input type="hidden" id="WAREHOUSE_PUT_ID" name="WAREHOUSE_PUT_ID" value="001"/>
+									<input type="hidden" id="WAREHOUSE_PUT_ID" name="WAREHOUSE_PUT_ID" value="${pd.WAREHOUSE_PUT_ID}"/>
 									<input type="text" name="PTNAME" id="PTNAME" readonly value="${pd.PTNAME}" maxlength="30" placeholder="这里选择入库仓库" title="入库仓库" style="width:80%;"/>
 									<button class="btn btn-mini radius" onclick="ptelect();" type="button">选择</button>
 								</td>
@@ -119,7 +119,8 @@
 								</td>
 								<td style="width:79px;text-align: right;padding-top: 13px;">出入库类型:</td>
 								<td>
-									<input type="hidden" id="OUTPUT_TYPE_ID" name="OUTPUT_TYPE_ID" value="003"/>
+									<input type="hidden" id="OUTPUT_TYPE_ID" name="OUTPUT_TYPE_ID" value="${pd.OUTPUT_TYPE_ID}"/>
+									<input type="hidden" id="STATE" name="STATE" value="0"/>
 									<input type="text" name="OPTNAME" id="OPTNAME" readonly value="${pd.OPTNAME}" maxlength="30" placeholder="这里选择出入库类型" title="出入库类型" style="width:80%;"/>
 									<button class="btn btn-mini radius" onclick="optelect();" type="button">选择</button>
 								</td>
@@ -368,8 +369,8 @@
 			$("#zhongxin2").show();
 		}
 		/**选择供应商*/
-		var materials = "";
-		var matid = "";
+		var materials = $("#NAME").val();
+		var matid = $("#MATERIALS_ID").val();
 		function matelect(){
 		    jBox.open(
 		        "iframe:<%=basePath%>warehousing/electMaterialsPage.do",
@@ -386,6 +387,8 @@
 		var supplier =  $("#OUT_CODE").val();
 		var COUNT =  $("#COUNT").val();
 		var OUT_CODE=$("#OUT_CODE").val();
+		var otwarid = $("#WAREHOUSE_OUT_ID").val();
+		var otwarname = $("#OTNAME").val();
 		function elect(){
 		    jBox.open(
 		        "iframe:<%=basePath%>warehousing/OUTlist.do",
@@ -393,6 +396,55 @@
 		        {buttons: {}, iframeScrolling: 'yes', showClose: true,
 		            closed:function (){
 		                $("#OUT_CODE").val(supplier);
+		                $("#WAREHOUSE_OUT_ID").val(otwarid);
+		                $("#OTNAME").val(otwarname);
+		            }
+		        }
+		    );
+		} 
+
+		<%-- /**选择出库仓库*/
+		function otelect(){
+			var warid = $("#WAREHOUSE_OUT_ID").val();
+			var warname = $("#OTNAME").val();
+		    jBox.open(
+		        "iframe:<%=basePath%>warehousing/elect_warehousePage.do",
+		        "选择", 750, 400,
+		        {buttons: {}, iframeScrolling: 'yes', showClose: true,
+		            closed:function (){
+		            	$("#WAREHOUSE_OUT_ID").val(warid);
+		                $("#OTNAME").val(warname);
+		            }
+		        }
+		    );
+		}  --%>
+		/**选择入库仓库*/
+		var warid = $("#WAREHOUSE_PUT_ID").val();
+		var warname = $("#PTNAME").val();
+		function ptelect(){
+		    jBox.open(
+		        "iframe:<%=basePath%>warehousing/elect_warehousePage.do",
+		        "选择", 750, 400,
+		        {buttons: {}, iframeScrolling: 'yes', showClose: true,
+		            closed:function (){
+		            	$("#WAREHOUSE_PUT_ID").val(warid);
+		                $("#PTNAME").val(warname);
+		            }
+		        }
+		    );
+		} 
+
+		var optid = $("#OUTPUT_TYPE_ID").val();
+		var optname = $("#OPTNAME").val();
+		/**选择出入库类型*/
+		function optelect(){
+		    jBox.open(
+		        "iframe:<%=basePath%>warehousing/electOutPutTypePage.do",
+		        "选择", 750, 400,
+		        {buttons: {}, iframeScrolling: 'yes', showClose: true,
+		            closed:function (){
+		            	$("#OUTPUT_TYPE_ID").val(optid);
+		            	$("#OPTNAME").val(optname);
 		            }
 		        }
 		    );

@@ -74,7 +74,7 @@
 				and MI.ENTRY_TIME &lt;= #{pd.lastLoginEnd} 
 			</if>
 		</where>
-			order by MI.ENTRY_TIME desc
+			ORDER BY MI.ENTRY_TIME DESC
 	</select>
 	
 	<select id="materialById" parameterType="pd" resultType="pd">

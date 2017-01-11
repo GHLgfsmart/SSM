@@ -11,6 +11,7 @@ import com.ht.entity.Checkout;
 import com.ht.entity.Materials_information;
 import com.ht.entity.Output_storage;
 import com.ht.entity.Page;
+import com.ht.entity.Picking;
 import com.ht.service.fhdb.WarehousingManager;
 import com.ht.util.PageData;
 
@@ -204,5 +205,23 @@ public class WarehousingService implements WarehousingManager{
 	@Override
 	public int findBypickingCount(PageData pd) throws Exception {
 		return (Integer)dao.delete("PickingMapper.pickingByCount", pd);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PageData> findByPutstorageMat(Page page) throws Exception {
+		return (List<PageData>) dao.findForList("Output_storageMapper.ByPutstorageMat",page);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Picking> barChar3() throws Exception {
+		return (List<Picking>) dao.findForList("PickingMapper.barChar1","");
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Picking> barChar4() throws Exception {
+		return (List<Picking>) dao.findForList("PickingMapper.barChar2","");
 	}
 }

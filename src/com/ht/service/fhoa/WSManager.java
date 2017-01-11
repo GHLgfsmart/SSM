@@ -70,4 +70,20 @@ public interface WSManager {
 	 * @throws Exception
 	 */
 	public int getCount(PageData pd)throws Exception;
+	
+	/**
+	 * 通过id对仓库总数量进行增加
+	 * @author Mr.Lin
+	 * @throws
+	 * @return
+	 */
+	public int editWarehouseCountadd(PageData pd) throws Exception;
+	
+	/**
+	 * 通过id对仓库总数量进行减少
+	 * @author Mr.Lin
+	 * @throws
+	 * @return
+	 */
+	public int editWarehouseCountreduce(PageData pd) throws Exception;
 }

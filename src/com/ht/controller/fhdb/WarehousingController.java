@@ -1063,12 +1063,12 @@ public class WarehousingController extends BaseController{
 		pd = this.getPageData();
 		int result = warehousingService.output_storageUpdate(pd);
 		if(result>0) {
-			/**仓库库存增加
-			 * 物资状态改为已入库
-			 * 待加
-			 * 
-			 * */
-			// TODO Auto-generated method stub
+			pd.put("ID", pd.get("WAREHOUSE_ID"));
+			wSService.editWarehouseCountadd(pd);	//仓库库存增加
+			System.out.println(pd.get("ID")+"**************");
+			pd.put("ID", pd.get("MATERIALS_ID"));
+			System.out.println(pd.get("ID")+"////////////");
+			warehousingService.materialUpdate(pd);  //物资改为已入库
 			mv.addObject("msg","success");
 		}else {
 			mv.addObject("msg","fail");
@@ -1186,7 +1186,7 @@ public class WarehousingController extends BaseController{
 	@RequestMapping(value="/sales_returnAdd")
 	public ModelAndView sales_returnAdd()throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"检验新增");
-		if(!Jurisdiction.buttonJurisdiction(returnmenuUrl, "add")){return null;} //校验权限
+		if(!Jurisdiction.buttonJurisdiction(returnmenuUrl, "sms")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -1348,20 +1348,95 @@ public class WarehousingController extends BaseController{
 	@RequestMapping(value="/sales_returnAuditing")
 	public void sales_returnAuditing(PrintWriter out) throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"主管审核操作");
-		if(!Jurisdiction.buttonJurisdiction(returnmenuUrl, "del")){return;} //校验权限
+		if(!Jurisdiction.buttonJurisdiction(returnmenuUrl, "email")){return;} //校验权限
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		int result = warehousingService.salesreturnUpdate(pd);
 		if(result>0) {
-			/**
-			 * 审核成功后仓库库存需要增加
-			 * 
-			 * */
-			// TODO Auto-generated method stub
+			pd.put("ID", pd.get("WAREHOUSE_ID"));
+			wSService.editWarehouseCountadd(pd);	//仓库库存增加
 			out.write("success");
 		}else {
 			out.write("fail");
 		}
 		out.close();
+	}
+	
+	/**
+	 * @author Mr.Lin
+	 * 导出退货入库信息到EXCEL
+	 * @return
+	 */
+	@RequestMapping(value="/sales_returnExcel")
+	public ModelAndView sales_returnExcel(Page page){
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try{
+			if(Jurisdiction.buttonJurisdiction(returnmenuUrl, "cha")){
+				String keywords = pd.getString("keywords");				//关键词检索条件
+				if(null != keywords && !"".equals(keywords)){
+					pd.put("keywords", keywords.trim());
+				}
+				String lastLoginStart = pd.getString("lastLoginStart");	//开始时间
+				String lastLoginEnd = pd.getString("lastLoginEnd");		//结束时间
+				if(lastLoginStart != null && !"".equals(lastLoginStart)){
+					pd.put("lastLoginStart", lastLoginStart+" 00:00:00");
+				}
+				if(lastLoginEnd != null && !"".equals(lastLoginEnd)){
+					pd.put("lastLoginEnd", lastLoginEnd+" 00:00:00");
+				} 
+				page.setPd(pd);
+				Map<String,Object> dataMap = new HashMap<String,Object>();
+				List<String> titles = new ArrayList<String>();
+				titles.add("序号");
+				titles.add("退货单号"); 		//1
+				titles.add("出库单号");  	//2
+				titles.add("出库仓库");		//3
+				titles.add("入库仓库");		//4
+				titles.add("出入库类型");	//5
+				titles.add("制单时间");		//6
+				titles.add("退货数量");		//7
+				titles.add("操作员");	//8
+				titles.add("状态");		//9
+				titles.add("备注");		//10
+				dataMap.put("titles", titles);
+				List<PageData> userList = warehousingService.findBysalesreturnAll(page);
+				List<PageData> varList = new ArrayList<PageData>();
+				String state = "";
+				for(int i=0;i<userList.size();i++){
+					PageData vpd = new PageData();
+					vpd.put("var1", i+1+"");
+					vpd.put("var2", userList.get(i).getString("RETREAT_CODE"));		//1
+					vpd.put("var3", userList.get(i).getString("OUT_CODE"));		//2
+					vpd.put("var4", userList.get(i).getString("OTNAME"));	//3
+					vpd.put("var5", userList.get(i).getString("PTNAME"));	//4
+					vpd.put("var6", userList.get(i).getString("OPTNAME"));	//5
+					vpd.put("var7", userList.get(i).getString("MAKETIME"));	//6
+					String count = userList.get(i).get("COUNT")+"";
+					vpd.put("var8", count);		//7
+					vpd.put("var9", userList.get(i).getString("INSPECTOR"));	//8
+					state = userList.get(i).get("STATE")+"";
+					if(state.equals("0")) {
+						state = "待检验";
+					}else if(state.equals("1")) {
+						state = "已检验";
+					}else if(state.equals("2")){
+						state = "不合格";
+					}else if(state.equals("3")){
+						state = "审核成功";
+					}
+					vpd.put("var10", state);		//9
+					vpd.put("var11", userList.get(i).getString("NOTE"));	//11
+					varList.add(vpd);
+				}
+				dataMap.put("varList", varList);
+				ObjectExcelView erv = new ObjectExcelView();					//执行excel操作
+				mv = new ModelAndView(erv,dataMap);
+			}
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		return mv;
 	}
 }

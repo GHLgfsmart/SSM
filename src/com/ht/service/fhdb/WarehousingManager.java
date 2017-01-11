@@ -6,6 +6,7 @@ import com.ht.entity.Checkout;
 import com.ht.entity.Materials_information;
 import com.ht.entity.Output_storage;
 import com.ht.entity.Page;
+import com.ht.entity.Picking;
 import com.ht.util.PageData;
 
 /**
@@ -289,4 +290,22 @@ public interface WarehousingManager {
 	 * @throws Exception
 	 * */
 	public int findBypickingCount(PageData pd)throws Exception;
+	
+	/**
+	 * @author Mr.Lin
+	 * 根据出入库表条件查询物资信息
+	 * */
+	public List<PageData> findByPutstorageMat(Page page)throws Exception;
+	
+	/**统计出库当前时间前15天的数据
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Picking> barChar3()throws Exception;
+	
+	/**统计出库当前时间后15天的数据
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Picking> barChar4()throws Exception;
 }

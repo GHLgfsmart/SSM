@@ -21,7 +21,6 @@
 		<association property="materials" javaType="com.ht.entity.Materials_information">
 			<id property="ID" column="ID" />
 			<result property="NAME" column="NAME" />
-			<result property="COUNT" column="COUNT" />
 		</association>
 		<association property="warehouse" javaType="com.ht.entity.Warehouse">
 			<id property="ID" column="ID" />
@@ -58,6 +57,17 @@
 		WH.WARNAME,
 		OT.OPTNAME,
 		SU.USERNAME
+	</sql>
+	
+	<sql id="matermessage">
+		OS.ENTRY_TIME,
+		MI.ID,
+		MI.NAME,
+		MI.BIANHAO,
+		MI.BAR_CODE,
+		MI.STATE,
+		MI.COUNT,
+		WH.WARNAME
 	</sql>
 	
 	<sql id="tableName">
@@ -106,6 +116,41 @@
 			</if>
 		</where>
 			ORDER BY OS.ENTRY_TIME DESC
+	</select>
+	
+	<select id="ByPutstorageMat" parameterType="page" resultType="pd">
+		SELECT 
+			<include refid="matermessage" /> 
+		FROM <include refid="tableName" /> OS INNER JOIN MATERIALS_INFORMATION MI ON OS.MATERIALS_ID = MI.ID 
+		INNER JOIN WAREHOUSE WH ON OS.WAREHOUSE_ID = WH.ID
+		<where>
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and 
+					(
+						MI.BIANHAO LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 	or 
+					 	MI.BAR_CODE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 	or 
+					 	MI.NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 	or 
+					 	WH.WARNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 	or 
+					 	MI.COUNT LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					)
+			</if>
+			<if test="pd.lastLoginStart!=null and pd.lastLoginStart!=''"><!-- 登录时间检索 -->
+				and OS.ENTRY_TIME &gt;= #{pd.lastLoginStart} 
+			</if>
+			<if test="pd.lastLoginEnd!=null and pd.lastLoginEnd!=''"><!-- 登录时间检索 -->
+				and OS.ENTRY_TIME &lt;= #{pd.lastLoginEnd} 
+			</if>
+			<if test="pd.TYPE!=null and pd.TYPE!=''"><!-- 登录时间检索 -->
+				and OS.TYPE = #{pd.TYPE} 
+			</if>
+			<if test="pd.matState!=null and pd.matState!=''"><!-- 登录时间检索 -->
+				and MI.STATE = #{pd.matState} 
+			</if>
+		</where>
 	</select>
 	
 	<select id="output_storageById" parameterType="pd" resultType="pd">

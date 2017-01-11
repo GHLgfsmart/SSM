@@ -15,6 +15,8 @@ import com.ht.controller.base.BaseController;
 import com.ht.entity.Output_storage;
 import com.ht.entity.Page;
 import com.ht.service.fhdb.WarehousingManager;
+import com.ht.service.system.MoneyManager;
+import com.ht.service.system.PriceManager;
 import com.ht.util.Jurisdiction;
 import com.ht.util.PageData;
 /**
@@ -28,7 +30,11 @@ public class OutstorageController extends BaseController{
 	String pickingmenuUrl = "outstorage/pickingList.do"; //菜单地址(权限用)
 	@Resource(name="warehousingService")
 	private WarehousingManager warehousingService;
-	
+	//洪青青修改
+	@Resource(name="priceService")
+	private PriceManager priceService;
+	@Resource(name="moneyService")
+	private MoneyManager moneyService;
 	/**
 	 * @author Mr.Lin
 	 * 查询所有出库信息
@@ -55,7 +61,38 @@ public class OutstorageController extends BaseController{
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
 	}
-	
+	/**
+	 * @author 洪青青
+	 * 费用规则查询
+	 * @throws Exception
+	 * @return
+	 */
+	public PageData Moneytoo()throws Exception{
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd.put("toos", "toos");
+		pd = priceService.findById(pd);
+		return pd;
+	}
+	/**
+	 * @author 洪青青
+	 * 费用查询
+	 * @throws Exception
+	 * @return
+	 */
+	@RequestMapping(value="/moneys")
+	public void moneys(PrintWriter out) throws Exception{
+		try {
+			PageData pd = new PageData();
+			pd = this.getPageData();
+			pd=moneyService.moneys(pd);
+			out.write(""+pd.get("MONEY")+";"+pd.get("COUNT"));
+		} catch (Exception e) {
+			e.fillInStackTrace();
+			out.write("fall");
+		}
+		out.close();
+	}
 	/**
 	 * @author Mr.Lin
 	 * 出库弹出新增界面
@@ -69,6 +106,10 @@ public class OutstorageController extends BaseController{
 		pd = this.getPageData();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String dj = "CK"+sdf.format(new Date());
+		//洪青青修改
+		PageData pd1=Moneytoo();
+		mv.addObject("pd1", pd1);
+		//--------
 		mv.setViewName("fhdb/outstorage/outstorageEdit");
 		mv.addObject("dj", dj);
 		mv.addObject("msg", "outstorageAdd");
@@ -91,12 +132,39 @@ public class OutstorageController extends BaseController{
 		pd = this.getPageData();
 		pd.put("ID", this.get32UUID());	//主键
 		int result = warehousingService.output_storageSave(pd);
-		if(result>0) {
+		//洪青青修改
+		pd.put("PRODUCT_ID", pd.getString("ID"));
+		int result1=moneyService.moneyeditU(pd);
+		//----------
+		if(result>0 || result1>0) {
 			mv.addObject("msg","success");
 		}else {
 			mv.addObject("msg","fail");
 		}
 		mv.setViewName("save_result");
+		return mv;
+	}
+	
+	/**
+	 * @author Mr.Lin
+	 * 弹出入库选择物资界面
+	 * @throws Exception 
+	 * */
+	@RequestMapping(value="/electMaterialsPage")
+	public ModelAndView electMaterialsPage(Page page) throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd.put("TYPE", "1");  //入库信息
+		pd.put("matState", "1");	//物资已入库信息
+		page.setPd(pd);
+		List<PageData> list = warehousingService.findByPutstorageMat(page);
+		for(PageData os : list) {
+			System.out.println(os+"********");
+		}
+		mv.setViewName("fhdb/outstorage/elect_materials");
+		mv.addObject("varList", list);
+		mv.addObject("pd", pd);
 		return mv;
 	}
 	
@@ -112,6 +180,10 @@ public class OutstorageController extends BaseController{
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd = warehousingService.findByOutput_storageId(pd);
+		//洪青青修改
+		PageData pd1=Moneytoo();
+		mv.addObject("pd1", pd1);
+		//--------
 		mv.setViewName("fhdb/outstorage/outstorageEdit");
 		mv.addObject("msg", "outstorageEdit");
 		mv.addObject("pd", pd);
@@ -132,7 +204,10 @@ public class OutstorageController extends BaseController{
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		int result = warehousingService.output_storageUpdate(pd);
-		if(result>0) {
+		//洪青青修改
+		pd.put("PRODUCT_ID", pd.getString("ID"));
+		int result1=moneyService.moneyeditU(pd);
+		if(result>0 ||result1>0) {
 			mv.addObject("msg","success");
 		}else {
 			mv.addObject("msg","fail");
@@ -213,7 +288,7 @@ public class OutstorageController extends BaseController{
 	@RequestMapping(value="/checkoutAdd")
 	public ModelAndView checkoutAdd()throws Exception{
 		logBefore(logger, Jurisdiction.getUsername()+"出库检验新增");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
+		if(!Jurisdiction.buttonJurisdiction(menuUrl, "sms")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -368,7 +443,7 @@ public class OutstorageController extends BaseController{
 		}
 		if(pd.get("YK").toString().equals("1")) {
 			pd.put("TYPE", "2");
-			pd.put("STATE", "1");
+			pd.put("STATE", "3");
 		}else {
 			pd.put("TYPE", "1");
 			pd.put("matState", "0");

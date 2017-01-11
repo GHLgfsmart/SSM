@@ -130,7 +130,7 @@
 								<td style="width:79px;text-align: right;padding-top: 13px;">状态:</td>
 								<td>
 									<select id="STATE" name="STATE">
-										<option value="0" selected>未入库</option>
+										<option value="0" selected>待入库</option>
 									</select>
 								</td>
 							</tr>

@@ -20,8 +20,8 @@
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
 </head>
-<body class="no-skin">
-
+<body class="no-skin" onload="onloadname();">
+	
 	<div class="main-container" id="main-container">
 		<!-- /section:basics/sidebar -->
 		<div class="main-content">
@@ -31,7 +31,7 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="warehousing/OUTlist.do" method="post" name="Form" id="Form">
+						<form action="outstorage/electMaterialsPage.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
@@ -57,11 +57,11 @@
 									</th>
 									<th class="center" style="width:50px;">序号</th>
 									<th class="center">单据编号</th>
-									<th class="center">原始单号</th>
+									<th class="center">条形码</th>
 									<th class="center">物资名称</th>
 									<th class="center">仓库名称</th>
-									<th class="center">出入库类型</th>
-									<th class="center">录入时间</th>
+									<th class="center">商品数量</th>
+									<th class="center">状态</th>
 								</tr>
 							</thead>
 													
@@ -70,43 +70,44 @@
 							<c:choose>
 								<c:when test="${not empty varList}">
 									<c:forEach items="${varList}" var="var" varStatus="vs">
-										<tr>
+										<tr id="t${vs.index+1}">
 											<td class='center'>
-												<label class="pos-rel"><input type='checkbox' name='ids' alt="${var.BIANHAO }" value="${var.ID}" class="ace" /><span class="lbl"></span></label>
+												<label class="pos-rel"><input type='checkbox' name='ids' alt="${var.ENTRY_TIME }" value="${var.ID}" class="ace" /><span class="lbl"></span></label>
 											</td>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
 											<td class='center'>${var.BIANHAO}</td>
-											<td class='center'>${var.RAW_NUMBER}</td>
-											<td class='center'>${var.materials.NAME}</td>
+											<td class='center'>${var.BAR_CODE}</td>
 											<td class='center'>
-												<label><input type='hidden' name='name' value="${var.warehouse.WARNAME}" class="ace" /></label>
-												<label><input type="hidden" name="warid" id="warid" value="${var.WAREHOUSE_ID}" class="ace" /></label>
-												${var.warehouse.WARNAME}
-											</td>
-											<td class='center'>${var.output_put.OPTNAME}</td>
-											<td class='center'>${var.ENTRY_TIME}</td>
+												<label><input type='hidden' name='name' value="${var.NAME}" class="ace" /></label>
+											${var.NAME}</td>
+											<td class='center'>${var.WARNAME}</td>
+											<td class='center'>${var.COUNT}</td>
+											<c:if test="${var.STATE eq 0}">
+												<td class='center'><span class="label label-default">待入库</span></td>
+											</c:if>
+											<c:if test="${var.STATE eq 1}">
+												<td class='center'><span class="label label-primary">已入库</span></td>
+											</c:if>
+											<c:if test="${var.STATE eq 2}">
+												<td class='center'><span class="label label-success">已出库</span></td>
+											</c:if>
 										</tr>
 									
 									</c:forEach>
 								</c:when>
-								<c:otherwise>
-									<tr class="main_info">
-										<td colspan="100" class="center" >没有相关数据</td>
-									</tr>
-								</c:otherwise>
 							</c:choose>
 							</tbody>
 						</table>
 						<div class="page-header position-relative">
-						<table style="width:100%;">
-							<tr>
-								<td style="vertical-align:top;">
-									<a class="btn btn-sm btn-success" onclick="elect('确定要选中数据吗?');">选择</a>
-									<a class="btn btn-sm btn-danger" onclick="window.parent.window.jBox.close();">取消</a>
-								</td>
-								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
-							</tr>
-						</table>
+							<table style="width:100%;">
+								<tr>
+									<td style="vertical-align:top;">
+										<a class="btn btn-sm btn-success" onclick="elect('确定要删除选中的数据吗?');">选择</a>
+										<a class="btn btn-sm btn-danger" onclick="window.parent.window.jBox.close();">取消</a>
+									</td>
+									<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
+								</tr>
+							</table>
 						</div>
 						</form>
 					
@@ -120,7 +121,8 @@
 		</div>
 
 	</div>
-
+	<!-- /.main-container -->
+	
 	<!-- basic scripts -->
 	<!-- 页面底部js¨ -->
 	<%@ include file="/WEB-INF/jsp/system/index/foot.jsp"%>
@@ -134,8 +136,7 @@
 	<script src="static/ace/js/chosen.jquery.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
-	</body>
-
+</body>
 <script type="text/javascript">
 $(top.hangge());//关闭加载状态	
 //检索
@@ -143,17 +144,32 @@ function tosearch(){
 	top.jzts();
 	$("#Form").submit();
 }
+var supp=window.parent.window.mid;
+function onloadname(){
+	var strs= new Array(); //定义一数组 
+	strs=supp.split(";"); //字符分割 
+	var fir = document.getElementsByName("ids");
+	for(var i=0;i < fir.length;i++){
+		for(var j=0;j<strs.length ;j++ ){			
+			if(document.getElementsByName('ids')[i].value == strs[j]){		
+				document.getElementById("t"+(i+1)).style.color="#f00";
+				fir[i].disabled = "disabled";
+			}
+		}
+	}
+}
+
 //选择
 function elect(msg){
 	var xid = '';
-	var wname = '';
-	var wid = '';
+	var xname = '';
+	var ENTRY_TIME="";
 	var c=0;
 	for(var i=0;i < document.getElementsByName('ids').length;i++){
 	  if(document.getElementsByName('ids')[i].checked){
-		 if(xid=='') xid += document.getElementsByName('ids')[i].alt;
-		 if(wname=='') wname += document.getElementsByName('name')[i].value;
-		 if(wid=='') wid += document.getElementsByName('warid')[i].value;
+	  	if(xid=='') xid += document.getElementsByName('ids')[i].value;
+	  	if(xname=='') xname += document.getElementsByName('name')[i].value;
+	  	if(ENTRY_TIME=='') ENTRY_TIME += document.getElementsByName('ids')[i].alt;
 	 	c=c+1;
 	  }
 	}
@@ -172,50 +188,15 @@ function elect(msg){
 		});
 		return;
 	}else {
-		window.parent.window.supplier = xid;
-		window.parent.window.otwarid = wid;
-		window.parent.window.otwarname = wname;
+		window.parent.window.materials = xname;
+		window.parent.window.matid = xid;
+		window.parent.window.ENTRY_TIME = ENTRY_TIME;
 		window.parent.window.jBox.close();
 	}
 }
 $(function() {
 	//日期框
 	$('.date-picker').datepicker({autoclose: true,todayHighlight: true});
-	//下拉框
-	if(!ace.vars['touch']) {
-		$('.chosen-select').chosen({allow_single_deselect:true}); 
-		$(window)
-		.off('resize.chosen')
-		.on('resize.chosen', function() {
-			$('.chosen-select').each(function() {
-				 var $this = $(this);
-				 $this.next().css({'width': $this.parent().width()});
-			});
-		}).trigger('resize.chosen');
-		$(document).on('settings.ace.chosen', function(e, event_name, event_val) {
-			if(event_name != 'sidebar_collapsed') return;
-			$('.chosen-select').each(function() {
-				 var $this = $(this);
-				 $this.next().css({'width': $this.parent().width()});
-			});
-		});
-		$('#chosen-multiple-style .btn').on('click', function(e){
-			var target = $(this).find('input[type=radio]');
-			var which = parseInt(target.val());
-			if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
-			 else $('#form-field-select-4').removeClass('tag-input-style');
-		});
-	}
-	//复选框全选控制
-	var active_class = 'active';
-	$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
-		var th_checked = this.checked;//checkbox inside "TH" table header
-		$(this).closest('table').find('tbody > tr').each(function(){
-			var row = this;
-			if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
-			else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
-		});
-	});
-});
+})
 </script>
 </html>

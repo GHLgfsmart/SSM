@@ -81,8 +81,9 @@
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">物资:</td>
 								<td>
-									<input type="hidden" id="MATERIALS_ID" name="MATERIALS_ID" />
+									<input type="hidden" id="MATERIALS_ID" name="MATERIALS_ID" value="${pd.MATERIALS_ID}"/>
 									<input type="text" name="NAME" id="NAME" value="${pd.NAME}" maxlength="30" readonly placeholder="这里选择物资" title="物资" style="width:80%;"/>
+									<input type="hidden" id="STATE" name="STATE" value="1" />
 								</td>
 								<td style="width:79px;text-align: left;padding-top: 13px;">出入库类型:</td>
 								<td>

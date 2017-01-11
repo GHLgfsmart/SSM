@@ -90,4 +90,14 @@ public class WSService implements WSManager{
 	public int getCount(PageData pd)throws Exception{
 		return (int)dao.findForObject("WSMapper.getCount", pd);
 	}
+
+	@Override
+	public int editWarehouseCountadd(PageData pd) throws Exception {
+		return (Integer)dao.update("WSMapper.WarehouseCountadd", pd);
+	}
+
+	@Override
+	public int editWarehouseCountreduce(PageData pd) throws Exception {
+		return (Integer)dao.update("WSMapper.WarehouseCountreduce", pd);
+	}
 }
