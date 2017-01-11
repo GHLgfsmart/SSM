@@ -28,14 +28,7 @@
                     <h5 style="color: #438EB9;">-------公告栏-------</h5>
                     <div class="ibox-tools">
                         <a class="collapse-link" onclick="searchs();">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        
-                        <a class="close-link">
-                            <i class="fa fa-times"></i>
+                            <i class="fa fa-refresh"></i>
                         </a>
                     </div>
                 </div>
@@ -399,9 +392,12 @@ function openMusic(clock123,repeat,time,mid,text){
 			top.jzts();
 			$("#defaultForm").submit();
 		}
+		function resh(){
+			window.location.href="<%=basePath%>login_default.do";
+		}
 	</script>
 	<div align="center">
-	  	<iframe width="800" scrolling="no" height="120" frameborder="0" allowtransparency="true" src="http://i.tianqi.com/index.php?c=code&id=19&icon=1&temp=1&num=5"></iframe>
+	  	<iframe width="800px" scrolling="no" height="120" frameborder="0" allowtransparency="true" src="http://i.tianqi.com/index.php?c=code&id=19&icon=1&temp=1&num=5"></iframe>
  	</div>
 </body>
 </html>

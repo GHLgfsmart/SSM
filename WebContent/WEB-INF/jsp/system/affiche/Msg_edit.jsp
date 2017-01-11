@@ -103,14 +103,14 @@
 			return false;
 		}
 			$("#msgForm").submit();
-			swal({
+			/* swal({
 		        title: "系统提示", 
 		        text: "操作成功！", 
 		        type: "success",
 		        timer: 5544400,
 		        showConfirmButton: false,
 		        confirmButtonColor: "#ec6c62"
-		    	});
+		    	}); */
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();
 	}

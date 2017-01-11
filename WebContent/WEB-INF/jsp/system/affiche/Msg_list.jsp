@@ -19,6 +19,9 @@
 <%@ include file="../index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
+<!-- 弹出框 -->
+<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="static/ace/css/sweetalert.css">
 </head>
 <body class="no-skin">
 	<div class="main-container" id="main-container">
@@ -223,11 +226,20 @@ function delmsg(MSGID,MSGTITLE){
 			var url = "<%=basePath%>msg/deleteU.do?MSGID="+MSGID
 			$.get(url,function(data){
 				if(data == 'success') {
-					alert("成功");
+					swal({   
+						title: "系统提示",
+						text: "删除成功!", 
+						type: "success",
+						confirmButtonText: "OK" },function(){
+							nextPage('${page.currentPage}');
+						});
 				}else {
-					alert("失败");
+					swal({   
+						title: "系统提示",
+						text: "删除失败!", 
+						type: "error",
+						confirmButtonText: "OK" });
 				}
-				nextPage(${page.currentPage});
 			});
 		};           
 	});
