@@ -21,16 +21,15 @@
 <link rel="stylesheet" href="static/login/matrix-login.css" />
 <link href="static/login/font-awesome.css" rel="stylesheet" />
 <link href="static/login/css/demo.css" rel="stylesheet" type="text/css" />
-
 <script type="text/javascript" src="static/login/js/jquery-1.5.1.min.js"></script>
 <script src="static/js/jquery-1.7.2.js"></script>
-<script type="text/javascript" src="static/login/js/iPass.packed.js"></script>
+<!-- 弹出框 -->
+<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="static/ace/css/sweetalert.css">
+
  <style type="text/css">
   </style>
   <script>
-	  	$(document).ready(function(){	
-			$("input[type=password]").iPass();
-		});
   		//window.setTimeout(showfh,3000); 
   		var timer;
 		function showfh(){
@@ -85,7 +84,8 @@
 						<div class="main_input_box">
 							<span class="add-on bg_ly">
 							<i><img height="37" src="static/login/suo.png" /></i>
-							</span><input type="password" id="password" name="password" placeholder="请输入密码" value=""/>
+							</span>
+							<input type="password" name="password" id="password" onblur="xzc()" placeholder="请输入密码" value=""/>
 						</div>
 					</div>
 				</div>
@@ -134,6 +134,22 @@
 	</div>
 
 	<script type="text/javascript">
+	
+		function xzc(){
+			var len=$("#password").val();
+			var le=len.length;
+			if(le<6 || le>=16){
+				$("#password").tips({
+					side : 2,
+					msg : '密码格式错误，请输入6~16为密码！',
+					bg : '#AE81FF',
+					time : 3
+				});
+				$("#password").focus();
+				return false;
+			}
+		}
+	
 		//服务器校验
 		function severCheck(){
 			if(check()){
@@ -221,7 +237,7 @@
 			} else {
 				$("#loginname").val(jQuery.trim($('#loginname').val()));
 			}
-
+			
 			if ($("#password").val() == "") {
 
 				$("#password").tips({
@@ -234,6 +250,7 @@
 				$("#password").focus();
 				return false;
 			}
+			
 			if ($("#code").val() == "") {
 
 				$("#code").tips({
