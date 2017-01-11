@@ -92,4 +92,36 @@
 				and #{lastLoginEnd} 
 			</if>
 	</select>
+	
+		<!-- 查询出所有警报及数据导出 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		SELECT mi.ID,mi.BIANHAO,mi.NAME,mi.COUNT,mi.UNIT,wa.WARNAME,wa.UPPER_LIMIT,wa.LOWER_LIMIT from  output_storage os,materials_information mi,warehouse wa 
+			WHERE
+			os.WAREHOUSE_ID=wa.ID 
+			AND 
+			os.MATERIALS_ID=mi.ID
+			AND
+			(mi.COUNT > wa.UPPER_LIMIT OR mi.COUNT &lt; wa.LOWER_LIMIT)
+			AND
+			mi.STATE=1
+			AND
+			wa.STATE=0
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(	  	mi.BIANHAO LIKE CONCAT(CONCAT(#{pd.keywords}))
+						or
+						mi.NAME LIKE CONCAT(CONCAT(#{pd.keywords}))
+						or
+						mi.COUNT LIKE CONCAT(CONCAT(#{pd.keywords}))
+						or
+						mi.UNIT LIKE CONCAT(CONCAT(#{pd.keywords}))
+						or
+					  	wa.WARNAME LIKE CONCAT(CONCAT(#{pd.keywords}))
+					  	or
+					  	wa.UPPER_LIMIT LIKE CONCAT(CONCAT(#{pd.keywords}))
+				)
+		</if>
+		order by mi.BIANHAO
+	</select>
+	
 </mapper>

@@ -1,5 +1,6 @@
 package com.ht.controller.fhdb;
 import java.io.PrintWriter;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,18 +15,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ht.controller.base.BaseController;
-import com.ht.entity.Materials_information;
 import com.ht.entity.Page;
 import com.ht.service.fhdb.impl.DrawingServiceImpl;
 import com.ht.util.Jurisdiction;
 import com.ht.util.ObjectExcelView;
 import com.ht.util.PageData;
-import com.sun.xml.internal.bind.v2.model.core.ID;
 
 @Controller
 @RequestMapping(value = "/Drawing")
 public class DrawingController extends BaseController {
 	String menuUrl = "Drawing/ListDrawing.do"; // 菜单地址(权限用)
+	String AlertUrl="Drawing/ListWarehouse";// 菜单地址(权限用)
 
 	@Resource(name = "drawingServiceImpl")
 	private DrawingServiceImpl drawingServiceImpl;
@@ -48,6 +48,9 @@ public class DrawingController extends BaseController {
 		// 生成添加时间
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String addtime = df.format(new Date());
+		//生成日期
+		SimpleDateFormat rq = new SimpleDateFormat("yyyy-MM-dd");
+		String ywrq = rq.format(new Date());
 		//查询经手人
 		List<PageData> goAddPage = drawingServiceImpl.ListWAndU(page);
 		//查询仓库名
@@ -67,6 +70,7 @@ public class DrawingController extends BaseController {
 		mv.addObject("spList",sp);
 		mv.addObject("pd", pd);
 		mv.addObject("addtime",addtime);
+		mv.addObject("ywrq", ywrq);
 		mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
 		mv.addObject("msg", "DrawingAdd");
 		mv.setViewName("fhdb/Drawing/ListWAndU");
@@ -74,7 +78,7 @@ public class DrawingController extends BaseController {
 	}
 	
 	/**
-	 * 调拨新增
+	 * 新增调拨数据
 	 * @throws Exception
 	 * @return
 	 */
@@ -142,7 +146,7 @@ public class DrawingController extends BaseController {
 	}
 	
 	/**
-	 * 查询所有
+	 * 查询所有调拨数据
 	 * 
 	 * @param page
 	 * @return
@@ -175,7 +179,7 @@ public class DrawingController extends BaseController {
 	
 
 	/**
-	 * 审核
+	 * 调拨审核
 	 * @return
 	 * @throws Exception
 	 */
@@ -196,7 +200,7 @@ public class DrawingController extends BaseController {
 	}
 	
 	/**
-	 * 去审
+	 * 调拨去审
 	 * @return
 	 * @throws Exception
 	 */
@@ -216,7 +220,7 @@ public class DrawingController extends BaseController {
 		return mv;
 	}
 	/**
-	 * 删除
+	 * 删除调拨数据
 	 * @param out
 	 * @throws Exception
 	 */
@@ -237,7 +241,7 @@ public class DrawingController extends BaseController {
 	}
 	
 	
-	/**批量删除
+	/**批量删除调拨数据
 	 * @param out
 	 * @throws Exception 
 	 */
@@ -319,7 +323,7 @@ public class DrawingController extends BaseController {
 	}
 	
 	/**
-	 * 编辑单据
+	 * 编辑调拨数据
 	 * @param response
 	 * @return
 	 * @throws Exception
@@ -357,7 +361,7 @@ public class DrawingController extends BaseController {
 	}
 	
 	/**
-	 * 导出数据
+	 * 导出调拨数据
 	 * 
 	 * @return
 	 * @throws Exception
@@ -414,4 +418,104 @@ public class DrawingController extends BaseController {
 		}
 		return mv;
 	}
+	
+	
+	/**
+	 * 查询所有警报的物资和仓库
+	 * 
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/ListWarehouse")
+	public ModelAndView ListWar(Page page) throws Exception {
+		ModelAndView mv = this.getModelAndView();
+		List<PageData> warList = drawingServiceImpl.listWarning(page);
+		if (warList.isEmpty()) {
+			mv.setViewName("fhdb/WarehouseAlert/no");
+			return mv;
+		} else {
+			mv.addObject("warList", warList);
+			mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
+			mv.setViewName("fhdb/WarehouseAlert/ListWarehouse");
+			return mv;
+		}
+	}
+	
+	/**
+	 * 仓库警报模糊查询数据
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/LikeList")
+	public ModelAndView LikeList(Page page) throws Exception {
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		String keywords = pd.getString("keywords");//关键词检索条件
+		if(null != keywords && !"".equals(keywords)){
+			pd.put("keywords", keywords.trim());
+		}
+		page.setPd(pd);
+		List<PageData> warList = drawingServiceImpl.listWarning(page);
+			mv.addObject("warList", warList);
+			mv.addObject("pd", pd);
+			mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
+			mv.setViewName("fhdb/WarehouseAlert/ListWarehouse");
+			return mv;
+	}
+	
+	/**
+	 * 导出仓库警报数据
+	 * 
+	 * @return
+	 * @throws Exception
+	 * @throws Throwable
+	 */
+	@RequestMapping(value = "/ExportData")
+	public ModelAndView ExportAlertData(Page page) throws Exception {
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		if(Jurisdiction.buttonJurisdiction(menuUrl, "cha")){
+			String keywords = pd.getString("keywords");				//关键词检索条件
+			if(null != keywords && !"".equals(keywords)){
+				pd.put("keywords", keywords.trim());
+			}
+			Map<String, Object> dataMap = new HashMap<String, Object>();
+			List<String> titles = new ArrayList<String>();
+			titles.add("商品编号");
+			titles.add("商品名称");
+			titles.add("计量单位");
+			titles.add("所在仓库");
+			titles.add("仓库上限");
+			titles.add("实际库存"); 
+			titles.add("仓库下限");
+			dataMap.put("titles", titles);
+			mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
+			page.setPd(pd);
+			List<PageData> warList = drawingServiceImpl.listWarning(page);
+			List<PageData> varList = new ArrayList<PageData>();
+			for (PageData i : warList) {
+				PageData vpd = new PageData();
+				vpd.put("var1", i.getString("BIANHAO"));
+				vpd.put("var2", i.getString("NAME"));
+				vpd.put("var3", i.getString("UNIT"));
+				vpd.put("var4", i.getString("WARNAME"));
+				String UPPER_LIMIT = i.get("UPPER_LIMIT") + "";
+				vpd.put("var5", UPPER_LIMIT);
+				String COUNT = i.get("COUNT") + "";
+				vpd.put("var6", COUNT);
+				String LOWER_LIMIT = i.get("LOWER_LIMIT") + "";
+				vpd.put("var7", LOWER_LIMIT);
+				varList.add(vpd);
+			}
+			dataMap.put("varList", varList);
+			ObjectExcelView erv = new ObjectExcelView(); // 执行excel操作
+			mv = new ModelAndView(erv, dataMap);
+		}
+		return mv;
+	}
+	
 }

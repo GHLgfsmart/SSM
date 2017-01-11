@@ -44,7 +44,7 @@
 									单据编号:<input type="text" style="width: 180px;" id="DBbIANHAO" name="DBbIANHAO" value="${db}" readonly="readonly"/>
 								</td>
 								<td style="padding-right: 50px; height: 20px;">
-									业务日期:<input type="date" id="BusinessDate" name="BusinessDate" style="width:180px; height:35px;">
+									业务日期:<input type="date" id="BusinessDate" name="BusinessDate" value="${ywrq}" style="width:180px; height:35px;">
 								</td>
 								<td style="padding-right: 50px;">
 							       经手人:<select name="JINGSHUO_ID" id="JINGSHUO_ID" style="width: 180px;" data-placeholder="请选择经手人">

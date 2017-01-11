@@ -32,7 +32,7 @@
 						<div class="col-xs-12">
 						
 						<!-- 检索  -->
-						<form action="Warehouse/LikeList.do" method="post" name="alertForm" id="alertForm">
+						<form action="Drawing/LikeList.do" method="post" name="alertForm" id="alertForm">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
@@ -63,12 +63,13 @@
 									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
 									</th>
 									<th class="center">序号</th>
-									<th class="center">仓库名称</th>
-									<th class="center">仓库大小</th>
+									<th class="center">商品编号</th>
+									<th class="center">商品名称</th>
+									<th class="center">计量单位</th>
+									<th class="center">所在仓库</th>
 									<th class="center">仓库上限</th>
-									<th class="center">仓库下限</th>
 									<th class="center">实际库存</th>
-									<th class="center">仓库地址</th>
+									<th class="center">仓库下限</th>
 								</tr>
 							</thead>
 													
@@ -81,15 +82,16 @@
 												
 										<tr>
 											<td class='center' style="width: 30px;">
-												<label><input type='checkbox' style="color: red;" value="${war.ID }"/><span class="lbl"></span></label>
+												<label><input type='checkbox' value="${war.ID }"/><span class="lbl"></span></label>
 											</td>
-											<td class='center' style="width: 60px;">${vs.index+1}</td>
-											<td class="center"><font color="red">${war.WARNAME }</font></td>
-											<td class="center"><font color="red">${war.SIZE }</font></td>
-											<td class="center"><font color="red">${war.UPPER_LIMIT }</font></td>
-											<td class="center"><font color="red">${war.LOWER_LIMIT}</font></td>
-											<td class="center"><font color="red"><b>${war.PRACTICAl}</b></font> </td>
-											<td class="center"><font color="red">${war.ADDRESS}</font></td>
+											<td class='center' style="width: 60px;"><font color="red">${vs.index+1}</font></td>
+											<td class="center"><font color="red">${war.BIANHAO }</font></td>
+											<td class="center"><font color="red">${war.NAME }</font></td>
+											<td class="center"><font color="red">${war.UNIT }</font></td>
+											<td class="center"><font color="red">${war.WARNAME}</font></td>
+											<td class="center"><font color="red"><b>${war.UPPER_LIMIT}</b></font> </td>
+											<td class="center"><font color="red"><b>${war.COUNT}</b></font> </td>
+											<td class="center"><font color="red"><b>${war.LOWER_LIMIT}</b></font></td>
 										</tr>
 									
 									</c:forEach>
@@ -164,7 +166,7 @@ function searchs(){
 //导出excel
 function toExcel(){
 	var keywords = $("#nav-search-input").val();
-	window.location.href='<%=basePath%>Warehouse/ExportData.do?keywords='+keywords;
+	window.location.href='<%=basePath%>Drawing/ExportData.do?keywords='+keywords;
 }
 	
 </script>
