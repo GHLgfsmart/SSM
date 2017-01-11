@@ -141,8 +141,6 @@
 				materials_information mi INNER JOIN drawing dr 
 				ON
 				dr.MATERIALS_ID = mi.ID
-				AND
-				mi.STATE=1
 				<if test="pd.MATERIALS_ID==null">
 					AND 
 					dr.MATERIALS_ID='null'

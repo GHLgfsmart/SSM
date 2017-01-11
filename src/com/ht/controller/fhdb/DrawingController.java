@@ -99,7 +99,7 @@ public class DrawingController extends BaseController {
 		pad.get("COUNT");
 		pad.getString("UNIT");
 		pad.getString("NOTE");
-		pad.put("STATE", 3);
+		pad.get("STATE");
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String addtime = df.format(new Date());
 		pad.put("ENTRY_TIME", addtime);

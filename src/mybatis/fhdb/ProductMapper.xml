@@ -61,9 +61,7 @@
 				AND 
 				os.MATERIALS_ID=mi.ID
 				AND
-				(mi.STATE=1
-				or
-				mi.STATE=3)
+				mi.STATE=1
 				AND
 				wa.STATE=0
 				<if test="pd.ckID==null">
