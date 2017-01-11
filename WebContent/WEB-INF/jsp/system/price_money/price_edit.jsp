@@ -32,23 +32,39 @@
 									<table id="table_report" class="table table-striped table-bordered table-hover">
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">存储费:</td>
-											<td><input type="text" name="STORAGE" id="STORAGE" value="${pd.STORAGE }" maxlength="32" placeholder="这里输入存储费" title="存储费" style="width:98%;"/></td>
+											<td><input type="number" name="STORAGE" id="STORAGE" value="${pd.STORAGE }" maxlength="32" placeholder="这里输入每件单价" title="存储费" style="width:98%;"/></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">理货费:</td>
-											<td><input type="text" name="RICHARD" id="RICHARD" value="${pd.RICHARD }" maxlength="32" placeholder="这里输入理货费" title="理货费" style="width:98%;"/></td>
+											<td><input type="number" name="RICHARD" id="RICHARD" value="${pd.RICHARD }" maxlength="32" placeholder="这里输入每件理货费" title="理货费" style="width:98%;"/></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">装车费:</td>
-											<td><input type="text" name="LOADING" id="LOADING"  value="${pd.LOADING }"  maxlength="32" placeholder="这里输入装车费" title="装车费" style="width:98%;"/></td>
+											<td><input type="number" name="LOADING" id="LOADING"  value="${pd.LOADING }"  maxlength="32" placeholder="这里输入每件装车费" title="装车费" style="width:98%;"/></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">卸车费:</td>
-											<td><input type="number" name="UNLOADING" id="UNLOADING"  value="${pd.UNLOADING }"  maxlength="32" placeholder="这里输入卸车费" title="卸车费" style="width:98%;"/></td>
+											<td><input type="number" name="UNLOADING" id="UNLOADING"  value="${pd.UNLOADING }"  maxlength="32" placeholder="这里输入每件卸车费" title="卸车费" style="width:98%;"/></td>
+										</tr>
+										<tr>
+											<td style="width:79px;text-align: right;padding-top: 13px;">超时费:</td>
+											<td><input type="number" name="SURCHARGE" id="SURCHARGE"value="${pd.SURCHARGE }" placeholder="这里输入每件超时费" maxlength="64" title="超时费" style="width:98%;"/></td>
+										</tr>
+										<tr>
+											<td style="width:79px;text-align: right;padding-top: 13px;">开始天数:</td>
+											<td><input type="number" name="DAYS" id="DAYS"value="${pd.DAYS }" placeholder="输入从什么时候开始的天数" maxlength="64" title="开始的天数" style="width:98%;"/></td>
+										</tr>
+										<tr>
+											<td style="width:79px;text-align: right;padding-top: 13px;">超时天数:</td>
+											<td><input type="number" name="EVERY_DAYS" id="EVERY_DAYS"value="${pd.EVERY_DAYS }" placeholder="输入每几天超时的天数" maxlength="64" title="超时的天数" style="width:98%;"/></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">人工费:</td>
-											<td><input type="text" name="ARTIFICIAL" id="ARTIFICIAL"value="${pd.ARTIFICIAL }" placeholder="这里输入人工费" maxlength="64" title="人工费" style="width:98%;"/></td>
+											<td><input type="number" name="ARTIFICIAL" id="ARTIFICIAL"value="${pd.ARTIFICIAL }" placeholder="这里输入每件人工费" maxlength="64" title="人工费" style="width:98%;"/></td>
+										</tr>
+										<tr>
+											<td style="width:79px;text-align: right;padding-top: 13px;">原因:</td>
+											<td><textarea style='resize: none;width: 98%;' name="WHY" id="WHY" >${pd.WHY }</textarea></td>
 										</tr>
 										<tr>
 											<td style="text-align: center;" colspan="10">
@@ -86,16 +102,103 @@
 	$(top.hangge());
 	//保存
 	function save(){
-		if($("#NUMBER").val()==""){
-			$("#NUMBER").tips({
+		if($("#STORAGE").val()==""){
+			$("#STORAGE").tips({
 				side:3,
-	            msg:'输入编号',
+	            msg:'存储费不能为空',
 	            bg:'#AE81FF',
-	            time:3
+	            time:2
 	        });
-			$("#NUMBER").focus();
-			return false;
-		}else{
+			$("#STORAGE").focus();
+		return false;
+		}
+		if($("#RICHARD").val()==""){
+			$("#RICHARD").tips({
+				side:3,
+	            msg:'理货费不能为空',
+	            bg:'#AE81FF',
+	            time:2
+	        });
+			$("#RICHARD").focus();
+		return false;
+		}if($("#LOADING").val()==""){
+			$("#LOADING").tips({
+				side:3,
+	            msg:'装车费不能为空',
+	            bg:'#AE81FF',
+	            time:2
+	        });
+			$("#LOADING").focus();
+		return false;
+		}if($("#UNLOADING").val()==""){
+			$("#UNLOADING").tips({
+				side:3,
+	            msg:'卸车费不能为空',
+	            bg:'#AE81FF',
+	            time:2
+	        });
+			$("#UNLOADING").focus();
+		return false;
+		}if($("#SURCHARGE").val()==""){
+			$("#SURCHARGE").tips({
+				side:3,
+	            msg:'超时费不能为空',
+	            bg:'#AE81FF',
+	            time:2
+	        });
+			$("#SURCHARGE").focus();
+		return false;
+		}
+		var reg = new RegExp("^[0-9]*$");
+		if($("#DAYS").val()==""){
+			$("#DAYS").tips({
+				side:3,
+	            msg:'开始时间不能为空',
+	            bg:'#AE81FF',
+	            time:2
+	        });
+			$("#DAYS").focus();
+		return false;
+		}
+		if(!reg.test($("#DAYS").val())){
+			$("#DAYS").tips({
+				side:3,
+	            msg:'数据格式不正确',
+	            bg:'#AE81FF',
+	            time:2
+	        });
+			$("#DAYS").focus();
+		return false;
+		}if($("#EVERY_DAYS").val()==""){
+			$("#EVERY_DAYS").tips({
+				side:3,
+	            msg:'超时时间不能为空',
+	            bg:'#AE81FF',
+	            time:2
+	        });
+			$("#EVERY_DAYS").focus();
+		return false;
+		}
+		if(!reg.test($("#EVERY_DAYS").val())){
+			$("#EVERY_DAYS").tips({
+				side:3,
+	            msg:'数据格式不正确',
+	            bg:'#AE81FF',
+	            time:2
+	        });
+			$("#EVERY_DAYS").focus();
+		return false;
+		}if($("#ARTIFICIAL").val()==""){
+			$("#ARTIFICIAL").tips({
+				side:3,
+	            msg:'超时时间不能为空',
+	            bg:'#AE81FF',
+	            time:2
+	        });
+			$("#ARTIFICIAL").focus();
+		return false;
+		}
+		else{
 			$("#priceForm").submit();
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();

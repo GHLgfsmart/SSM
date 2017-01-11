@@ -14,8 +14,8 @@
 		<%@ include file="../../system/index/top.jsp"%>
 		<link rel="stylesheet" href="static/js/common/jbox.css" />
 		<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+		<link rel="stylesheet" type="text/css" href="static/ace/css/build.css"><!-- 洪青青     复选框  必须要有<link rel="stylesheet" href="static/ace/css/bootstrap.css" /> <link rel="stylesheet" href="static/ace/css/font-awesome.css" />-->
 		<script type="text/javascript">
-
 			function getNowFormatDate() {
 			    var date = new Date();
 			    var seperator1 = "-";
@@ -101,7 +101,7 @@
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">单据金额:</td>
 								<td>
- 									<input type="number" name="MONEY" id="MONEY" value="${pd.MONEY}" maxlength="30" placeholder="这里输入单据金额" title="单据金额" style="width:98%;"/>
+ 									<input type="number" name="MONEY" id="MONEY" readonly value="${pd.MONEY}" maxlength="30" placeholder="这里输入单据金额" title="单据金额" style="width:98%;"/>
 								</td>
 								<td style="width:79px;text-align: right;padding-top: 13px;">单据数量:</td>
 								<td><input type="number" name="NUMBER_OF" id="NUMBER_OF" value="${pd.NUMBER_OF}" maxlength="30" placeholder="这里输入单据数量" title="单据数量" style="width:98%;"/></td>
@@ -122,6 +122,19 @@
 								<td>
 									<input type="text" name="ENTRY_TIME" id="ENTRY_TIME" value="${pd.ENTRY_TIME}" maxlength="30" title="录入时间" readonly="readonly" style="width:98%;"/>
 									<input type="hidden" name="UPDATE_TIME" id="UPDATE_TIME" value="${pd.UPDATE_TIME}" />
+								</td>
+							</tr>
+							<tr>
+								<td style="width:79px;text-align: right;padding-top: 13px;">费用:</td>
+								<td colspan="3">
+								<fieldset style="padding-right: 25px;">
+								<div class="checkbox checkbox-success">
+									<input type="checkbox" class="styled" id="SURCHARGE" name="SURCHARGE" onclick="return false;" value="${pd1.SURCHARGE}" checked>
+									<label for="inlineCheckbox2"> 超时费（<span style="color: #438EB9;">每<span style="color: red;" id="money">${pd1.SURCHARGE }</span>  &nbsp;共<span style="color: red;" id="moneys1">0</span> </span>）/<i class="ace-icon fa fa-cny red"></i></label>
+								</div> 
+								</fieldset>
+								<input type="hidden" name="DAYS" id="DAYS" value="${pd1.DAYS}"/>
+								<input type="hidden" name="EVERY_DAYS" id="EVERY_DAYS" value="${pd1.EVERY_DAYS}"/>
 								</td>
 							</tr>
 							<tr>
@@ -241,35 +254,82 @@
 			$("#zhongxin2").show();
 		}
 		/**选择供应商*/
-		var materials = "";
-		var matid = "";
+		var materials = $("#NAME").val();
+		var matid = $("#MATERIALS_ID").val();
+		var ENTRY_TIME='';
 		function matelect(){
+			var OUT_TIME=$("#ENTRY_TIME").val();
 		    jBox.open(
 		        "iframe:<%=basePath%>warehousing/electMaterialsPage.do?STATE=1",
 		        "选择", 750, 400,
 		        {buttons: {}, iframeScrolling: 'yes', showClose: true,
 		            closed:function (){
 		                $("#NAME").val(materials);
-		                $("#MATERIALS_ID").val(matid);
+ 						if(matid != $("#MATERIALS_ID").val()){
+			                $("#MATERIALS_ID").val(matid);
+			                var strs= new Array(); //定义一数组 
+			        		strs=OUT_TIME.split(" "); //字符分割  
+			        		var strs1= new Array(); //定义一数组 
+			        		strs1=ENTRY_TIME.split(" "); //字符分割  
+			                var days=dateDiff(strs[0], strs1[0]);//计算天数
+			                var DAYSS=$("#DAYS").val();
+			                var daysss=parseInt(DAYSS);
+			                var EVERY_DAYS=$("#EVERY_DAYS").val();
+			                var EVERY_DAYSS=parseInt(EVERY_DAYS);
+			                var SURCHARGE=$("#SURCHARGE").val();
+			                var SURCHARGES=parseFloat(SURCHARGE);
+			       			var url = "<%=basePath%>outstorage/moneys.do?ID="+matid
+			    			$.get(url,function(data){
+			    				if(data == 'fall') {
+			    					$("#MONEY").val('0');
+			    					window.document .getElementById ("moneys1").innerHTML="0";
+			    				}else {
+			    					var data1= new Array(); //定义一数组 
+					        		data1=data.split(";"); //字符分割  
+					        		var count=parseInt(data1[1]);
+			    					if(days>daysss){
+			    						var money=parseInt(data1[0]);
+			    						var moneytot=((days-daysss)/EVERY_DAYSS*SURCHARGES)*count;
+			    						window.document .getElementById ("moneys1").innerHTML=moneytot;
+			    						money+=moneytot;
+			    						$("#MONEY").val(money);
+					                }else{
+					                	$("#MONEY").val(data1[0]);
+					                	window.document .getElementById ("moneys1").innerHTML="0";
+					                }
+			    				}
+			    			});
+ 						}
 		            }
 		        }
 		    );
 		} 
-		<%-- 
-		function elect(){
-			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="资料";
-			 diag.URL = '<%=basePath%>warehousing/testPage.do';
-			 diag.Width = 700;
-			 diag.Height = 530;
-			 diag.CancelEvent = function(){ //关闭事件
-				diag.close();
-			 };
-			 diag.show();
-		}
-		--%>
+		function dateDiff(date1, date2) {
+	            var type1 = typeof date1, type2 = typeof date2;
+	            if (type1 == 'string')
+	                date1 = stringToTime(date1);
+	            else if (date1.getTime)
+	                date1 = date1.getTime();
+	            if (type2 == 'string')
+	                date2 = stringToTime(date2);
+	            else if (date2.getTime)
+	                date2 = date2.getTime();
+	            return (date1 - date2) / (1000 * 60 * 60 * 24); //结果是小时 
+	        }
+	        //字符串转成Time(dateDiff)所需方法 
+	        function stringToTime(string) {
+	            var f = string.split(' ', 2);
+	            var d = (f[0] ? f[0] : '').split('-', 3);
+	            var t = (f[1] ? f[1] : '').split(':', 3);
+	            return (new Date(
+	           parseInt(d[0], 10) || null,
+	           (parseInt(d[1], 10) || 1) - 1,
+	            parseInt(d[2], 10) || null,
+	            parseInt(t[0], 10) || null,
+	            parseInt(t[1], 10) || null,
+	            parseInt(t[2], 10) || null
+	            )).getTime();
+	        }
 		</script>
 </body>
 </html>

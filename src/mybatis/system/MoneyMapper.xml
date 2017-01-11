@@ -54,6 +54,12 @@
 		#{UNLOADING_STATE}
 		
 	</sql>
+	<!-- 修改money -->
+	<update id="moneyeditU" parameterType="pd" >
+		update  <include refid="moneyTableName"></include>
+			set MONEY 					= #{MONEY}
+				where PRODUCT_ID      =#{PRODUCT_ID} 
+	</update>
 	<!-- 	新增 退货费用表-->
 	<insert id="totalsaveU" parameterType="pd">
 		insert into <include refid="moneytotal_TableName"></include> (
@@ -72,6 +78,10 @@
 				UNLOADING_STATE 				= #{UNLOADING_STATE}
 				where PRODUCT_ID      =#{PRODUCT_ID} 
 	</update>
+	<!-- 查询费用 -->
+	<select id="moneys" parameterType="pd" resultType="pd" >
+		select ma.COUNT,m.MONEY from <include refid="tableName"></include> ma,<include refid="moneyTableName"></include> m where ma.ID=m.PRODUCT_ID and ma.ID=#{ID}
+	</select> 
 	<!--出入库查询实际库存 -->
 	<select id="numbers" parameterType="pd" resultType="int" >
 		select 
@@ -108,6 +118,7 @@
 		ma.NAME maNAME,
 		ma.CUS_ID,
 		ma.COUNT,
+		ma.STATE,
 		m.ID mID,
 		m.PRODUCT_ID,
 		m.MO_TIME,
@@ -115,11 +126,10 @@
 		sc.ID scID,
 		sc.SUPNAME,
 		cc.ID ccID,
-		cc.NAME ccNAME,
-		sum(m.MONEY) MONEYS
+		cc.NAME ccNAME
 		from <include refid="tableName"></include> ma,<include refid="moneyTableName"></include> m,
 			 <include refid="S_C_TableName"></include> sc,<include refid="C_C_TableName"></include> cc
-			 where ma.ID = m.PRODUCT_ID and ma.CUS_ID = sc.ID and sc.CATEGORIES_ID=cc.ID
+			 where ma.ID = m.PRODUCT_ID and ma.CUS_ID = sc.ID and sc.CATEGORIES_ID=cc.ID and ma.STATE=#{pd.STATE}
 			 <choose>
 			<when test="pd.boos=='true'">
 			and m.MO_TIME &gt;=CONCAT(#{pd.MO_TIME},'-01-01 00:00:00') and m.MO_TIME &lt;= CONCAT(#{pd.MO_TIME},'-06-30 23:59:59')
@@ -129,6 +139,25 @@
 			</when>
 			<otherwise>
 			and m.MO_TIME LIKE CONCAT(CONCAT('', #{pd.MO_TIME}),'%')
+			</otherwise>
+		</choose>
+	</select>
+	<!-- 总money -->
+	<select id="mlistsum" parameterType="pd" resultType="pd" >
+		select  
+		sum(m.MONEY) MONEYS
+		from <include refid="tableName"></include> ma,<include refid="moneyTableName"></include> m,
+			 <include refid="S_C_TableName"></include> sc,<include refid="C_C_TableName"></include> cc
+			 where ma.ID = m.PRODUCT_ID and ma.CUS_ID = sc.ID and sc.CATEGORIES_ID=cc.ID and ma.STATE=#{STATE}
+			 <choose>
+			<when test="boos=='true'">
+			and m.MO_TIME &gt;=CONCAT(#{MO_TIME},'-01-01 00:00:00') and m.MO_TIME &lt;= CONCAT(#{MO_TIME},'-06-30 23:59:59')
+			</when>
+			<when test="boos=='false'"> 
+			and m.MO_TIME &gt;=#{MO_TIME}'-07-01 00:00:00' and m.MO_TIME &lt;= #{MO_TIME}'-12-30 23:59:59'
+			</when>
+			<otherwise>
+			and m.MO_TIME LIKE CONCAT(CONCAT('', #{MO_TIME}),'%')
 			</otherwise>
 		</choose>
 	</select>

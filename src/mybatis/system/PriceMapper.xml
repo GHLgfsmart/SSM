@@ -15,7 +15,11 @@
 		UNLOADING,
 		MONEYTIME,
 		ARTIFICIAL,
-		STATE
+		STATE,
+		SURCHARGE,
+		DAYS,
+		EVERY_DAYS,
+		WHY
 	</sql>
 	
 <!-- 	字段值 -->
@@ -27,7 +31,11 @@
 		#{UNLOADING},
 		#{MONEYTIME},
 		#{ARTIFICIAL},
-		#{STATE}
+		#{STATE},
+		#{SURCHARGE},
+		#{DAYS},
+		#{EVERY_DAYS},
+		#{WHY}
 	</sql>
 	
 <!-- 	新增公告栏 -->

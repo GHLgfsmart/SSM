@@ -67,12 +67,16 @@
 									<label class="pos-rel"><input type="checkbox" class="ace" id="zcheckbox" /><span class="lbl"></span></label>
 									</th>
 									<th class="center" style="width:50px;">序号</th>
-									<th class="center">存储费</th>
-									<th class="center">理货费</th>
-									<th class="center" >装车费</th>
-									<th class="center" >卸车费</th>
-									<th class="center" >人工费</th>
+									<th class="center">存储费/<span style="color: red;"><i class="ace-icon fa fa-cny bigger-120"></i></span></th>
+									<th class="center">理货费/<span style="color: red;"><i class="ace-icon fa fa-cny bigger-120"></i></span></th>
+									<th class="center" >装车费/<span style="color: red;"><i class="ace-icon fa fa-cny bigger-120"></i></span></th>
+									<th class="center" >卸车费/<span style="color: red;"><i class="ace-icon fa fa-cny bigger-120"></i></span></th>
+									<th class="center" >超时费/<span style="color: red;"><i class="ace-icon fa fa-cny bigger-120"></i></span></th>
+									<th class="center" >开始天数/天</th>
+									<th class="center" >超时天数/天</th>
+									<th class="center" >人工费/<span style="color: red;"><i class="ace-icon fa fa-cny bigger-120"></i></span></th>
 									<th class="center" >发布时间</th>
+									<th class="center" >原因</th>
 									<th class="center">操作</th>
 								</tr>
 							</thead>
@@ -92,8 +96,12 @@
 											<td class="center">${price.RICHARD}</td>
 											<td class="center">${price.LOADING}</td>
 											<td class="center">${price.UNLOADING}</td>
+											<td class="center">${price.SURCHARGE}</td>
+											<td class="center">${price.DAYS}</td>
+											<td class="center">${price.EVERY_DAYS}</td>
 											<td class="center">${price.ARTIFICIAL}</td>
 											<td class="center">${price.MONEYTIME}</td>
+											<td class="center">${price.WHY}</td>
 											<td class="center">
 												<div class="hidden-sm hidden-xs btn-group">
 												<c:if test="${QX.edit == 1 }">
@@ -242,7 +250,7 @@ function add(){
 	 diag.Title ="新增";
 	 diag.URL = '<%=basePath%>price/goAddU.do';
 	 diag.Width = 469;
-	 diag.Height = 400;
+	 diag.Height = 510;
 	 diag.CancelEvent = function(){ //关闭事件
 		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 			 if('${page.currentPage}' == '0'){
@@ -265,7 +273,7 @@ function editPrice(PRICE_ID){
 	 diag.Title ="资料";
 	 diag.URL = '<%=basePath%>price/goEditU.do?PRICE_ID='+PRICE_ID;
 	 diag.Width = 469;
-	 diag.Height = 400;
+	 diag.Height = 510;
 	 diag.CancelEvent = function(){ //关闭事件
 		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 			nextPage(${page.currentPage});

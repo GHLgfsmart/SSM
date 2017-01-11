@@ -63,24 +63,6 @@ public class MoneyController extends BaseController {
 		map.put("result", errInfo);
 		return AppUtil.returnObject(new PageData(), map);
 	}
-	
-	/**修改
-	 * @param
-	 * @throws Exception
-	 */
-	@RequestMapping(value="/edit")
-	public ModelAndView edit() throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"修改");
-		if(!Jurisdiction.buttonJurisdiction(menuUrl, "edit")){return null;} //校验权限
-		ModelAndView mv = this.getModelAndView();
-		PageData pd = new PageData();
-		pd = this.getPageData();
-		departmentService.edit(pd);
-		mv.addObject("msg","success");
-		mv.setViewName("save_result");
-		return mv;
-	}
-	
 	/**列表
 	 * @param page
 	 * @throws Exception
@@ -90,14 +72,18 @@ public class MoneyController extends BaseController {
 		logBefore(logger, Jurisdiction.getUsername()+"列表");
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
+		PageData pd1 = new PageData();
 		pd = this.getPageData();
 		pd.put("MO_TIME", pd.getString("MO_TIME"));
 		pd.put("boos", pd.getString("boos"));
+		pd.put("STATE",pd.getString("STATE"));
 		page.setPd(pd);
 		List<PageData>	varList = moneyService.listMoneys(page);	//列出moneyService列表
+		pd1=moneyService.mlistsum(pd);
 		mv.setViewName("system/money/money_list");
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
+		mv.addObject("pd1", pd1);
 		mv.addObject("QX",Jurisdiction.getHC());				//按钮权限
 		return mv;
 	}

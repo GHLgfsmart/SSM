@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="CarMapper">
+		
+		<resultMap type="Car" id="carResultMap">
+		
+			<id property="ID" column="ID"/>
+			<result property="BRAND" column="BRAND"/>
+			<result property="TIMES" column="TIMES"/>
+			<result property="WEIGHT" column="WEIGHT"/>
+		
+		</resultMap>
+		
+		<!--表名 -->
+		<sql id="tableName">
+			car
+		</sql>
+		
+		<!-- 字段 -->
+		<sql id="Field">
+			ID,
+			BRAND,
+			TIMES,
+			WEIGHT
+		</sql>
+		
+		<!-- 字段值 -->
+		<sql id="FieldValue">
+			#{ID},
+			#{BRAND},
+			#{TIMES},
+			#{WEIGHT}
+		</sql>
+		
+		<!-- 新增 -->
+		<insert id="saveU" parameterType="pd" >
+			insert into <include refid="tableName"></include> (
+				<include refid="Field"></include>
+			) values (
+				<include refid="FieldValue"></include>
+			)
+		</insert>
+		
+		<!-- 查询 -->
+		<select id="datalistPage" parameterType="page" resultType="pd" >
+			select  i.ID,
+					i.BRAND,
+					i.TIMES,
+					i.WEIGHT
+			from <include refid="tableName"></include> i
+			<where>
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			
+					(
+						 i.BRAND LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+						 or 
+						 i.WEIGHT LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					)
+			</if>
+			<if test="pd.lastStart!=null and pd.lastStart!=''">
+				and i.TIMES &gt;= #{pd.lastStart} 
+			</if>
+			<if test="pd.lastEnd!=null and pd.lastEnd!=''">
+				and i.TIMES &lt;= #{pd.lastEnd} 
+			</if>
+			</where>
+			order by i.TIMES desc
+		</select>
+		
+		<!-- 查询 -->
+		<select id="findCar" parameterType="page" resultType="pd" >
+			select  i.ID,
+					i.BRAND,
+					i.TIMES,
+					i.WEIGHT
+			from <include refid="tableName"></include> i
+			<where>
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			
+					(
+						 i.BRAND LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+						 or 
+						 i.WEIGHT LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					)
+			</if>
+			</where>
+			order by i.TIMES desc
+		</select>
+			
+		<!-- 获取总数 -->
+		<select id="getCount" parameterType="String" resultType="pd">
+			select 
+				count(id) inventoryCount
+			from 
+			<include refid="tableName"></include>
+		</select>
+		
+		<!-- 通过ID获取数据 -->
+		<select id="findById" parameterType="pd" resultType="pd" >
+			select 
+				<include refid="Field"></include>
+			from 
+				<include refid="tableName"></include>
+			where 
+				ID = #{ID}
+		</select>
+		
+		<!-- 修改 -->
+		<update id="editU" parameterType="pd" >
+			update  <include refid="tableName"></include>
+				set BRAND 				= #{BRAND},
+				TIMES					= #{TIMES},
+				WEIGHT				    = #{WEIGHT}
+				where 
+					ID = #{ID}
+		</update>
+		
+		<!-- 删除 -->
+		<delete id="deleteU" parameterType="pd" flushCache="false">
+			delete from <include refid="tableName"></include>
+			where 
+				ID = #{ID}
+		</delete>
+	
+		<!-- 批量删除 -->
+		<delete id="deleteAllU" parameterType="String" >
+			delete from <include refid="tableName"></include>
+			where 
+				ID in
+	  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+	                  #{item}
+	             </foreach>
+		</delete>
+		
+		<!-- 判断车牌号是否存在 -->
+		<select id="findByUN" parameterType="pd" resultType="pd" >
+			select 
+				<include refid="Field"></include>
+			from 
+				<include refid="tableName"></include>
+			where 
+				BRAND = #{BRAND}
+		</select>
+			
+	</mapper>

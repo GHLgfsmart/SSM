@@ -31,6 +31,14 @@ public class MoneyService implements MoneyManager{
 	public List<PageData> listMoneys(Page page)throws Exception{
 		return (List<PageData>) dao.findForList("MoneyMapper.mlistPage", page);
 	}
+	/**总费用
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData mlistsum(PageData pd)throws Exception{
+		return (PageData) dao.findForObject("MoneyMapper.mlistsum", pd);
+	}
 	/**通过id获取数据
 	 * @param pd
 	 * @return
@@ -68,7 +76,13 @@ public class MoneyService implements MoneyManager{
 	public void editU(PageData pd)throws Exception{
 		dao.update("MoneyMapper.editU", pd);
 	}
-	
+	/**修改money
+	 * @param pd
+	 * @throws Exception
+	 */
+	public int moneyeditU(PageData pd)throws Exception{
+		return (Integer)dao.update("MoneyMapper.moneyeditU", pd);
+	}
 	/**删除
 	 * @param pd
 	 * @throws Exception
@@ -99,5 +113,13 @@ public class MoneyService implements MoneyManager{
 	@Override
 	public PageData countsum(PageData pd) throws Exception{
 		return (PageData)dao.findForObject("MoneyMapper.countsum",pd);
+	}
+	/**费用查询
+	 * @param USER_IDS
+	 * @throws Exception
+	 */
+	@Override
+	public PageData moneys(PageData pd) throws Exception{
+		return (PageData)dao.findForObject("MoneyMapper.moneys",pd);
 	}
 }

@@ -15,7 +15,12 @@ public interface MoneyManager {
 	 * @throws Exception
 	 */
 	public List<PageData> listMoneys(Page page)throws Exception;
-	
+	/**总费用
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData mlistsum(PageData pd)throws Exception;
 	/**通过id获取数据
 	 * @param pd
 	 * @return
@@ -66,4 +71,14 @@ public interface MoneyManager {
 	 * @throws Exception
 	 */
 	public PageData countsum(PageData pd) throws Exception;
+	/**费用查询
+	 * @param USER_IDS
+	 * @throws Exception
+	 */
+	public PageData moneys(PageData pd) throws Exception;
+	/**修改money
+	 * @param pd
+	 * @throws Exception
+	 */
+	public int moneyeditU(PageData pd)throws Exception;
 }

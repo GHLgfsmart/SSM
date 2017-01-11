@@ -26,7 +26,9 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="department/list.do" method="post" name="Form" id="Form">
+						<form action="money/list.do" method="post" name="Form" id="Form">
+						<a href="money/list.do?STATE=1&MO_TIME=${pd.MO_TIME }&boos=${pd.boos }"><span class="label label-<c:if test="${pd.STATE != '2' }">success</c:if> arrowed-right arrowed-in">入库费用</span></a>
+						<a href="money/list.do?STATE=2&MO_TIME=${pd.MO_TIME }&boos=${pd.boos }"><span class="label label-<c:if test="${pd.STATE == '2' }">info</c:if> arrowed-right arrowed-in">出库费用</span></a>
 						<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-top:5px;">	
 							<thead>
 								<tr>
@@ -36,7 +38,7 @@
 									<th class="center">供应商名称</th>
 									<th class="center">供应商分类</th>
 									<th class="center">数量&nbsp;/个</th>
-									<th class="center">金额 &nbsp;/<span style="color: red;"><i class="ace-icon fa fa-cny bigger-120"></i></span></td></th>
+									<th class="center">金额 &nbsp;/<span style="color: red;"><i class="ace-icon fa fa-cny bigger-120"></i></span></th>
 									<th class="center">录入时间</th>
 								</tr>
 							</thead>
@@ -125,21 +127,34 @@
 			}else if(year==(eval(arr[0])-2)){
 				arr[0]="前年 ";
 			}
-			if(arr[1]==null){
-				if('${pd.boos}'=='true'){
-					document.getElementById("money").innerHTML =""+arr[0]+"上半年收益为"+'${pd.MONEYS}';
-				}else if('${pd.boos}'=='false'){
-					document.getElementById("money").innerHTML =""+arr[0]+"下半年收益为"+'${pd.MONEYS}';
+			var money ='${pd1.MONEYS}';
+			if(money !=''){
+				if(arr[1]==null){
+					if('${pd.boos}'=='true'){
+						document.getElementById("money").innerHTML =""+arr[0]+"上半年收益为"+money;
+					}else if('${pd.boos}'=='false'){
+						document.getElementById("money").innerHTML =""+arr[0]+"下半年收益为"+money;
+					}else{
+						document.getElementById("money").innerHTML =""+arr[0]+"全年收益为"+money;
+					}
 				}else{
-					document.getElementById("money").innerHTML =""+arr[0]+"全年收益为"+'${pd.MONEYS}';
+					document.getElementById("money").innerHTML =""+arr[0]+eval(arr[1])+"月份收益为"+money;
 				}
 			}else{
-				document.getElementById("money").innerHTML =""+arr[0]+arr[1]+"月份收益为"+'${pd.MONEYS}';
+				if(arr[1]==null){
+					if('${pd.boos}'=='true'){
+						document.getElementById("money").innerHTML =""+arr[0]+"上半年收益为0";
+					}else if('${pd.boos}'=='false'){
+						document.getElementById("money").innerHTML =""+arr[0]+"下半年收益为0";
+					}else{
+						document.getElementById("money").innerHTML =""+arr[0]+"全年收益为0";
+					}
+				}else{
+					document.getElementById("money").innerHTML =""+arr[0]+eval(arr[1])+"月份收益为0";
+				}
 			}
-			
 		}
 	</script>
-
-
+	
 </body>
 </html>

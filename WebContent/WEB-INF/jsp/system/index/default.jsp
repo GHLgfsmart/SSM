@@ -400,5 +400,8 @@ function openMusic(clock123,repeat,time,mid,text){
 			$("#defaultForm").submit();
 		}
 	</script>
+	<div align="center">
+	  	<iframe width="800" scrolling="no" height="120" frameborder="0" allowtransparency="true" src="http://i.tianqi.com/index.php?c=code&id=19&icon=1&temp=1&num=5"></iframe>
+ 	</div>
 </body>
 </html>

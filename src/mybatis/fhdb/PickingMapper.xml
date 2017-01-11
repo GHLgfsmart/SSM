@@ -2,7 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="PickingMapper">
-	
+	<resultMap type="Picking" id="pickingResult">
+		<id property="ID" column="ID"/>
+		<result property="BIANHAO" column="BIANHAO"/>
+		<result property="INSPECTOR" column="INSPECTOR"/>
+		<result property="STATE" column="STATE"/>
+		<result property="TYPE" column="TYPE"/>
+		<result property="COUNT" column="COUNT"/>
+		<result property="MATCOUNT" column="MATCOUNT"/>
+		<result property="TIME" column="TIME"/>
+		<result property="NOTE" column="NOTE"/>
+	</resultMap>
 	<!-- 字段 -->
 	<sql id="field">
 		PI.ID,
@@ -133,5 +143,31 @@
 	<select id="pickingByCount" parameterType="pd" resultType="int">
 		SELECT COUNT(ID) FROM PICKING_OUTSTORAGE WHERE OID=#{ID};
 	</select>
+	<!-- 前15天 -->
+	<select id="barChar1" resultMap="pickingResult">
+		SELECT
+			CO.TIME,
+			SUM(CO.COUNT) as count
+		FROM
+			<include refid="tableName" /> CO
+		WHERE
+		    CO.STATE = 2
+		AND 
+			CO.TIME &gt;= DATE_SUB(NOW(),interval 30 day)
+		AND
+			CO.TIME &lt; DATE_SUB(NOW(),interval 15 day) 
+	</select>
 	
+	<!-- 后15天 -->
+	<select id="barChar2" resultMap="pickingResult">
+		SELECT
+			CO.TIME,
+			SUM(CO.COUNT) as count
+		FROM
+			<include refid="tableName" /> CO
+		WHERE
+		    CO.STATE = 2
+		AND 
+			CO.TIME &gt;= DATE_SUB(NOW(),interval 15 day)
+	</select>
 </mapper>
