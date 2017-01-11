@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ht.controller.base.BaseController;
+import com.ht.entity.Materials_information;
 import com.ht.entity.Page;
 import com.ht.service.fhdb.impl.DrawingServiceImpl;
 import com.ht.util.Jurisdiction;
@@ -88,13 +89,40 @@ public class DrawingController extends BaseController {
 		pds.get("COUNT");
 		pds.getString("MATERIALS_ID");
 		drawingServiceImpl.reduce(pds);
+		
+		//把调出的物资调入到另一个仓库
+		PageData pad = new PageData();
+		pad = this.getPageData();
+		pad.put("ID", this.get32UUID());	//主键
+		pad.getString("BIANHAO");
+		pad.getString("NAME");
+		pad.get("COUNT");
+		pad.getString("UNIT");
+		pad.getString("NOTE");
+		pad.put("STATE", 3);
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String addtime = df.format(new Date());
+		pad.put("ENTRY_TIME", addtime);
+		drawingServiceImpl.SaveWz(pad);
+		//调入到另一个仓库
+	    PageData pada = new PageData();
+	    pada = this.getPageData();
+	    pada.put("ID", this.get32UUID());	//主键
+	    pada.put("MATERIALS_ID", pad.getString("ID"));
+	    pada.put("STATE", 4);
+	    SimpleDateFormat sj = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String time = sj.format(new Date());
+	 	pad.put("ENTRY_TIME", time);
+	    pada.getString("WAREHOUSE_PUT_ID");
+	    drawingServiceImpl.SaveCk(pada);
+
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.put("ID", this.get32UUID());	//主键
 		pd.get("ENTRY_TIME");
 		pd.get("COUNT");
 		pd.getString("INSPECTOR");
-		pd.getString("BIANHAO");
+		pd.getString("DBbIANHAO");
 		pd.get("BusinessDate");
 		pd.getString("JINGSHUO_ID");
 		pd.getString("WAREHOUSE_OUT_ID");

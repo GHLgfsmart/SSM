@@ -41,7 +41,7 @@
 						<table style="margin-top: 30px;">
 							<tr>
 								<td style="padding-right: 50px;">
-									单据编号:<input type="text" style="width: 180px;" id="BIANHAO" name="BIANHAO" value="${db}" readonly="readonly"/>
+									单据编号:<input type="text" style="width: 180px;" id="DBbIANHAO" name="DBbIANHAO" value="${db}" readonly="readonly"/>
 								</td>
 								<td style="padding-right: 50px; height: 20px;">
 									业务日期:<input type="date" id="BusinessDate" name="BusinessDate" style="width:180px; height:35px;">
@@ -108,14 +108,15 @@
 											
 										<tr>
 											<td class='center' style="width: 30px;">
+												<input type="hidden" name="STATE" id="STATE" value="${sp.STATE }"/>
 												<label><input type='checkbox' name="MATERIALS_ID" id="MATERIALS_ID"  value="${sp.ID }"/><span class="lbl"></span></label>
 											</td>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class="center">${sp.BIANHAO }</td>
-											<td class="center">${sp.NAME }</td>
+											<td style="text-align:center;"><input type="text" name="BIANHAO" id="BIANHAO" value="${sp.BIANHAO}"  readOnly="true"  style="border:none;outline:medium;text-align:center;" /></td>
+											<td style="text-align:center;"><input type="text" name="NAME" id="NAME" value="${sp.NAME}"  readOnly="true"  style="border:none;outline:medium;text-align:center;" /></td>
 											<td style="text-align:center;"><input type="text" name="COUNT" id="COUNT" value="${sp.COUNT}" style="border:none;outline:medium;text-align:center;width:100px;" /></td>
-											<td class="center">${sp.UNIT}</td>
-											<td class="center">${sp.NOTE}</td>
+											<td style="text-align:center;"><input type="text" name="UNIT" id="UNIT" value="${sp.UNIT}"  readOnly="true"  style="border:none;outline:medium;text-align:center;" /></td>
+											<td style="text-align:center;"><input type="text" name="NOTE" id="NOTE" value="${sp.NOTE}"  readOnly="true"  style="border:none;outline:medium;text-align:center;" /></td>
 										</tr>
 									
 									</c:forEach>
@@ -230,7 +231,8 @@ function save(msg){
         });
 		$("#WAREHOUSE_PUT_ID").focus();
 	return false;
-	}else{
+	}
+	else{
  			$("#Form").submit();
  			$("#zhongxin").hide();
  			$("#zhongxin2").show();

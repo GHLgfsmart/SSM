@@ -55,13 +55,15 @@
 		
 		<!-- 查询出产品 -->
 		<select id="matlistPage" parameterType="page" resultType="pd">
-				SELECT mi.ID,mi.BIANHAO,mi.NAME,mi.COUNT,mi.UNIT,mi.NOTE from  output_storage os,materials_information mi,warehouse wa 
+				SELECT mi.ID,mi.BIANHAO,mi.NAME,mi.COUNT,mi.UNIT,mi.NOTE,mi.STATE,os.MATERIALS_ID from  output_storage os,materials_information mi,warehouse wa 
 				WHERE
 				os.WAREHOUSE_ID=wa.ID 
 				AND 
 				os.MATERIALS_ID=mi.ID
 				AND
-				mi.STATE=1
+				(mi.STATE=1
+				or
+				mi.STATE=3)
 				AND
 				wa.STATE=0
 				<if test="pd.ckID==null">
@@ -74,6 +76,13 @@
 				</if>
 		</select> 
 		
+		<insert id="SaveWz" parameterType="pd">
+			INSERT INTO materials_information(ID,BIANHAO,NAME,COUNT,UNIT,NOTE,STATE,ENTRY_TIME)VALUES(#{ID},#{BIANHAO},#{NAME},#{COUNT},#{UNIT},#{NOTE},#{STATE},#{ENTRY_TIME})
+		</insert>
+		
+		<insert id="SaveCk" parameterType="pd">
+			INSERT INTO  output_storage (ID,MATERIALS_ID,WAREHOUSE_ID,STATE,ENTRY_TIME)VALUES(#{ID},#{MATERIALS_ID},#{WAREHOUSE_PUT_ID},#{STATE},#{ENTRY_TIME})
+		</insert>
 		<!-- 统计待入库的物资报表 -->
 	<select id="notSuppliesList" parameterType="pd" resultType="pd">
 		select mat.NAME,mat.COUNT,mat.UNIT,mat.ENTRY_TIME from materials_information mat

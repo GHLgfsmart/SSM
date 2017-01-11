@@ -3,6 +3,7 @@ package com.ht.service.fhdb;
 import java.util.List;
 
 import com.ht.entity.Drawing;
+import com.ht.entity.Materials_information;
 import com.ht.entity.Page;
 import com.ht.util.PageData;
 
@@ -97,5 +98,9 @@ public interface DrawingService {
 	public List<PageData> notSuppliesList(PageData pd) throws Exception;
 	
 	public void reduce(PageData pd) throws Exception;
+	
+	public void  SaveWz(PageData pd)throws Exception;
+	
+	public void SaveCk(PageData pd)throws Exception;
 	
 }

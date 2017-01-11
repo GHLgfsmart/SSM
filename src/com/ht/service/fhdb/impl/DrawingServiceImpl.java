@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import com.ht.dao.DaoSupport;
+import com.ht.entity.Materials_information;
 import com.ht.entity.Page;
 import com.ht.service.fhdb.DrawingService;
 import com.ht.util.PageData;
@@ -132,5 +133,13 @@ public class DrawingServiceImpl implements DrawingService{
 	@Override
 	public void reduce(PageData pd) throws Exception {
 		ds.update("DrawingMapper.reduce", pd);
+	}
+	@Override
+	public void SaveWz(PageData pd) throws Exception {
+		ds.save("ProductMapper.SaveWz", pd);
+	}
+	@Override
+	public void SaveCk(PageData pd) throws Exception {
+		ds.save("ProductMapper.SaveCk", pd);
 	};
 }

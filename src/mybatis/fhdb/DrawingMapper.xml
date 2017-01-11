@@ -79,7 +79,7 @@
 		<!-- 保存调拨的数据 -->
 		<insert id="DrwingSave" parameterType="pd">
 			insert into drawing(ID,INSPECTOR,BIANHAO,BusinessDate,ENTRY_TIME,JINGSHUO_ID,WAREHOUSE_OUT_ID,WAREHOUSE_PUT_ID,DRAWING_INST,MATERIALS_ID,NUMBER_OF)
-			values(#{ID},#{INSPECTOR},#{BIANHAO},#{BusinessDate},#{ENTRY_TIME},#{JINGSHUO_ID},#{WAREHOUSE_OUT_ID},#{WAREHOUSE_PUT_ID},#{DRAWING_INST},#{MATERIALS_ID},#{COUNT})
+			values(#{ID},#{INSPECTOR},#{DBbIANHAO},#{BusinessDate},#{ENTRY_TIME},#{JINGSHUO_ID},#{WAREHOUSE_OUT_ID},#{WAREHOUSE_PUT_ID},#{DRAWING_INST},#{MATERIALS_ID},#{COUNT})
 		</insert>
 		
 		<!-- 查询调拨单 -->
@@ -119,7 +119,9 @@
 		
 		<!-- 根据id查询出业务日期,经手人,调拨说明,单据编号,业务日期 -->
 		<select id="DraeingById" parameterType="String" resultType="pd">
-			select dr.ID,dr.BusinessDate,dr.BIANHAO,dr.DRAWING_INST,u.USER_ID from drawing dr,sys_user u WHERE dr.JINGSHUO_ID=u.USER_ID AND dr.ID=#{ID} 
+			select dr.ID,dr.BusinessDate,dr.BIANHAO,dr.DRAWING_INST,u.USER_ID from 
+				drawing dr INNER JOIN sys_user u ON dr.JINGSHUO_ID=u.USER_ID
+			 AND dr.ID=#{ID} 
 		</select>
 		
 		<!--根据MATERIALS_ID查询出仓库id-->
@@ -135,9 +137,12 @@
 		
 		<!--根据MATERIALS_ID查询出此仓库的物资-->
 		<select id="idlistPage" parameterType="page" resultType="pd"> 
-				select mi.ID,mi.BIANHAO,mi.NAME,mi.COUNT,mi.UNIT,mi.NOTE from  materials_information mi,drawing dr
-				WHERE
-				dr.MATERIALS_ID=mi.ID
+				SELECT mi.ID,mi.BIANHAO,mi. NAME,mi.COUNT,mi.UNIT,mi.NOTE FROM 
+				materials_information mi INNER JOIN drawing dr 
+				ON
+				dr.MATERIALS_ID = mi.ID
+				AND
+				mi.STATE=1
 				<if test="pd.MATERIALS_ID==null">
 					AND 
 					dr.MATERIALS_ID='null'
@@ -161,6 +166,5 @@
 			,NUMBER_OF=#{COUNT}
 			WHERE ID=#{ID}
 		</update>
-	
 		
 	</mapper>
