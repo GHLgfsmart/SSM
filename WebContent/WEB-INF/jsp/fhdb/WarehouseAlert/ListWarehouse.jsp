@@ -67,9 +67,9 @@
 									<th class="center">商品名称</th>
 									<th class="center">计量单位</th>
 									<th class="center">所在仓库</th>
-									<th class="center">仓库上限</th>
+									<th class="center">库存上限</th>
 									<th class="center">实际库存</th>
-									<th class="center">仓库下限</th>
+									<th class="center">库存下限</th>
 								</tr>
 							</thead>
 													

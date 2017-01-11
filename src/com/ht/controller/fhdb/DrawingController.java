@@ -489,9 +489,9 @@ public class DrawingController extends BaseController {
 			titles.add("商品名称");
 			titles.add("计量单位");
 			titles.add("所在仓库");
-			titles.add("仓库上限");
+			titles.add("库存上限");
 			titles.add("实际库存"); 
-			titles.add("仓库下限");
+			titles.add("库存下限");
 			dataMap.put("titles", titles);
 			mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
 			page.setPd(pd);
