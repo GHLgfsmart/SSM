@@ -84,11 +84,11 @@
 											<td class='center' style="width: 30px;">
 												<label><input type='checkbox' value="${war.ID }"/><span class="lbl"></span></label>
 											</td>
-											<td class='center' style="width: 60px;"><font color="red">${vs.index+1}</font></td>
-											<td class="center"><font color="red">${war.BIANHAO }</font></td>
-											<td class="center"><font color="red">${war.NAME }</font></td>
-											<td class="center"><font color="red">${war.UNIT }</font></td>
-											<td class="center"><font color="red">${war.WARNAME}</font></td>
+											<td class='center' style="width: 60px;"><font color="red"><b>${vs.index+1}</b></font></td>
+											<td class="center"><font color="red"><b>${war.BIANHAO }</b></font></td>
+											<td class="center"><font color="red"><b>${war.NAME }</b></font></td>
+											<td class="center"><font color="red"><b>${war.UNIT }</b></font></td>
+											<td class="center"><font color="red"><b>${war.WARNAME}</b></font></td>
 											<td class="center"><font color="red"><b>${war.UPPER_LIMIT}</b></font> </td>
 											<td class="center"><font color="red"><b>${war.COUNT}</b></font> </td>
 											<td class="center"><font color="red"><b>${war.LOWER_LIMIT}</b></font></td>
