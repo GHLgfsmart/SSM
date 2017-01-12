@@ -16,6 +16,7 @@
 <base href="<%=basePath%>">
 <!-- 下拉框 -->
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
+<link rel="stylesheet" type="text/css" href="static/ace/css/sweetalert.css">
 <!-- jsp文件头和头部 -->
 <%@ include file="../index/top.jsp"%>
 <link rel="stylesheet" href="static/js/common/jbox.css" />
@@ -35,12 +36,16 @@
 						<div class="col-xs-12">
 								<form action="inventory/${msg }.do" name="inventoryForm" id="inventoryForm" method="post">
 									<input type="hidden" name="ID" id="ID" value="${pd.ID }"/>
-									
+									<input type="hidden" name="MATERIALSID" id="MATERIALSID" value="${pd.MATERIALS_ID }"/>
 									<div id="zhongxin" style="padding-top: 13px;">
 									<table id="table_report" class="table table-striped table-bordered table-hover">
-										<tr>
+										<tr hidden="true">
 											<td style="width:79px;text-align: right;padding-top: 13px;">编号:</td>
-											<td><input type="text" name="BIANHAO" id="BIANHAO" readonly="readonly" value="${pd.BIANHAO }" maxlength="32" placeholder="这里输入编号" title="编号" style="width:98%;"/></td>
+											<td><input type="text" name="BIANHAO" id="BIANHAO" value="${pd.BIANHAO }" maxlength="32" placeholder="这里输入编号" title="编号" style="width:98%;" onblur="hasN('${pd.ID }')"/></td>
+										</tr>
+										<tr hidden="true">
+											<td></td>
+											<td></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">物资:</td>
@@ -121,10 +126,12 @@
 	<!-- inline scripts related to this page -->
 	<!-- 下拉框 -->
 	<script src="static/ace/js/chosen.jquery.js"></script>
+	
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 	<script type="text/javascript" src="static/js/common/jquery.jBox-2.3.min.js"></script>
 	<script type="text/javascript" src="static/js/common/jquery.jBox-zh-CN.js"></script>
+	<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
 </body>
 <script type="text/javascript">
     $(top.hangge());
@@ -162,12 +169,14 @@
 		$("#inventoryForm").submit();
 		$("#zhongxin").hide();
 		$("#zhongxin2").show();
+		
 	}
 	
 	/**选择物资*/
 	var m_Information = "";
 	var mid = "";
 	var co = "";
+	var idsid=document.getElementById('MATERIALSID').value;
 	function elect(){
 	    jBox.open(
 	        "iframe:<%=basePath%>inventory/testPage.do",
@@ -177,6 +186,7 @@
 	                $("#PRO_NAME").val(m_Information);
 	                $("#PRACTICAL").val(co);
 	                $("#MATERIALS_ID").val(mid);
+	                $("#MATERIALSID").val(idsid);
 	            }
 	        }
 	    );
@@ -211,12 +221,12 @@
 	});
 	
 	//判断编码是否存在
-	function hasN(){
+	function hasN(ID){
 		var BIANHAO = $.trim($("#BIANHAO").val());
 		$.ajax({
 			type: "POST",
 			url: '<%=basePath%>inventory/hasN.do',
-	    	data: {BIANHAO:BIANHAO,tm:new Date().getTime()},
+	    	data: {BIANHAO:BIANHAO,ID:ID,tm:new Date().getTime()},
 			dataType:'json',
 			cache: false,
 			success: function(data){
@@ -232,6 +242,7 @@
 			}
 		});
 	}
+	
 	function check(){
 		 var temp=/^\d+(\.\d+)?$/;
 		 var s = document.getElementById("MANY");

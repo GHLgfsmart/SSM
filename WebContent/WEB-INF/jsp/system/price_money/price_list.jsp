@@ -148,13 +148,13 @@
 									</c:forEach>
 									<c:if test="${pd.sizes=='sizes' }">
 									<tr class="main_info">
-										<td colspan="10" class="center">没有相关数据</td>
+										<td colspan="20" class="center">没有相关数据</td>
 									</tr>
 									</c:if>
 								</c:when>
 								<c:otherwise>
 									<tr class="main_info">
-										<td colspan="10" class="center">没有相关数据</td>
+										<td colspan="20" class="center">没有相关数据</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>

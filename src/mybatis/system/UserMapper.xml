@@ -351,5 +351,16 @@
 		from 
 		<include refid="tableName"></include>
 	</select>
-	
+	<!-- 判断手机号是由唯一 -->
+	<select id="findByUP" parameterType="pd" resultType="pd" >
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 
+			PHONE = #{PHONE}
+		<if test="USERNAME != null and USERNAME != ''">
+			and USERNAME != #{USERNAME} 
+		</if>
+	</select>
 </mapper>

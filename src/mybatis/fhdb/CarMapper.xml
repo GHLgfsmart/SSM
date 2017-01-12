@@ -142,6 +142,8 @@
 				<include refid="tableName"></include>
 			where 
 				BRAND = #{BRAND}
+			<if test="ID != null and ID != ''">
+				and ID != #{ID} 
+			</if>
 		</select>
-			
 	</mapper>

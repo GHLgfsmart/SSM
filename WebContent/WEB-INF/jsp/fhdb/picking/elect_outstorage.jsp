@@ -162,12 +162,15 @@ function elect(msg){
 	var xname = '';
 	var c = 0;
 	var count = 0;
+	var counts = '';
 	for(var i=0;i < document.getElementsByName('ids').length;i++){
 	  if(document.getElementsByName('ids')[i].checked){
 	  	if(xid=='') xid += document.getElementsByName('ids')[i].value;
 	  	else xid += ';' + document.getElementsByName('ids')[i].value;
 	  	if(xname=='') xname += document.getElementsByName('name')[i].value;
 	  	else xname += ';' + document.getElementsByName('name')[i].value;
+	  	if(counts=='') counts += document.getElementsByName('count')[i].value;
+	  	else counts += ';' + document.getElementsByName('count')[i].value;
 	  	count += parseInt(document.getElementsByName('count')[i].value);
 	  	c+=1;
 	  }
@@ -184,6 +187,7 @@ function elect(msg){
 		window.parent.window.outid +=xid+ ";";
 		window.parent.window.outcount += c;
 		window.parent.window.count += count;
+		window.parent.window.countss += counts;//洪青青
 		window.parent.window.jBox.close();
 	}
 }

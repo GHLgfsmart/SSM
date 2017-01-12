@@ -107,6 +107,22 @@
 			<include refid="tableName"></include>
 		where 
 			EMAIL = #{EMAIL}
+		<if test="ID != null and ID != ''">
+			and ID != #{ID} 
+		</if>
+	</select>
+
+<!-- 判断手机号码是否存在 -->
+	<select id="findByUN" parameterType="pd" resultType="pd" >
+		select 
+			<include refid="Field"></include>
+		from 
+			<include refid="tableName"></include>
+		where 
+			PHONE = #{PHONE}
+		<if test="ID != null and ID != ''">
+			and ID != #{ID} 
+		</if>
 	</select>
 	
 	<!-- 通过ID获取数据 -->
@@ -146,15 +162,4 @@
                   #{item}
              </foreach>
 	</delete>
-	
-	<!-- 判断手机号码是否存在 -->
-	<select id="findByUN" parameterType="pd" resultType="pd" >
-		select 
-			<include refid="Field"></include>
-		from 
-			<include refid="tableName"></include>
-		where 
-			PHONE = #{PHONE}
-	</select>
-	
 	</mapper>

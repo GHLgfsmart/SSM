@@ -12,8 +12,17 @@
 <html lang="en">
 <head>
 <base href="<%=basePath%>">
+<!-- 下拉框 -->
+<link rel="stylesheet" href="static/ace/css/chosen.css" />
+<link rel="stylesheet" type="text/css" href="static/ace/css/sweetalert.css">
 <!-- jsp文件头和头部 -->
 <%@ include file="../index/top.jsp"%>
+<!-- 日期框 -->
+<link rel="stylesheet" href="static/ace/css/datepicker.css" />
+
+<link rel="stylesheet" href="static/js/common/jbox.css" />
+<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+<script type="text/javascript" src="static/js/common/brief_code.js"></script><!-- 引用拼音方法JS -->
 </head>
 <body class="no-skin">
 <%-- 	session：${pd.USERNAME}
@@ -32,7 +41,7 @@
 									<table id="table_report" class="table table-striped table-bordered table-hover">
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">车牌号:</td>
-											<td><input type="text" name="BRAND" id="BRAND" onblur="check1()" value="${pd.BRAND }"/></td>
+											<td><input type="text" name="BRAND" id="BRAND" onblur="check1('${pd.ID }')" value="${pd.BRAND }"/></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">购买时间:</td>
@@ -68,8 +77,15 @@
 	<!-- basic scripts -->
 	<!-- 页面底部js¨ -->
 	<%@ include file="../index/foot.jsp"%>
+	<!-- 下拉框 -->
+	<script src="static/ace/js/chosen.jquery.js"></script>
+	<!-- 日期框 -->
+	<script src="static/ace/js/date-time/bootstrap-datepicker.js"></script>	
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
+	<script type="text/javascript" src="static/js/common/jquery.jBox-2.3.min.js"></script>
+	<script type="text/javascript" src="static/js/common/jquery.jBox-zh-CN.js"></script>
+	<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
 </body>
 <script type="text/javascript">
     $(top.hangge());
@@ -131,12 +147,12 @@
 		
 	}
 	
-	function check1(){
+	function check1(ID){
 		var BRAND = $.trim($("#BRAND").val());
 		$.ajax({
 			type: "POST",
 			url: '<%=basePath%>car/hasNum.do',
-	    	data: {BRAND:BRAND,tm:new Date().getTime()},
+	    	data: {BRAND:BRAND,ID:ID,tm:new Date().getTime()},
 			dataType:'json',
 			cache: false,
 			success: function(data){

@@ -38,6 +38,7 @@
 									<th class="center">供应商分类</th>
 									<th class="center">数量&nbsp;/个</th>
 									<th class="center">金额 &nbsp;/<span style="color: red;"><i class="ace-icon fa fa-cny bigger-120"></i></span></th>
+									<th class="center">人工费 &nbsp;/<span style="color: red;"><i class="ace-icon fa fa-cny bigger-120"></i></span></th>
 									<th class="center">录入时间</th>
 								</tr>
 							</thead>
@@ -54,6 +55,7 @@
 											<td class='center'>${var.ccNAME}</td>
 											<td class='center'>${var.COUNT}</td>
 											<td class='center'>${var.MONEY}</td>
+											<td class='center'>${var.ARTIFICIALS }<input type="hidden" name="ARTIFICIALS" id="ARTIFICIALS" value="${var.ARTIFICIALS }" /></td>
 											<td class='center'>${var.MO_TIME}</td>
 										</tr>
 									
@@ -125,8 +127,15 @@
 			}else if(year==(eval(arr[0])-2)){
 				arr[0]="前年 ";
 			}
-			var money ='${pd1.MONEYS}';
-			if(money !=''){
+			var moneys ='${pd1.MONEYS}';
+			var name=document.getElementsByName('ARTIFICIALS');
+			var ARTIFICIALS=0;
+			for(var i=0;i < name.length;i++)
+			{
+				ARTIFICIALS += parseFloat(name[i].value);
+			}
+			var money=parseFloat(moneys)-ARTIFICIALS;
+			if(moneys !=''){
 				if(arr[1]==null){
 					if('${pd.boos}'=='true'){
 						document.getElementById("money").innerHTML =""+arr[0]+"上半年收益为"+money;

@@ -215,7 +215,6 @@
                   #{item}
              </foreach>
 	</delete>
-	
 	<!-- 判断编号是否存在 -->
 	<select id="findByUN" parameterType="pd" resultType="pd" >
 		select 
@@ -224,6 +223,9 @@
 			<include refid="tableName"></include>
 		where 
 			BIANHAO = #{BIANHAO}
+		<if test="ID != null and ID != ''">
+			and ID != #{ID} 
+		</if>
 	</select>
 	<select id="cylistPage" parameterType="page" resultType="pd">
 				SELECT I.BIANHAO,I.MATERIALS_ID,I.ENTRY_TIME,I.warehouse_ID,I.PRACTICAL,C.QUANTITY,

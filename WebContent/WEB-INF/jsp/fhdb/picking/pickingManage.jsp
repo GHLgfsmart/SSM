@@ -243,7 +243,7 @@ function add(YK){
 	 diag.Title ="新增";
 	 diag.URL = '<%=basePath%>outstorage/pickingAddPage.do?YK='+YK;
 	 diag.Width = 850;
-	 diag.Height = 500;
+	 diag.Height = 550;
 	 diag.CancelEvent = function(){ //关闭事件
 		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 			 if('${page.currentPage}' == '0'){

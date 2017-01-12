@@ -49,6 +49,16 @@ public interface MoneyManager {
 	 * @throws Exception
 	 */
 	public int totaleditU(PageData pd)throws Exception;
+	/**修改出货单money
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void OuteditU(PageData pd)throws Exception;
+	/**修改物质状态
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void maeditU(PageData pd)throws Exception;
 	/**删除费用
 	 * @param pd
 	 * @throws Exception
@@ -81,4 +91,9 @@ public interface MoneyManager {
 	 * @throws Exception
 	 */
 	public int moneyeditU(PageData pd)throws Exception;
+	/**费用查询
+	 * @param USER_IDS
+	 * @throws Exception
+	 */
+	public PageData outmoney(PageData pd) throws Exception;
 }

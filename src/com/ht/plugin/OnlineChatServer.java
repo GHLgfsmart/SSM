@@ -65,7 +65,7 @@ public class OnlineChatServer extends WebSocketServer{
 			OnlineChatServerPool.sendMessageToUser(conn, message);//同时向本人发送消息
 		}
 	}
-
+	
 	public void onFragment( WebSocket conn, Framedata fragment ) {
 	}
 
@@ -74,9 +74,7 @@ public class OnlineChatServer extends WebSocketServer{
 	 */
 	@Override
 	public void onError( WebSocket conn, Exception ex ) {
-		//ex.printStackTrace();
 		if( conn != null ) {
-			//some errors like port binding failed may not be assignable to a specific websocket
 		}
 	}
 

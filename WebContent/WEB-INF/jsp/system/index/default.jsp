@@ -18,10 +18,12 @@
  <link href="plugins/zoomimage/css/custom.css" rel="stylesheet">
  <link href="plugins/fhform/css/animate.min.css" rel="stylesheet">
  <link href="static/login/css/style.min.css?v=4.0.0" rel="stylesheet"><base target="_blank">
-<script src="plugins/echarts/echarts.min.js"></script>
+ <!--引入属于此页面的js -->
+ <script type="text/javascript" src="static/js/myjs/head.js"></script>
+ <script src="plugins/echarts/echarts.min.js"></script>
 </head>
 <!-- <body class="no-skin"> -->
-<body class="gray-bg" style="background-color: white;">
+<body class="gray-bg" style="background-color: white;" >
 		<form action="<%=basePath%>login_default.do" method="post" id="defaultForm" name="defaultForm">
             <div class="ibox float-e-margins" style="width: 60%;height:268px;float: left;margin-top: 12px;border:7px #E7EAEC solid;margin-left: 12px;">
                 <div class="ibox-title">
@@ -225,7 +227,7 @@ function openMusic(clock123,repeat,time,mid,text){
 <div id="bodyD">
   <div style="height:24px;">&nbsp;</div>
   <div id="nowclock"><font id="clock" face="Arial" color="#000080" size="4" align="center">2010年01月01日 00时00分00秒</font></div>
-  <!--form action="setclock.html" method="get" onsubmit="return post(this)"-->
+  form action="setclock.html" method="get" onsubmit="return post(this)"
   <form id="clockform">
     <input type="hidden" id="time" name="time" />
     <input type="hidden" id="clock123" name="clock123" value="1" />
@@ -378,12 +380,10 @@ function openMusic(clock123,repeat,time,mid,text){
 </div>
 </div>
 </div>
-<!-- 返回顶部 -->
-		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-		</a>
-
 	</div>
+	<div align="center">
+            <iframe width="80%" scrolling="no" height="120" frameborder="0" allowtransparency="true" src="http://i.tianqi.com/index.php?c=code&id=19&icon=1&temp=1&num=5"></iframe>
+            </div>
 	<script src="static/ace/js/ace/ace.js"></script>
 	<script type="text/javascript">
 		$(top.hangge());
@@ -395,9 +395,7 @@ function openMusic(clock123,repeat,time,mid,text){
 		function resh(){
 			window.location.href="<%=basePath%>login_default.do";
 		}
+		
 	</script>
-	<div align="center">
-	  	<iframe width="800px" scrolling="no" height="120" frameborder="0" allowtransparency="true" src="http://i.tianqi.com/index.php?c=code&id=19&icon=1&temp=1&num=5"></iframe>
- 	</div>
 </body>
 </html>

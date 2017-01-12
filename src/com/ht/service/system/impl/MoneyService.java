@@ -83,6 +83,20 @@ public class MoneyService implements MoneyManager{
 	public int moneyeditU(PageData pd)throws Exception{
 		return (Integer)dao.update("MoneyMapper.moneyeditU", pd);
 	}
+	/**修改物质状态
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void maeditU(PageData pd)throws Exception{
+		dao.update("MoneyMapper.maeditU", pd);
+	}
+	/**修改出货单money
+	 * @param pd
+	 * @throws Exception
+	 */
+	public void OuteditU(PageData pd)throws Exception{
+		dao.update("MoneyMapper.OuteditU", pd);
+	}
 	/**删除
 	 * @param pd
 	 * @throws Exception
@@ -121,5 +135,13 @@ public class MoneyService implements MoneyManager{
 	@Override
 	public PageData moneys(PageData pd) throws Exception{
 		return (PageData)dao.findForObject("MoneyMapper.moneys",pd);
+	}
+	/**费用查询
+	 * @param USER_IDS
+	 * @throws Exception
+	 */
+	@Override
+	public PageData outmoney(PageData pd) throws Exception{
+		return (PageData)dao.findForObject("MoneyMapper.outmoney",pd);
 	}
 }

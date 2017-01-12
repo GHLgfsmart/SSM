@@ -14,6 +14,7 @@
 		<%@ include file="../../system/index/top.jsp"%>
 		<link rel="stylesheet" href="static/js/common/jbox.css" />
 		<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+		<link rel="stylesheet" type="text/css" href="static/ace/css/build.css"><!-- 洪青青     复选框  必须要有<link rel="stylesheet" href="static/ace/css/bootstrap.css" /> <link rel="stylesheet" href="static/ace/css/font-awesome.css" />-->
 		<script type="text/javascript">
 
 			function getNowFormatDate() {
@@ -88,11 +89,11 @@
 							</tr>
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">拣取数量:</td>
-								<td><input type="number" name="COUNT" id="COUNT" value="${pd.COUNT}" maxlength="30" placeholder="这里输入拣取数量" title="拣取数量" style="width:98%;"/></td>
+								<td><input type="number" name="COUNT" id="COUNT" readonly="readonly" value="${pd.COUNT}" maxlength="30" placeholder="这里输入拣取数量" title="拣取数量" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">出库单数:</td>
-								<td><input type="number" name="MATCOUNT" id="MATCOUNT" value="${pd.MATCOUNT}" maxlength="30" placeholder="这里输入出库单数" title="出库单数" style="width:98%;"/></td>
+								<td><input type="number" name="MATCOUNT" readonly="readonly" id="MATCOUNT" value="${pd.MATCOUNT}" maxlength="30" placeholder="这里输入出库单数" title="出库单数" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">操作员:</td>
@@ -111,6 +112,21 @@
 									<input type="text" name="TIME" id="TIME" value="${pd.TIME}" maxlength="30" title="录入时间" readonly="readonly" style="width:98%;"/>
 									<input type="hidden" name="STATE" id="STATE" value="1" />
 									<input type="hidden" name="TYPE" id="TYPE" value="2" />
+								</td>
+							</tr>
+							<tr>
+								<td style="width:79px;text-align: right;padding-top: 13px;">费用:</td>
+								<td colspan="3">
+								<fieldset style="float: left; padding-right: 25px;">
+								<div class="checkbox checkbox-success">
+								<input type="hidden" name="COUNTS" id="COUNTS" value="${pd1.COUNTS }" />
+									<input type="hidden" name="ID1" id="ID1" value="${pd1.ID }" />
+									<input class="styled styled" id="STORAGE" name="STORAGE" value="${pd1.STORAGE}" type="checkbox" onclick="return false;" checked>
+									<label for="checkbox10">
+										存储费（<span style="color: #438EB9;">每<span style="color: red;" id="money">${pd1.STORAGE }</span>  &nbsp;共<span style="color: red;" id="moneys">0</span> </span>）/<i class="ace-icon fa fa-cny red"></i>
+									</label>
+								</div>
+								</fieldset>
 								</td>
 							</tr>
 							<tr>
@@ -202,6 +218,7 @@
 		var outid = "";
 		var outcount = "";
 		var count = "";
+		var countss="";
 		function matelect(){
 		    jBox.open(
 		        "iframe:<%=basePath%>outstorage/electOutstoragePage.do?YK=2",
@@ -212,6 +229,43 @@
 		                $("#OUTID").val(outid);
 		                $("#MATCOUNT").val(outcount);
 		                $("#COUNT").val(count);
+		                var STORAGE=parseFloat('${pd1.STORAGE}');
+		                var  RICHARD=parseFloat('${pd1.RICHARD}');
+		                var  LOADING=parseFloat('${pd1.LOADING}');
+		                var  UNLOADING=parseFloat('${pd1.UNLOADING}');
+		                
+		                var arrs= new Array(); //定义一数组 
+		                var arrs1= new Array(); //定义一数组 
+		        		arrs=countss.split(";"); //字符分割
+		                for(var i=0;i<arrs.length;i++){
+		                	arrs1[i]=arrs[i]*STORAGE;
+		                }
+		        		$("#STORAGE").val(""+arrs1);
+		                var counts=parseInt(count);
+		                STORAGE =STORAGE * counts;//存储费
+						RICHARD =RICHARD * counts;//理货费
+						LOADING =LOADING * counts;//装车费
+						UNLOADING =UNLOADING * counts;//卸车费
+		                if((STORAGE+"").indexOf(".") > 0 ){
+							 window.document .getElementById ("moneys").innerHTML="-"+STORAGE.toFixed(2);//四舍五入
+						 }else{
+							 window.document .getElementById ("moneys").innerHTML="-"+STORAGE+".00";
+						 }
+						 if((RICHARD+"").indexOf(".") > 0 ){
+							 window.document .getElementById ("moneys1").innerHTML=RICHARD.toFixed(2);//四舍五入
+						 }else{
+							 window.document .getElementById ("moneys1").innerHTML=RICHARD+".00";
+						 }
+						 if((LOADING+"").indexOf(".") > 0 ){
+							 window.document .getElementById ("moneys2").innerHTML=LOADING.toFixed(2);//四舍五入
+						 }else{
+							 window.document .getElementById ("moneys2").innerHTML=LOADING+".00";
+						 }
+						 if((UNLOADING+"").indexOf(".") > 0 ){
+							 window.document .getElementById ("moneys3").innerHTML=UNLOADING.toFixed(2);//四舍五入
+						 }else{
+							 window.document .getElementById ("moneys3").innerHTML=UNLOADING+".00";
+						 }
 		            }
 		        }
 		    );

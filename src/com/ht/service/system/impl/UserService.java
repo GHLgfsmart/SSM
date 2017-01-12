@@ -184,4 +184,11 @@ public class UserService implements UserManager{
 	public int WsCount(PageData pd)throws Exception{
 		return (int)dao.findForObject("UserMapper.wsCount", pd);
 	}
+	/**
+	 * 判断手机号是否唯一
+	 */
+	@Override
+	public PageData findByUP(PageData pd) throws Exception {
+		return (PageData)dao.findForObject("UserMapper.findByUP", pd);
+	}
 }

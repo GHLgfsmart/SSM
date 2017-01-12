@@ -131,7 +131,9 @@ function readFhsms(){
 	fhsmsCount = Number(fhsmsCount)-1;
 	$("#fhsmsCount").html(Number(fhsmsCount) <= 0 ?'0':fhsmsCount);
 }
-
+function MSGname(MSGTITLE,MSGCON){
+	
+}
 //修改个人资料
 function editUserH(){
 	 jzts();
@@ -176,7 +178,6 @@ function fhsms(){
 	 };
 	 diag.show();
 }
-
 //切换菜单
 function changeMenus(){
 	window.location.href=locat+'/main/yes';

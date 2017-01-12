@@ -31,6 +31,10 @@
 	<sql id="moneytotal_TableName">
 		money_total
 	</sql>
+	<!-- 费用规则表  -->
+	<sql id="prm_TableName">
+		price_money
+	</sql>
 	<!-- 	费用字段 -->
 	<sql id="Field">
 		ID,
@@ -60,6 +64,18 @@
 			set MONEY 					= #{MONEY}
 				where PRODUCT_ID      =#{PRODUCT_ID} 
 	</update>
+	<!-- 修改物质状态改成出库 -->
+	<update id="maeditU" parameterType="pd" >
+		update  <include refid="tableName"></include>
+			set STATE 					= 2
+				where ID      =#{PRODUCT_ID} 
+	</update>
+	<!-- 修改出货单的money -->
+	<update id="OuteditU" parameterType="pd" >
+		update  <include refid="O_TableName"></include>
+			set MONEY 					= #{MONEY}
+				where ID      =#{ID} 
+	</update>
 	<!-- 	新增 退货费用表-->
 	<insert id="totalsaveU" parameterType="pd">
 		insert into <include refid="moneytotal_TableName"></include> (
@@ -81,6 +97,10 @@
 	<!-- 查询费用 -->
 	<select id="moneys" parameterType="pd" resultType="pd" >
 		select ma.COUNT,m.MONEY from <include refid="tableName"></include> ma,<include refid="moneyTableName"></include> m where ma.ID=m.PRODUCT_ID and ma.ID=#{ID}
+	</select> 
+	<!-- 查询费用 -->
+	<select id="outmoney" parameterType="pd" resultType="pd" >
+		select m.MONEY,m.PRODUCT_ID from <include refid="moneyTableName"></include> m,<include refid="O_TableName"></include> ou where ou.MATERIALS_ID=m.PRODUCT_ID and ou.ID=#{ID}
 	</select> 
 	<!--出入库查询实际库存 -->
 	<select id="numbers" parameterType="pd" resultType="int" >
@@ -126,10 +146,12 @@
 		sc.ID scID,
 		sc.SUPNAME,
 		cc.ID ccID,
-		cc.NAME ccNAME
+		cc.NAME ccNAME,
+		pr.ARTIFICIAL * ma.COUNT ARTIFICIALS
 		from <include refid="tableName"></include> ma,<include refid="moneyTableName"></include> m,
-			 <include refid="S_C_TableName"></include> sc,<include refid="C_C_TableName"></include> cc
-			 where ma.ID = m.PRODUCT_ID and ma.CUS_ID = sc.ID and sc.CATEGORIES_ID=cc.ID and ma.STATE=#{pd.STATE}
+			 <include refid="S_C_TableName"></include> sc,<include refid="C_C_TableName"></include> cc,
+			<include refid="prm_TableName"></include> pr
+			 where ma.ID = m.PRODUCT_ID and ma.CUS_ID = sc.ID and sc.CATEGORIES_ID=cc.ID and m.PRICE_ID=pr.PRICE_ID and ma.STATE=#{pd.STATE}
 			 <choose>
 			<when test="pd.boos=='true'">
 			and m.MO_TIME &gt;=CONCAT(#{pd.MO_TIME},'-01-01 00:00:00') and m.MO_TIME &lt;= CONCAT(#{pd.MO_TIME},'-06-30 23:59:59')

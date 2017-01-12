@@ -122,6 +122,7 @@ public class InventoryController extends BaseController{
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.put("username", Jurisdiction.getUsername());
+		pd.put("BIANHAO", "PD"+DateUtil.getCurrentDateStr());
 		mv.setViewName("system/inventory/inventory_edit");
 		mv.addObject("msg", "saveU");
 		mv.addObject("pd", pd);
@@ -143,7 +144,6 @@ public class InventoryController extends BaseController{
 		String MATERIALS_ID = pd.getString("MATERIALS_ID");
 		pd.put("ID", this.get32UUID());	//ID 主键
 		pd.put("MATERIALS_ID", MATERIALS_ID);
-		pd.put("BIANHAO", "KC"+DateUtil.getCurrentDateStr());
 		pd.put("PRO_NAME", it.getPRO_NAME());
 		pd.put("PRACTICAL", Integer.valueOf(it.getPRACTICAL()));
 		pd.put("MANY", Integer.valueOf(it.getMANY()));

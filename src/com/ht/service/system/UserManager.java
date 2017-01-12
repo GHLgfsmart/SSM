@@ -127,4 +127,10 @@ public interface UserManager {
 	 * @throws Exception
 	 */
 	public int WsCount(PageData pd)throws Exception;
+	/**判断手机号是否唯一
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData findByUP(PageData pd)throws Exception;
 }

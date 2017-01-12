@@ -89,7 +89,26 @@ public class UserController extends BaseController {
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
 	}
-	
+	/**判断手机号是否唯一
+	 * @return
+	 */
+	@RequestMapping(value="/hasP")
+	@ResponseBody
+	public Object hasP(){
+		Map<String,String> map = new HashMap<String,String>();
+		String errInfo = "success";
+		PageData pd = new PageData();
+		try{
+			pd = this.getPageData();
+			if(userService.findByUP(pd) != null){
+				errInfo = "error";
+			}
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		map.put("result", errInfo);				//返回结果
+		return AppUtil.returnObject(new PageData(), map);
+	}
 	/**删除用户
 	 * @param out
 	 * @throws Exception 

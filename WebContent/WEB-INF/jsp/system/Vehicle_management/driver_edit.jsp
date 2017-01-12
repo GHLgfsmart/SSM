@@ -48,11 +48,11 @@
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">电话号码:</td>
-											<td><input type="text" name="PHONE" id="PHONE" onblur="check2()" value="${pd.PHONE }" style="width:98%;"/></td>
+											<td><input type="text" name="PHONE" id="PHONE" onblur="check2('${pd.ID }')" value="${pd.PHONE }" style="width:98%;"/></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">电子邮箱:</td>
-											<td><input type="text" name="EMAIL" id="EMAIL" onblur="check3()"  value="${pd.EMAIL }" style="width:98%;"/></td>
+											<td><input type="text" name="EMAIL" id="EMAIL" onblur="check3('${pd.ID }')"  value="${pd.EMAIL }" style="width:98%;"/></td>
 										</tr>
 										<tr>
 											<td style="text-align: center;" colspan="10">
@@ -204,7 +204,7 @@
 		 }
 	}
 	
-	function check2(){
+	function check2(ID){
 		var temp=/^1[3,5,8]\d{9}$/;
 		var s = document.getElementById("PHONE");
 		if(temp.test(s.value)==false){
@@ -220,7 +220,7 @@
 		$.ajax({
 			type: "POST",
 			url: '<%=basePath%>driver/hasN.do',
-	    	data: {PHONE:PHONE,tm:new Date().getTime()},
+	    	data: {PHONE:PHONE,ID:ID,tm:new Date().getTime()},
 			dataType:'json',
 			cache: false,
 			success: function(data){
@@ -237,7 +237,7 @@
 		});
 	}
 	
-	function check3(){
+	function check3(ID){
 		var temp=/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 		var s = document.getElementById("EMAIL");
 		if(temp.test(s.value)==false){
@@ -253,7 +253,7 @@
 		$.ajax({
 			type: "POST",
 			url: '<%=basePath%>driver/hasE.do',
-	    	data: {EMAIL:EMAIL,tm:new Date().getTime()},
+	    	data: {EMAIL:EMAIL,ID:ID,tm:new Date().getTime()},
 			dataType:'json',
 			cache: false,
 			success: function(data){
