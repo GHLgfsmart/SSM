@@ -84,16 +84,16 @@
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">物资:</td>
 								<td>
-									<input type="hidden" id="MATERIALS_ID" name="MATERIALS_ID" />
+									<input type="hidden" id="MATERIALS_ID" name="MATERIALS_ID" value="${pd.MATERIALS_ID}"/>
 									<input type="text" name="NAME" id="NAME" value="${pd.NAME}" maxlength="30" readonly placeholder="这里选择物资" title="物资" style="width:80%;"/>
 									<button class="btn btn-mini radius" onclick="matelect();" type="button">选择</button>
+									<input type="hidden" id="WAREHOUSE_ID" name="WAREHOUSE_ID" value="${pd.WAREHOUSE_ID}"/>
 								</td>
 								<td style="width:79px;text-align: left;padding-top: 13px;">出入库类型:</td>
 								<td>
-									<input type="hidden" id="OUTPUT_TYPE_ID" name="OUTPUT_TYPE_ID" value="002"/>
-									<input type="text" name="OPTNAME" id="OPTNAME" value="${pd.OPTNAME}" maxlength="30" placeholder="这里选择出入库类型" title="出入库类型" style="width:80%;"/>
+									<input type="hidden" id="OUTPUT_TYPE_ID" name="OUTPUT_TYPE_ID" value="${pd.OUTPUT_TYPE_ID}"/>
+									<input type="text" name="OPTNAME" id="OPTNAME" value="${pd.OPTNAME}" readonly maxlength="30" placeholder="这里选择出入库类型" title="出入库类型" style="width:80%;"/>
 									<button class="btn btn-mini radius" onclick="optelect();" type="button">选择</button>
-									<input type="hidden" id="WAREHOUSE_ID" name="WAREHOUSE_ID" value="001"/>
 									<input type="hidden" value="2" id="TYPE" name="TYPE"/>
 									<input type="hidden" value="0" id="STATE" name="STATE"/>
 								</td>
@@ -253,20 +253,24 @@
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();
 		}
+		
+		var mid = '${pd.MATID}';  //获取已经选择的物资id
 		/**选择供应商*/
 		var materials = $("#NAME").val();
 		var matid = $("#MATERIALS_ID").val();
+		var warid = $("#WAREHOUSE_ID").val();
 		var ENTRY_TIME='';
 		function matelect(){
 			var OUT_TIME=$("#ENTRY_TIME").val();
 		    jBox.open(
-		        "iframe:<%=basePath%>warehousing/electMaterialsPage.do?STATE=1",
+		        "iframe:<%=basePath%>outstorage/electMaterialsPage.do",
 		        "选择", 750, 400,
 		        {buttons: {}, iframeScrolling: 'yes', showClose: true,
 		            closed:function (){
 		                $("#NAME").val(materials);
  						if(matid != $("#MATERIALS_ID").val()){
 			                $("#MATERIALS_ID").val(matid);
+			                $("#WAREHOUSE_ID").val(warid);
 			                var strs= new Array(); //定义一数组 
 			        		strs=OUT_TIME.split(" "); //字符分割  
 			        		var strs1= new Array(); //定义一数组 
@@ -330,6 +334,21 @@
 	            parseInt(t[2], 10) || null
 	            )).getTime();
 	        }
+
+	        var optid = $("#OUTPUT_TYPE_ID").val();
+			var optname = $("#OPTNAME").val();
+			function optelect(){
+			    jBox.open(
+			        "iframe:<%=basePath%>warehousing/electOutPutTypePage.do",
+			        "选择", 750, 400,
+			        {buttons: {}, iframeScrolling: 'yes', showClose: true,
+			            closed:function (){
+			            	$("#OUTPUT_TYPE_ID").val(optid);
+			            	$("#OPTNAME").val(optname);
+			            }
+			        }
+			    );
+			}
 		</script>
 </body>
 </html>

@@ -78,9 +78,9 @@
 											<td class='center'>${var.BIANHAO}</td>
 											<td class='center'>${var.BAR_CODE}</td>
 											<td class='center'>
-												<label><input type='hidden' name='name' value="${var.NAME}" class="ace" /></label>
-											${var.NAME}</td>
-											<td class='center'>${var.WARNAME}</td>
+												<label><input type='hidden' name='name' value="${var.NAME}" class="ace" /></label>${var.NAME}
+											</td>
+											<td class='center'><label><input type='hidden' name='WARID' value="${var.WAREHOUSE_ID}" class="ace" /></label>${var.WARNAME}</td>
 											<td class='center'>${var.COUNT}</td>
 											<c:if test="${var.STATE eq 0}">
 												<td class='center'><span class="label label-default">待入库</span></td>
@@ -165,11 +165,13 @@ function elect(msg){
 	var xname = '';
 	var ENTRY_TIME="";
 	var c=0;
+	var mid = '';
 	for(var i=0;i < document.getElementsByName('ids').length;i++){
 	  if(document.getElementsByName('ids')[i].checked){
 	  	if(xid=='') xid += document.getElementsByName('ids')[i].value;
 	  	if(xname=='') xname += document.getElementsByName('name')[i].value;
 	  	if(ENTRY_TIME=='') ENTRY_TIME += document.getElementsByName('ids')[i].alt;
+	  	if(mid=='') mid += document.getElementsByName('WARID')[i].value;
 	 	c=c+1;
 	  }
 	}
@@ -191,6 +193,7 @@ function elect(msg){
 		window.parent.window.materials = xname;
 		window.parent.window.matid = xid;
 		window.parent.window.ENTRY_TIME = ENTRY_TIME;
+		window.parent.window.warid = mid;
 		window.parent.window.jBox.close();
 	}
 }

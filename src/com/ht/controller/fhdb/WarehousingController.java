@@ -676,7 +676,7 @@ public class WarehousingController extends BaseController{
 					}else if(state.equals("1")) {
 						state = "已检验";
 					}else {
-						state = "已检验";
+						state = "不合格";
 					}
 					vpd.put("var8", state);		//7
 					vpd.put("var9", userList.get(i).getUser().getUSERNAME());//8

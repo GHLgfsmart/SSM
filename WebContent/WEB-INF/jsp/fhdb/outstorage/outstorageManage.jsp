@@ -56,7 +56,8 @@
 								  	</select>
 								</td>
 								<c:if test="${QX.cha == 1 }">
-								<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+									<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+									<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-cloud-download bigger-110 nav-search-icon blue"></i>导出</a></td></c:if>
 								</c:if>
 							</tr>
 						</table>
@@ -96,6 +97,7 @@
 										<tr>
 											<td class='center'>
 												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
+												<input type='hidden' name='sstate' id="sstate" value="${var.STATE}" class="ace" />
 											</td>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
 											<td class='center'>${var.BIANHAO}</td>
@@ -133,12 +135,12 @@
 												</c:if>
 												<div class="hidden-sm hidden-xs btn-group">
 													<c:if test="${QX.edit == 1 }">
-													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.ID}');">
+													<a class="btn btn-xs btn-success" title="编辑" onclick="edit('${var.ID}','${var.STATE}');">
 														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
 													</a>
 													</c:if>
 													<c:if test="${QX.del == 1 }">
-													<a class="btn btn-xs btn-danger" onclick="del('${var.ID}');">
+													<a class="btn btn-xs btn-danger" onclick="del('${var.ID}','${var.STATE}');">
 														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 													</a>
 													</c:if>
@@ -148,12 +150,20 @@
 													</a>
 													</c:if>
 													<c:if test="${QX.email == 1 }">
-													<a class="btn btn-xs btn-info" onclick="auditing('${var.ID}','${var.STATE}');">
-														<i class="ace-icon fa fa-check-circle bigger-120" title="审核"></i>
-													</a>
-													<%-- <a class="btn btn-xs btn-info" onclick="auditing('${var.ID}','${var.STATE}');">
-														<i class="ace-icon fa fa-times-circle bigger-120" title="去审"></i>
-													</a> --%>
+														<a class="btn btn-xs btn-info" onclick="auditing('${var.ID}','${var.STATE}','${var.WAREHOUSE_ID }','${var.materials.COUNT }');">
+															<i class="ace-icon fa fa-check-circle bigger-120" title="审核"></i>
+														</a>
+														
+														<%-- <c:if test="${empty var.AUDITOR}">
+															<a class="btn btn-xs btn-info" onclick="remove_auditing('${var.ID}','${var.STATE}','1');">
+																<i class="ace-icon fa fa-times-circle bigger-120" title="去审"></i>
+															</a>
+														</c:if>
+														<c:if test="${!empty var.AUDITOR}">
+															<a class="btn btn-xs btn-info" onclick="remove_auditing('${var.ID}','${var.STATE}','${var.AUDITOR }');">
+																<i class="ace-icon fa fa-times-circle bigger-120" title="去审"></i>
+															</a>
+														</c:if> --%>
 													</c:if>
 												</div>
 												<div class="hidden-md hidden-lg">
@@ -165,7 +175,7 @@
 														<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
 															<c:if test="${QX.edit == 1 }">
 															<li>
-																<a style="cursor:pointer;" onclick="edit('${var.ID}');" class="tooltip-success" data-rel="tooltip" title="修改">
+																<a style="cursor:pointer;" onclick="edit('${var.ID}','${var.STATE}');" class="tooltip-success" data-rel="tooltip" title="修改">
 																	<span class="green">
 																		<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
 																	</span>
@@ -174,7 +184,7 @@
 															</c:if>
 															<c:if test="${QX.del == 1 }">
 															<li>
-																<a style="cursor:pointer;" onclick="del('${var.ID}');" class="tooltip-error" data-rel="tooltip" title="删除">
+																<a style="cursor:pointer;" onclick="del('${var.ID}','${var.STATE}');" class="tooltip-error" data-rel="tooltip" title="删除">
 																	<span class="red">
 																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
 																	</span>
@@ -192,16 +202,26 @@
 															</c:if>
 															<c:if test="${QX.email == 1 }">
 															<li>
-																<a style="cursor:pointer;" onclick="auditing('${var.ID}','${var.STATE}');" class="tooltip-error" data-rel="tooltip" title="审核">
+																<a style="cursor:pointer;" onclick="auditing('${var.ID}','${var.STATE}','${var.WAREHOUSE_ID }','${var.materials.COUNT }');" class="tooltip-error" data-rel="tooltip" title="审核">
 																	<span class="blue">
 																		<i class="ace-icon fa fa-check-circle bigger-120"></i>
 																	</span>
 																</a>
-																<%-- <a style="cursor:pointer;" onclick="auditing('${var.ID}','${var.STATE}');" class="tooltip-error" data-rel="tooltip" title="去审">
-																	<span class="blue">
-																		<i class="ace-icon fa fa-times-circle bigger-120"></i>
-																	</span>
-																</a> --%>
+																<%-- <c:if test="${empty var.AUDITOR}">
+																	<a style="cursor:pointer;" onclick="remove_auditing('${var.ID}','${var.STATE}','1');" class="tooltip-error" data-rel="tooltip" title="去审">
+																		<span class="blue">
+																			<i class="ace-icon fa fa-times-circle bigger-120"></i>
+																		</span>
+																	</a>
+																</c:if>
+																<c:if test="${!empty var.AUDITOR}">
+																	<a style="cursor:pointer;" onclick="remove_auditing('${var.ID}','${var.STATE}','${var.AUDITOR}');" class="tooltip-error" data-rel="tooltip" title="去审">
+																		<span class="blue">
+																			<i class="ace-icon fa fa-times-circle bigger-120"></i>
+																		</span>
+																	</a>
+																</c:if> --%>
+																
 															</li>
 															</c:if>
 														</ul>
@@ -231,7 +251,7 @@
 							<tr>
 								<td style="vertical-align:top;">
 									<c:if test="${QX.add == 1 }">
-									<a class="btn btn-sm btn-success" onclick="add();">新增</a>
+									<a class="btn btn-sm btn-success" onclick="add();">新开单</a>
 									</c:if>
 									<c:if test="${QX.del == 1 }">
 									<a class="btn btn-sm btn-danger" onclick="makeAll('确定要删除选中的数据吗?');" title="批量删除" ><i class='ace-icon fa fa-trash-o bigger-120'></i></a>
@@ -275,6 +295,15 @@ $(top.hangge());//关闭加载状态
 function tosearch(){
 	top.jzts();
 	$("#Form").submit();
+}
+
+//导出excel
+function toExcel(){
+	var keywords = $("#keywords").val();
+	var lastLoginStart = $("#lastLoginStart").val();
+	var lastLoginEnd = $("#lastLoginEnd").val();
+	var STATE = $("#STATE").val();
+	window.location.href='<%=basePath%>outstorage/output_storageExcel.do?keywords='+keywords+'&lastLoginStart='+lastLoginStart+'&lastLoginEnd='+lastLoginEnd+'&STATE='+STATE+'&TYPE=2';
 }
 
 //新增
@@ -338,59 +367,209 @@ function examine(Id,state){
 	}
 }
 
-//删除
-function del(Id){
-	bootbox.confirm("确定要删除吗?", function(result) {
-		if(result) {
-			top.jzts();
-			var url = '<%=basePath%>outstorage/outstorageDel.do?ID='+Id;
-			$.get(url,function(data){
-				$(top.hangge());//关闭加载状态
-				if(data == 'success'){
-					swal({   
-						title: "系统提示",
-						text: "删除成功!", 
-						type: "success",
-						confirmButtonText: "OK" },function(){
-							nextPage('${page.currentPage}');
-						});
-				}else {
-					swal({   
-						title: "系统提示",
-						text: "删除失败!", 
-						type: "error",
-						confirmButtonText: "OK" });
+//审核
+function auditing(Id,state,warid,count){
+	if(state==0){
+		bootbox.dialog({
+			message: "<span class='bigger-110'>商品未检验，暂时无法审核!</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		return;
+	}else {
+		 if(state==1) {
+			 	top.jzts();
+				var url = '<%=basePath%>outstorage/outstorageAuditing.do?STATE=3&ID='+Id+'&WAREHOUSE_ID='+warid+'&COUNT='+count;
+				$.get(url,function(data){
+					$(top.hangge());//关闭加载状态
+					if(data == 'success'){
+						swal({   
+							title: "系统提示",
+							text: "审核成功!", 
+							type: "success",
+							confirmButtonText: "OK" },function(){
+								nextPage('${page.currentPage}');
+							});
+					}else {
+						swal({   
+							title: "系统提示",
+							text: "审核失败!", 
+							type: "error",
+							confirmButtonText: "OK" });
+					}
+				});
+		}else if(state==2) {
+			bootbox.confirm("检验不合格，确定要审核吗?", function(result) {
+				if(result) {
+					top.jzts();
+					var url = '<%=basePath%>outstorage/outstorageAuditing.do?STATE=3&ID='+Id+'&WAREHOUSE_ID='+warid+'&COUNT='+count;;
+					$.get(url,function(data){
+						$(top.hangge());//关闭加载状态
+						if(data == 'success'){
+							swal({   
+								title: "系统提示",
+								text: "审核成功!", 
+								type: "success",
+								confirmButtonText: "OK" },function(){
+									nextPage('${page.currentPage}');
+								});
+						}else {
+							swal({   
+								title: "系统提示",
+								text: "审核失败!", 
+								type: "error",
+								confirmButtonText: "OK" });
+						}
+					});
+				}
+			});
+		}else if(state==3) {
+			bootbox.dialog({
+				message: "<span class='bigger-110'>已处于审核成功状态，无需审核!</span>",
+				buttons: 			
+				{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+			});
+			return;
+		}
+	}
+}
+
+//去审
+function remove_auditing(Id,state,AUDITOR){
+	if(state!=3){
+		bootbox.dialog({
+			message: "<span class='bigger-110'>出库未审核，无法去审！</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		return;
+	}else {
+		var u = '${sessionUser.USERNAME}';
+		if(u!=AUDITOR){
+			bootbox.dialog({
+				message: "<span class='bigger-110'>必须是审核人才能去审！</span>",
+				buttons: 			
+				{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+			});
+			return;
+		}else {
+			bootbox.confirm("确定要去审吗?", function(result) {
+				if(result) {
+					top.jzts();
+					var url = '<%=basePath%>outstorage/outstorageAuditing.do?STATE=1&ID='+Id;
+					$.get(url,function(data){
+						$(top.hangge());//关闭加载状态
+						if(data == 'success'){
+							swal({   
+								title: "系统提示",
+								text: "去审成功!", 
+								type: "success",
+								confirmButtonText: "OK" },function(){
+									nextPage('${page.currentPage}');
+								});
+						}else {
+							swal({   
+								title: "系统提示",
+								text: "去审失败!", 
+								type: "error",
+								confirmButtonText: "OK" });
+						}
+					});
 				}
 			});
 		}
-	});
+	}
+}
+
+//删除
+function del(Id,state){
+	if(state==3){
+		bootbox.dialog({
+			message: "<span class='bigger-110'>已审核成功，不允许删除!</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		return;
+	}else {
+		bootbox.confirm("确定要删除吗?", function(result) {
+			if(result) {
+				top.jzts();
+				var url = '<%=basePath%>outstorage/outstorageDel.do?ID='+Id;
+				$.get(url,function(data){
+					$(top.hangge());//关闭加载状态
+					if(data == 'success'){
+						swal({   
+							title: "系统提示",
+							text: "删除成功!", 
+							type: "success",
+							confirmButtonText: "OK" },function(){
+								nextPage('${page.currentPage}');
+							});
+					}else {
+						swal({   
+							title: "系统提示",
+							text: "删除失败!", 
+							type: "error",
+							confirmButtonText: "OK" });
+					}
+				});
+			}
+		});
+	}
 }
 
 //修改
-function edit(Id){
-	 top.jzts();
-	 var diag = new top.Dialog();
-	 diag.Drag=true;
-	 diag.Title ="编辑";
-	 diag.URL = '<%=basePath%>outstorage/outstorageEditPage.do?ID='+Id;
-	 diag.Width = 850;
-	 diag.Height = 500;
-	 diag.CancelEvent = function(){ //关闭事件
-		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-			 nextPage(${page.currentPage});
-		}
-		diag.close();
-	 };
-	 diag.show();
+function edit(Id,STATE){
+	if(STATE==1) {
+		bootbox.dialog({
+			message: "<span class='bigger-110'>已检验合格，不允许修改!</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		return;
+	}else if(STATE==3) {
+		bootbox.dialog({
+			message: "<span class='bigger-110'>已审核成功，不允许修改!</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		return;
+	}else {
+		 top.jzts();
+		 var diag = new top.Dialog();
+		 diag.Drag=true;
+		 diag.Title ="编辑";
+		 diag.URL = '<%=basePath%>outstorage/outstorageEditPage.do?ID='+Id;
+		 diag.Width = 850;
+		 diag.Height = 500;
+		 diag.CancelEvent = function(){ //关闭事件
+			 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
+				 nextPage(${page.currentPage});
+			}
+			diag.close();
+		 };
+		 diag.show();
+	}
 }
 //批量操作
 function makeAll(msg){
 	var str = '';
+	var state = '';
 	for(var i=0;i < document.getElementsByName('ids').length;i++){
 	  if(document.getElementsByName('ids')[i].checked){
 	  	if(str=='') str += document.getElementsByName('ids')[i].value;
 	  	else str += ',' + document.getElementsByName('ids')[i].value;
+	  	if(state=='') state += document.getElementsByName('sstate')[i].value;
+	  	else state += ',' + document.getElementsByName('sstate')[i].value;
 	  }
+	}
+	var c = 0;
+	var strs= new Array(); //定义一数组 
+	strs=state.split(","); //字符分割 
+	for(var j=0;j<strs.length ;j++ ){
+		if(strs[j]==3){
+			c+=1;
+		}
 	}
 	if(str==''){
 		bootbox.dialog({
@@ -405,18 +584,35 @@ function makeAll(msg){
           time:8
       });
 		return;
-	}else {
+	}else if(c!=0){
+		bootbox.dialog({
+			message: "<span class='bigger-110'>已有数据审核成功，不允许删除!</span>",
+			buttons: 			
+			{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+		});
+		return;
+	}else if(msg!=''){
 		bootbox.confirm(msg, function(result) {
 			if(result) {
 				top.jzts();
-				var url = '<%=basePath%>outstorage/outstorageDel.do?DATA_IDS='+str;
+				var url = '<%=basePath%>warehousing/sales_returnBatchDel.do?DATA_IDS='+str;
 				$.get(url,function(data){
+					$(top.hangge());//关闭加载状态
 					if(data == 'success'){
-						alert("成功");
+						swal({   
+							title: "系统提示",
+							text: "删除成功!", 
+							type: "success",
+							confirmButtonText: "OK" },function(){
+								nextPage('${page.currentPage}');
+							});
 					}else {
-						alert("失败");
+						swal({   
+							title: "系统提示",
+							text: "删除失败!", 
+							type: "error",
+							confirmButtonText: "OK" });
 					}
-					nextPage(${page.currentPage});
 				});
 			}
 		});

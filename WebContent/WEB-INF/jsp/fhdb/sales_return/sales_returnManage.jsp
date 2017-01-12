@@ -364,26 +364,28 @@ function auditing(Id,state,warid,count){
 				});
 		}else if(state==2) {
 			bootbox.confirm("检验不合格，确定要审核吗?", function(result) {
-				top.jzts();
-				var url = '<%=basePath%>warehousing/sales_returnAuditing.do?STATE=3&ID='+Id+'&WAREHOUSE_ID='+warid+'&COUNT='+count;
-				$.get(url,function(data){
-					$(top.hangge());//关闭加载状态
-					if(data == 'success'){
-						swal({   
-							title: "系统提示",
-							text: "审核成功!", 
-							type: "success",
-							confirmButtonText: "OK" },function(){
-								nextPage('${page.currentPage}');
-							});
-					}else {
-						swal({   
-							title: "系统提示",
-							text: "审核失败!", 
-							type: "error",
-							confirmButtonText: "OK" });
-					}
-				});
+				if(result) {
+					top.jzts();
+					var url = '<%=basePath%>warehousing/sales_returnAuditing.do?STATE=3&ID='+Id+'&WAREHOUSE_ID='+warid+'&COUNT='+count;
+					$.get(url,function(data){
+						$(top.hangge());//关闭加载状态
+						if(data == 'success'){
+							swal({   
+								title: "系统提示",
+								text: "审核成功!", 
+								type: "success",
+								confirmButtonText: "OK" },function(){
+									nextPage('${page.currentPage}');
+								});
+						}else {
+							swal({   
+								title: "系统提示",
+								text: "审核失败!", 
+								type: "error",
+								confirmButtonText: "OK" });
+						}
+					});
+				}
 			});
 		}else if(state==3) {
 			bootbox.dialog({

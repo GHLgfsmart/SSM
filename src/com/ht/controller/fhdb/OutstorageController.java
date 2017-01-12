@@ -2,11 +2,17 @@ package com.ht.controller.fhdb;
 
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.apache.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -14,10 +20,14 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ht.controller.base.BaseController;
 import com.ht.entity.Output_storage;
 import com.ht.entity.Page;
+import com.ht.entity.User;
 import com.ht.service.fhdb.WarehousingManager;
+import com.ht.service.fhoa.WSManager;
 import com.ht.service.system.MoneyManager;
 import com.ht.service.system.PriceManager;
+import com.ht.util.Const;
 import com.ht.util.Jurisdiction;
+import com.ht.util.ObjectExcelView;
 import com.ht.util.PageData;
 /**
  * 出库控制
@@ -30,6 +40,8 @@ public class OutstorageController extends BaseController{
 	String pickingmenuUrl = "outstorage/pickingList.do"; //菜单地址(权限用)
 	@Resource(name="warehousingService")
 	private WarehousingManager warehousingService;
+	@Resource
+	private WSManager wSService;
 	//洪青青修改
 	@Resource(name="priceService")
 	private PriceManager priceService;
@@ -159,9 +171,6 @@ public class OutstorageController extends BaseController{
 		pd.put("matState", "1");	//物资已入库信息
 		page.setPd(pd);
 		List<PageData> list = warehousingService.findByPutstorageMat(page);
-		for(PageData os : list) {
-			System.out.println(os+"********");
-		}
 		mv.setViewName("fhdb/outstorage/elect_materials");
 		mv.addObject("varList", list);
 		mv.addObject("pd", pd);
@@ -281,6 +290,35 @@ public class OutstorageController extends BaseController{
 	
 	/**
 	 * @author Mr.Lin
+	 * 主管审核操作
+	 * @throws Exception 
+	 * */
+	@RequestMapping(value="/outstorageAuditing")
+	public void outstorageAuditing(HttpServletRequest request,PrintWriter out) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"主管审核操作");
+		if(!Jurisdiction.buttonJurisdiction(menuUrl, "email")){return;} //校验权限
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		if(pd.get("STATE").equals("3")) {
+			HttpSession session = request.getSession();
+			User u = (User)session.getAttribute(Const.SESSION_USER);
+			pd.put("AUDITOR", u.getUSERNAME());
+		}else {
+			pd.put("AUDITOR", "暂无");
+		}
+		int result = warehousingService.output_storageUpdate(pd);
+		if(result>0) {
+			pd.put("ID", pd.get("WAREHOUSE_ID"));
+			wSService.editWarehouseCountreduce(pd);	//仓库库存减少
+			out.write("success");
+		}else {
+			out.write("fail");
+		}
+		out.close();
+	}
+	
+	/**
+	 * @author Mr.Lin
 	 * 出库检验新增操作
 	 * @throws Exception
 	 * @return
@@ -303,6 +341,91 @@ public class OutstorageController extends BaseController{
 			mv.addObject("msg","fail");
 		}
 		mv.setViewName("save_result");
+		return mv;
+	}
+	
+	/**
+	 * @author Mr.Lin
+	 * 导出出库信息到EXCEL
+	 * @return
+	 */
+	@RequestMapping(value="/output_storageExcel")
+	public ModelAndView output_storageExcel(Page page){
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try{
+			if(Jurisdiction.buttonJurisdiction(menuUrl, "cha")){
+				String keywords = pd.getString("keywords");				//关键词检索条件
+				if(null != keywords && !"".equals(keywords)){
+					pd.put("keywords", keywords.trim());
+				}
+				String lastLoginStart = pd.getString("lastLoginStart");	//开始时间
+				String lastLoginEnd = pd.getString("lastLoginEnd");		//结束时间
+				if(lastLoginStart != null && !"".equals(lastLoginStart)){
+					pd.put("lastLoginStart", lastLoginStart+" 00:00:00");
+				}
+				if(lastLoginEnd != null && !"".equals(lastLoginEnd)){
+					pd.put("lastLoginEnd", lastLoginEnd+" 00:00:00");
+				} 
+				page.setPd(pd);
+				Map<String,Object> dataMap = new HashMap<String,Object>();
+				List<String> titles = new ArrayList<String>();
+				titles.add("序号");
+				titles.add("单据编号"); 		//1
+				titles.add("物资名称");  	//2
+				titles.add("仓库名称");		//3
+				titles.add("出入库类型");	//4
+				titles.add("单据金额");		//5
+				titles.add("单据数量");		//6
+				titles.add("状态");			//7
+				titles.add("操作员");		//8
+				titles.add("录入时间");		//9
+				titles.add("最后修改时间");	//10
+				titles.add("原始单号");		//11
+				titles.add("审核人");		//12
+				titles.add("备注");			//13
+				dataMap.put("titles", titles);
+				List<Output_storage> userList = warehousingService.findByOutput_storageAll(page);
+				List<PageData> varList = new ArrayList<PageData>();
+				String state = "";
+				for(int i=0;i<userList.size();i++){
+					PageData vpd = new PageData();
+					vpd.put("var1", i+1+"");
+					vpd.put("var2", userList.get(i).getBIANHAO());		//1
+					vpd.put("var3", userList.get(i).getMaterials().getNAME());		//2
+					vpd.put("var4", userList.get(i).getWarehouse().getWARNAME());	//3
+					vpd.put("var5", userList.get(i).getOutput_put().getOPTNAME());	//4
+					String money = userList.get(i).getMONEY()+"";
+					vpd.put("var6", money);		//5
+					String count = userList.get(i).getNUMBER_OF()+"";
+					vpd.put("var7", count);		//6
+					state = userList.get(i).getSTATE()+"";
+					if(state.equals("0")) {
+						state = "待检验";
+					}else if(state.equals("1")) {
+						state = "已检验";
+					}else if(state.equals("2")){
+						state = "不合格";
+					}else {
+						state = "审核成功";
+					}
+					vpd.put("var8", state);		//7
+					vpd.put("var9", userList.get(i).getUser().getUSERNAME());//8
+					vpd.put("var10", userList.get(i).getENTRY_TIME());	//9
+					vpd.put("var11", userList.get(i).getUPDATE_TIME());	//10
+					vpd.put("var12", userList.get(i).getRAW_NUMBER());	//11
+					vpd.put("var13", userList.get(i).getAUDITOR());		//12
+					vpd.put("var14", userList.get(i).getNOTE());		//13
+					varList.add(vpd);
+				}
+				dataMap.put("varList", varList);
+				ObjectExcelView erv = new ObjectExcelView();					//执行excel操作
+				mv = new ModelAndView(erv,dataMap);
+			}
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
 		return mv;
 	}
 	
@@ -377,8 +500,12 @@ public class OutstorageController extends BaseController{
 		String dj = "JH"+sdf.format(new Date());
 		System.out.println(pd.get("YK"));
 		if(pd.get("YK").toString().equals("1")) {
-			mv.setViewName("fhdb/picking/pickingEdit");
+		mv.setViewName("fhdb/picking/pickingEdit");
 		}else {
+			//洪青青修改
+			PageData pd1=Moneytoo();
+			mv.addObject("pd1", pd1);
+			//--------
 			mv.setViewName("fhdb/picking/picking_exceedEdit");
 		}
 		mv.addObject("dj", dj);
@@ -400,24 +527,46 @@ public class OutstorageController extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		//洪青青修改
+		try{
+		PageData pd1 = new PageData();
+		pd1 = this.getPageData();
+		//-----
 		pd.put("ID", this.get32UUID());	//主键    拣货单id
 		String pid = pd.getString("ID");
 		int result = warehousingService.pickingSave(pd);
 		String OUTID = pd.getString("OUTID"); //获取选择入库单的ID
+		int result1=0;
 		if(null != OUTID && !"".equals(OUTID)){
 			OUTID = OUTID.replaceAll("；", ";");
 			OUTID = OUTID.replaceAll(" ", "");
 			String[] arrOUTID = OUTID.split(";");
+			//洪青青修改
+			String[] STORAGE = (""+pd1.get("STORAGE")).split(";");
 			for(int i=0; i<arrOUTID.length; i++) {
 				pd.put("ID", this.get32UUID());
 				pd.put("OID", arrOUTID[i]);
 				pd.put("PID", pid);
 				warehousingService.outstorage_pickingSave(pd);
+				pd1.put("ID", pd.getString("OID"));
+				pd1=moneyService.outmoney(pd1);//查询money
+				pd1.put("ID", pd.getString("OID"));
+				Object money= pd1.get("MONEY");
+				pd1.put("PRODUCT_ID", pd1.getString("PRODUCT_ID"));
+				double moneys=Double.valueOf(""+money)-Double.valueOf(STORAGE[i]);
+				pd1.put("MONEY", moneys);
+				moneyService.maeditU(pd1);//修改物质状态
+				moneyService.OuteditU(pd1);				//修改出货单的money
+				result1=moneyService.moneyeditU(pd1);//修改money
 			}
 		}
-		if(result>0) {
+		if(result>0 ||result1>0) {
 			mv.addObject("msg","success");
 		}else {
+			mv.addObject("msg","fail");
+		}
+		}catch(Exception e){
+			e.fillInStackTrace();
 			mv.addObject("msg","fail");
 		}
 		mv.setViewName("save_result");

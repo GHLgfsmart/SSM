@@ -21,6 +21,7 @@
 		<association property="materials" javaType="com.ht.entity.Materials_information">
 			<id property="ID" column="ID" />
 			<result property="NAME" column="NAME" />
+			<result property="COUNT" column="COUNT" />
 		</association>
 		<association property="warehouse" javaType="com.ht.entity.Warehouse">
 			<id property="ID" column="ID" />
@@ -61,6 +62,7 @@
 	
 	<sql id="matermessage">
 		OS.ENTRY_TIME,
+		OS.WAREHOUSE_ID,
 		MI.ID,
 		MI.NAME,
 		MI.BIANHAO,
@@ -205,6 +207,9 @@
 			</if>
 			<if test="RAW_NUMBER!=null and RAW_NUMBER!='' ">
 				RAW_NUMBER=#{RAW_NUMBER},
+			</if>
+			<if test="AUDITOR!=null and AUDITOR!='' ">
+				AUDITOR=#{AUDITOR},
 			</if>
 		</set>
 		WHERE ID=#{ID}
