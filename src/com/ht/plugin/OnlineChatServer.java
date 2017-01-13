@@ -56,6 +56,8 @@ public class OnlineChatServer extends WebSocketServer{
 			this.senFhsms(message.replaceFirst("\\[fhsms\\]", ""));
 		}else if(null != message && message.startsWith("[leave]")){
 			this.userLeave(conn);
+		}else if(null != message && message.startsWith("[Msgname]")){
+			this.Msgname(message.replaceFirst("\\[Msgname\\]", ""));
 		}else if(null != message && message.startsWith("[count]")){
 			this.getUserCount(conn);
 		}else if(null != message && message.startsWith("[QQ313596790]")){
@@ -95,7 +97,15 @@ public class OnlineChatServer extends WebSocketServer{
 		result.element("type", "senFhsms");
 		OnlineChatServerPool.sendMessageToUser(OnlineChatServerPool.getWebSocketByUser(user),result.toString());	
 	}
-	
+	/**
+	 * 公告栏通知
+	 * @param user
+	 */
+	public void Msgname(String user){
+		JSONObject result = new JSONObject();
+		result.element("type", "Msgname");
+		OnlineChatServerPool.sendMessageToUser(OnlineChatServerPool.getWebSocketByUser(user),result.toString());	
+	}
 	/**
 	 * 强制某用户下线
 	 * @param user

@@ -82,7 +82,9 @@
 	$(top.hangge());
 	//保存
 	function save(){
-		if($("#MSGTITLE").val()==""){
+		var MSGTITLE=$("#MSGTITLE").val();
+		var MSGCON=$("#MSGCON").val();
+		if(MSGTITLE==""){
 			$("#MSGTITLE").tips({
 				side:3,
 	            msg:'输入标题',
@@ -92,7 +94,7 @@
 			$("#MSGTITLE").focus();
 			return false;
 		}
-		if($("#MSGCON").val()==""){
+		if(MSGCON==""){
 			$("#MSGCON").tips({
 				side:3,
 	            msg:'输入内容',
@@ -103,14 +105,8 @@
 			return false;
 		}
 			$("#msgForm").submit();
-			/* swal({
-		        title: "系统提示", 
-		        text: "操作成功！", 
-		        type: "success",
-		        timer: 5544400,
-		        showConfirmButton: false,
-		        confirmButtonColor: "#ec6c62"
-		    	}); */
+			top.msgMSGTITLEandMSGCON();
+			top.Msgname();
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();
 	}

@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ht.controller.base.BaseController;
 import com.ht.service.system.FhsmsManager;
 import com.ht.service.system.UserManager;
+import com.ht.service.system.impl.MsgService;
 import com.ht.util.AppUtil;
 import com.ht.util.Const;
 import com.ht.util.Jurisdiction;
@@ -36,7 +37,8 @@ public class HeadController extends BaseController {
 	private UserManager userService;	
 	@Resource(name="fhsmsService")
 	private FhsmsManager fhsmsService;
-	
+	@Resource(name="msgService")
+	private MsgService msgService;
 	/**获取头部信息
 	 * @return
 	 */
@@ -86,6 +88,27 @@ public class HeadController extends BaseController {
 		Map<String,Object> map = new HashMap<String,Object>();
 		try {
 			map.put("fhsmsCount", fhsmsService.findFhsmsCount(Jurisdiction.getUsername()).get("fhsmsCount").toString());//站内信未读总数
+		} catch (Exception e) {
+			logger.error(e.toString(), e);
+		} finally {
+			logAfter(logger);
+		}
+		return AppUtil.returnObject(pd, map);
+	}
+	/**获取公告栏的标题和内容
+	 * @return
+	 */
+	@RequestMapping(value="/msgMSGTITLEandMSGCON")
+	@ResponseBody
+	public Object msgMSGTITLEandMSGCON() {
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		Map<String,Object> map = new HashMap<String,Object>();
+		try {
+			pd.put("msgs", "msgs");
+			pd = msgService.findById(pd);	//列出用户列表
+			map.put("msgMSGTITLE",pd.getString("MSGTITLE"));	//公告栏标题
+			map.put("msgMSGCON",pd.getString("MSGCON"));    	//公告栏内容
 		} catch (Exception e) {
 			logger.error(e.toString(), e);
 		} finally {

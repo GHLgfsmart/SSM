@@ -261,54 +261,6 @@ public class LoginController extends BaseController {
 	@RequestMapping(value="/login_default")
 	public ModelAndView defaultPage() throws Exception{
 		ModelAndView mv = this.getModelAndView();
-		PageData pd = new PageData();
-		pd.put("msgs", "msgs");
-		try{
-		pd = msgService.findById(pd);	//列出用户列表
-		String shijian=pd.getString("MSGTIME");
-		String shi[]=shijian.split(" ");
-		pd.put("shi1", shi[1]);
-		String shijian1=DateUtil.getTime().toString();
-		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
-        Date one;  
-        Date two;  
-        long day = 0;  
-        long hour = 0;  
-        long min = 0;  
-        long sec = 0;  
-        one = df.parse(shijian);  
-        two = df.parse(shijian1);  
-        long time1 = one.getTime();  
-        long time2 = two.getTime();  
-        long diff ;  
-        if(time1<time2) {  
-            diff = time2 - time1;  
-        } else {  
-            diff = time1 - time2;  
-        }  
-        day = diff / (24 * 60 * 60 * 1000);  
-        hour = (diff / (60 * 60 * 1000) - day * 24);  
-        min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);  
-        sec = (diff/1000-day*24*60*60-hour*60*60-min*60);  
-        long[] times = {day, hour, min, sec}; 
-        String shijian3="";
-        for(int i=0 ;i<times.length;i++){
-        	 if(i==0){
-        		 shijian3+=""+times[i]+"天 ";
-        	 }else if(i==1){
-        		 shijian3+=""+times[i]+"时 <br>";
-        	 }else if(i==2){
-        		 shijian3+=""+times[i]+"分 ";
-        	 }else if(i==3){
-        		 shijian3+=""+times[i]+"秒";
-        	 }
-        }
-	    pd.put("shijain3", shijian3); 
-		}catch(Exception e){
-			e.printStackTrace();
-			pd.put("shijain3", 0); 
-		}
-		mv.addObject("pd",pd);
 		mv.setViewName("system/index/default");
 		return mv;
 	}

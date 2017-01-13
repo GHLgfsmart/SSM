@@ -10,7 +10,8 @@ var TFHsmsSound = '1';	//站内信提示音效
 var websocket;			//websocket对象
 var wimadress="";		//即时聊天服务器IP和端口
 var oladress="";		//在线管理和站内信服务器IP和端口
-
+var msgMSGTITLE = "";	//公告栏标题
+var msgMSGCON="";    	//公告栏内容
 function siMenu(id,fid,MENU_NAME,MENU_URL){
 	if(id != mid){
 		$("#"+mid).removeClass();
@@ -34,6 +35,7 @@ $(function(){
 
 //初始页面信息
 function getHeadMsg(){
+	msgMSGTITLEandMSGCON();
 	$.ajax({
 		type: "POST",
 		url: locat+'/head/getList.do?tm='+new Date().getTime(),
@@ -69,8 +71,24 @@ function getFhsmsCount(){
 		dataType:'json',
 		cache: false,
 		success: function(data){
-			 fhsmsCount = Number(data.fhsmsCount);
-			 $("#fhsmsCount").html(Number(fhsmsCount));	//站内信未读总数
+			fhsmsCount = Number(data.fhsmsCount);
+			$("#fhsmsCount").html(Number(fhsmsCount));	//站内信未读总数
+		}
+	});
+}
+//获取公告栏
+function msgMSGTITLEandMSGCON(){
+	$.ajax({
+		type: "POST",
+		url: locat+'/head/msgMSGTITLEandMSGCON.do',
+    	data: encodeURI(""),
+		dataType:'json',
+		cache: false,
+		success: function(data){
+			msgMSGTITLE =data.msgMSGTITLE;	//公告栏标题
+			msgMSGCON=data.msgMSGCON;    	//公告栏内容
+			$("#msgMSGTITLE").html(msgMSGTITLE);	
+			$("#msgMSGCON").html(msgMSGCON);	
 		}
 	});
 }
@@ -108,6 +126,8 @@ function online(){
 		            bg:'#AE81FF',
 		            time:30
 		        });
+			}else if(message.type == 'Msgname'){
+				msgMSGTITLEandMSGCON();
 			}
 		};
 	}
@@ -125,14 +145,18 @@ function fhsmsmsg(USERNAME){
 		websocket.send('[fhsms]'+arrUSERNAME[i]);//发送通知
 	}
 }
-
+//去通知在线人公告栏
+function Msgname(){
+	var USERNAME='小明'
+	var arrUSERNAME = USERNAME.split(';');
+	for(var i=0;i<arrUSERNAME.length;i++){
+		websocket.send('[Msgname]'+arrUSERNAME[i]);//发送通知
+	}
+}
 //读取站内信时减少未读总数
 function readFhsms(){
 	fhsmsCount = Number(fhsmsCount)-1;
 	$("#fhsmsCount").html(Number(fhsmsCount) <= 0 ?'0':fhsmsCount);
-}
-function MSGname(MSGTITLE,MSGCON){
-	
 }
 //修改个人资料
 function editUserH(){

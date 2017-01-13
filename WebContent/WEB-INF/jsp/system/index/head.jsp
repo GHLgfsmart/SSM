@@ -4,32 +4,19 @@
 			</script>
 
 			<div class="navbar-container" id="navbar-container">
-				<!-- #section:basics/sidebar.mobile.toggle -->
-				<button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
-					<span class="sr-only">Toggle sidebar</span>
-
-					<span class="icon-bar"></span>
-
-					<span class="icon-bar"></span>
-
-					<span class="icon-bar"></span>
-				</button>
-
-				<!-- /section:basics/sidebar.mobile.toggle -->
 				<div class="navbar-header pull-left">
-					<!-- #section:basics/navbar.layout.brand -->
 					<a class="navbar-brand">
 						<small> <i class="fa fa-leaf"></i> ${pd.SYSNAME} </small>
 					</a>
-
-					<!-- /section:basics/navbar.layout.brand -->
-
-					<!-- #section:basics/navbar.toggle -->
-
-					<!-- /section:basics/navbar.toggle -->
 				</div>
-
-				<!-- #section:basics/navbar.dropdown -->
+				<div class="navbar-header pull-left" style="width: 56%;">
+					<div class="navbar-brand" style="width: 100%">
+					
+					<marquee direction="left" behavior="scroll"scrollamount="10px">
+						<span style="font-size: 18px;font-family:楷体;color: #FFFF00;">&lt;&lt;</span><span id="msgMSGTITLE" style="font-size: 18px;font-family:楷体;color: #FFFF00;">最新播报</span><span style="font-size: 18px;font-family:楷体;color: #FFFF00;">&gt;&gt;</span><span id="msgMSGCON" style="font-size: 16px;padding-left: 10px;font-family:楷体;"></span>
+					</marquee>
+					</div>
+				</div>
 				<div class="navbar-buttons navbar-header pull-right" role="navigation">
 					<ul class="nav ace-nav">
 
@@ -46,7 +33,6 @@
 								</li>
 							</ul>
 						</li>
-
 						<li title="站内信" class="green" onclick="fhsms();" id="fhsmstss"><!-- fhsms()在 WebRoot\static\js\myjs\head.js中 -->
 							<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 								<i class="ace-icon fa fa-envelope icon-animated-vertical"></i>
@@ -69,7 +55,7 @@
 								</li>
 								<li id="systemset">
 								<!--下面系统设置的方法 editSys(); -->
-									<a onclick="#" style="cursor:pointer;"><i class="ace-icon fa fa-user"></i>系统设置</a><!-- editSys()在 WebRoot\static\js\myjs\head.js中 -->
+									<a style="cursor:pointer;"><i class="ace-icon fa fa-user"></i>系统设置</a><!-- editSys()在 WebRoot\static\js\myjs\head.js中 -->
 								</li>
 								<li class="divider"></li>
 								<li>
