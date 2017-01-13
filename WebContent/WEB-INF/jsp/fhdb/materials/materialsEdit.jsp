@@ -110,7 +110,7 @@
 							</tr>
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">单位:</td>
-								<td><input type="text" name="UNIT" id="UNIT" value="${pd.UNIT}" maxlength="30" placeholder="这里输入单位" title="单位" style="width:98%;"/></td>
+								<td><input type="text" name="UNIT" id="UNIT" maxlength="30" readonly="readonly" placeholder="这里输入单位" value="件" title="单位" style="width:98%;"/></td>
 								<td style="width:79px;text-align: right;padding-top: 13px;">录入时间:</td>
 								<td>
 									<input type="text" name="ENTRY_TIME" id="ENTRY_TIME" value="${pd.ENTRY_TIME}" maxlength="30" title="录入时间" readonly="readonly" style="width:98%;"/>

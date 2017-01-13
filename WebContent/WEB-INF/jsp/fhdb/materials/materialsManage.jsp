@@ -45,7 +45,7 @@
 									</div>
 								</td>
 								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginStart" id="lastLoginStart"  value="${pd.lastLoginStart}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="最近登录开始"/></td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginEnd" name="lastLoginEnd"  value="${pd.lastLoginEnd}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="最近登录结束"/></td>
+								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginEnd" id="lastLoginEnd"  value="${pd.lastLoginEnd}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="最近登录结束"/></td>
 								<td style="vertical-align:top;padding-left:2px;">
 								 	<select class="chosen-select form-control" name="STATE" id="STATE" data-placeholder="请选择状态" style="vertical-align:top;width: 120px;">
 										<option value=""></option>
@@ -56,6 +56,9 @@
 								</td>
 								<c:if test="${QX.cha == 1 }">
 									<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="tosearch();" title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+									<td width="10px"></td>
+									<td><button type="button" class="btn btn-default btn-sm" onclick="cl()">重置</button></td>
+									<td width="10px"></td>
 									<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-cloud-download bigger-110 nav-search-icon blue"></i>导出</a></td></c:if>
 									<c:if test="${QX.FromExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="fromExcel();" title="从EXCEL导入"><i id="nav-search-icon" class="ace-icon fa fa-cloud-upload bigger-110 nav-search-icon blue"></i>导入</a></td></c:if>
 								</c:if>
@@ -225,6 +228,13 @@ $(top.hangge());//关闭加载状态
 function tosearch(){
 	top.jzts();
 	$("#Form").submit();
+}
+
+//重置
+function cl(){
+	$("#keywords").val("");
+	$("#lastLoginStart").val("");
+	$("#lastLoginEnd").val("");
 }
 
 //新增
