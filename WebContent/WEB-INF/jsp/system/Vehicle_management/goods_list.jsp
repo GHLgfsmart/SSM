@@ -50,7 +50,7 @@
 									</div>
 								</td>
 								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastStart" id="lastStart"  value="${pd.lastStart}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期"/></td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" name="lastEnd"  value="${pd.lastEnd}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期"/></td>
+								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastEnd" id="lastEnd"  value="${pd.lastEnd}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期"/></td>
 								<td style="vertical-align:top;padding-left:2px;">
 								 	<select name="state" id="state" style="vertical-align:top;width: 120px;">
 										<option value="">请选择状态</option>	
@@ -59,6 +59,9 @@
 		 								<option value="2">已派送</option>
 								  	</select>
 								</td>
+								<td width="10px"></td>
+								<td><button type="button" class="btn btn-default btn-sm" onclick="cl()">重置</button></td>
+								<td width="10px"></td>
 								<c:if test="${QX.cha == 1 }">
 								<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
 								</c:if>
@@ -280,6 +283,13 @@
 <script type="text/javascript">
 $(top.hangge());
 
+//重置
+function cl(){
+	$("select#STATE").val("");
+	$("#nav-search-input").val("");
+	$("#lastStart").val("");
+	$("#lastEnd").val("");
+}
 
 function onChecks() {
 	namelist();
@@ -395,7 +405,7 @@ function add(){
 	 diag.Drag=true;
 	 diag.Title ="新增";
 	 diag.URL = '<%=basePath%>goods/goAddU.do?P_ID='+P_ID+'&D_ID='+D_ID+'&C_ID='+C_ID+'&STATE='+STATE;
-	 diag.Width = 760;
+	 diag.Width = 800;
 	 diag.Height = 480;
 	 diag.CancelEvent = function(){ //关闭事件
 		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
@@ -425,7 +435,7 @@ function editUser(ID,STATE){
 		 diag.Drag=true;
 		 diag.Title ="资料";
 		 diag.URL = '<%=basePath%>goods/goEditU.do?ID='+ID;
-		 diag.Width = 760;
+		 diag.Width = 800;
 		 diag.Height = 480;
 		 diag.CancelEvent = function(){ //关闭事件
 			 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){

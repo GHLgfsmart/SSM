@@ -76,7 +76,7 @@
 									<th class="center" >超时天数/天</th>
 									<th class="center" >人工费/<span style="color: red;"><i class="ace-icon fa fa-cny bigger-120"></i></span></th>
 									<th class="center" >发布时间</th>
-									<th class="center" >原因</th>
+									<th class="center" >备注</th>
 									<th class="center">操作</th>
 								</tr>
 							</thead>
