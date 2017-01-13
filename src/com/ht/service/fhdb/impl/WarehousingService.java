@@ -224,4 +224,10 @@ public class WarehousingService implements WarehousingManager{
 	public List<Picking> barChar4() throws Exception {
 		return (List<Picking>) dao.findForList("PickingMapper.barChar2","");
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PageData> findoutstorageByPType(PageData pd) throws Exception {
+		return (List<PageData>) dao.findForList("PickingMapper.outstorageByPType", pd);
+	}
 }

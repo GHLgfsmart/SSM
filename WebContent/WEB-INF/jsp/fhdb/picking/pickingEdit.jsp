@@ -88,11 +88,11 @@
 							</tr>
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">拣取数量:</td>
-								<td><input type="number" name="COUNT" id="COUNT" value="${pd.COUNT}" maxlength="30" placeholder="这里输入拣取数量" title="拣取数量" style="width:98%;"/></td>
+								<td><input type="number" name="COUNT" id="COUNT" value="${pd.COUNT}" readonly maxlength="30" placeholder="这里输入拣取数量" title="拣取数量" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">出库单数:</td>
-								<td><input type="number" name="MATCOUNT" id="MATCOUNT" value="${pd.MATCOUNT}" maxlength="30" placeholder="这里输入出库单数" title="出库单数" style="width:98%;"/></td>
+								<td><input type="number" name="MATCOUNT" id="MATCOUNT" value="${pd.MATCOUNT}" readonly maxlength="30" placeholder="这里输入出库单数" title="出库单数" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">操作员:</td>
@@ -197,6 +197,7 @@
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();
 		}
+		var outputid = '${pd.oid}';  //获取已经选择的入库id
 		/**选择入库单据*/
 		var outname = "";
 		var outid = "";

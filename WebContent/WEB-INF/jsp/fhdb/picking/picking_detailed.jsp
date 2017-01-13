@@ -26,7 +26,7 @@
 		<!-- /section:basics/sidebar -->
 		<div class="main-content">
 			<div class="main-content-inner">
-				<div class="page-content" id="print">
+				<div class="page-content" id="prints">
 					<h3 style="font-weight:bold;text-align:center;">宏图软件物流中心拣货单</h3>
 					<div class="row">
 						<div class="col-xs-4">
@@ -157,9 +157,18 @@ function tosearch(){
 	$("#Form").submit();
 }
 function windowprint() {
-	var f = document.getElementById('print').innerHTML;
+	var headstr = "<html><head><title></title></head><body>";  
+	var footstr = "</body>";
+	var printDatad = document.getElementById("prints").innerHTML; 
+	var oldstr = document.body.innerHTML;  
+	document.body.innerHTML = headstr+printDatad+footstr; 
+	window.print();  
+	document.body.innerHTML = oldstr; 
+	return false;
+	
+	/* var f = document.getElementById('print').innerHTML;
 	window.print();
-	location.reload([true]);
+	location.reload([true]); */
 }
 </script>
 </html>

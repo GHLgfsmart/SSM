@@ -170,4 +170,8 @@
 		AND 
 			CO.TIME &gt;= DATE_SUB(NOW(),interval 15 day)
 	</select>
+	
+	<select id="outstorageByPType" parameterType="pd" resultType="pd">
+		SELECT OID FROM PICKING_OUTSTORAGE PO LEFT JOIN PICKING PI ON PO.PID=PI.ID WHERE PI.TYPE=#{TYPE};
+	</select>
 </mapper>

@@ -12,7 +12,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -38,6 +37,7 @@ public class OutstorageController extends BaseController{
 	
 	String menuUrl = "outstorage/outstorageList.do"; //菜单地址(权限用)
 	String pickingmenuUrl = "outstorage/pickingList.do"; //菜单地址(权限用)
+	String picking_exceedmenuUrl = "outstorage/exceedList.do"; //菜单地址(权限用)
 	@Resource(name="warehousingService")
 	private WarehousingManager warehousingService;
 	@Resource
@@ -451,7 +451,6 @@ public class OutstorageController extends BaseController{
 		List<PageData> list = warehousingService.findBypickingAll(page);
 		mv.setViewName("fhdb/picking/pickingManage");
 		mv.addObject("varList", list);
-		mv.addObject("YK", "1");
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
@@ -477,9 +476,8 @@ public class OutstorageController extends BaseController{
 		pd.put("TYPE", "2");  //一般越库数据
 		page.setPd(pd);
 		List<PageData> list = warehousingService.findBypickingAll(page);
-		mv.setViewName("fhdb/picking/pickingManage");
+		mv.setViewName("fhdb/picking/picking_exceedManage");
 		mv.addObject("varList", list);
-		mv.addObject("YK", "2");
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
@@ -498,73 +496,120 @@ public class OutstorageController extends BaseController{
 		pd = this.getPageData();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String dj = "JH"+sdf.format(new Date());
-		System.out.println(pd.get("YK"));
 		if(pd.get("YK").toString().equals("1")) {
-		mv.setViewName("fhdb/picking/pickingEdit");
+			mv.setViewName("fhdb/picking/pickingEdit");
+			mv.addObject("msg", "pickingAdd");
 		}else {
 			//洪青青修改
 			PageData pd1=Moneytoo();
 			mv.addObject("pd1", pd1);
 			//--------
 			mv.setViewName("fhdb/picking/picking_exceedEdit");
+			mv.addObject("msg", "pickingexceedAdd");
 		}
+		String str = "";
+		List<PageData> list = warehousingService.findoutstorageByPType(pd);
+		for(PageData p : list) {
+			if(str=="" && str.equals("")) {
+				str+=p.getString("OID");
+			}else {
+				str += ";"+p.getString("OID");
+			}
+		}
+		pd.put("oid", str);
 		mv.addObject("dj", dj);
-		mv.addObject("msg", "pickingAdd");
 		mv.addObject("pd", pd);
 		return mv;
 	}
 	
 	/**
 	 * @author Mr.Lin
-	 * 拣货新增操作
+	 * 拣货新增操作 整进整出
 	 * @throws Exception
 	 * @return
 	 */
 	@RequestMapping(value="/pickingAdd")
 	public ModelAndView pickingAdd()throws Exception{
-		logBefore(logger, Jurisdiction.getUsername()+"出库新增");
+		logBefore(logger, Jurisdiction.getUsername()+"拣货新增");
 		if(!Jurisdiction.buttonJurisdiction(pickingmenuUrl, "add")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		//洪青青修改
-		try{
-		PageData pd1 = new PageData();
-		pd1 = this.getPageData();
-		//-----
 		pd.put("ID", this.get32UUID());	//主键    拣货单id
 		String pid = pd.getString("ID");
 		int result = warehousingService.pickingSave(pd);
 		String OUTID = pd.getString("OUTID"); //获取选择入库单的ID
-		int result1=0;
 		if(null != OUTID && !"".equals(OUTID)){
 			OUTID = OUTID.replaceAll("；", ";");
 			OUTID = OUTID.replaceAll(" ", "");
 			String[] arrOUTID = OUTID.split(";");
-			//洪青青修改
-			String[] STORAGE = (""+pd1.get("STORAGE")).split(";");
 			for(int i=0; i<arrOUTID.length; i++) {
 				pd.put("ID", this.get32UUID());
 				pd.put("OID", arrOUTID[i]);
 				pd.put("PID", pid);
 				warehousingService.outstorage_pickingSave(pd);
-				pd1.put("ID", pd.getString("OID"));
-				pd1=moneyService.outmoney(pd1);//查询money
-				pd1.put("ID", pd.getString("OID"));
-				Object money= pd1.get("MONEY");
-				pd1.put("PRODUCT_ID", pd1.getString("PRODUCT_ID"));
-				double moneys=Double.valueOf(""+money)-Double.valueOf(STORAGE[i]);
-				pd1.put("MONEY", moneys);
-				moneyService.maeditU(pd1);//修改物质状态
-				moneyService.OuteditU(pd1);				//修改出货单的money
-				result1=moneyService.moneyeditU(pd1);//修改money
 			}
 		}
-		if(result>0 ||result1>0) {
+		if(result>0) {
 			mv.addObject("msg","success");
 		}else {
 			mv.addObject("msg","fail");
 		}
+		mv.setViewName("save_result");
+		return mv;
+	}
+	
+	/**
+	 * @author Mr.Lin
+	 * 拣货新增操作  越货
+	 * @throws Exception
+	 * @return
+	 */
+	@RequestMapping(value="/pickingexceedAdd")
+	public ModelAndView pickingexceedAdd()throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"拣货新增");
+		if(!Jurisdiction.buttonJurisdiction(picking_exceedmenuUrl, "add")){return null;} //校验权限
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		//洪青青修改
+		try{
+			PageData pd1 = new PageData();
+			pd1 = this.getPageData();
+			//-----
+			pd.put("ID", this.get32UUID());	//主键    拣货单id
+			String pid = pd.getString("ID");
+			int result = warehousingService.pickingSave(pd);
+			String OUTID = pd.getString("OUTID"); //获取选择入库单的ID
+			int result1=0;
+			if(null != OUTID && !"".equals(OUTID)){
+				OUTID = OUTID.replaceAll("；", ";");
+				OUTID = OUTID.replaceAll(" ", "");
+				String[] arrOUTID = OUTID.split(";");
+				//洪青青修改
+				String[] STORAGE = (""+pd1.get("STORAGE")).split(";");
+				for(int i=0; i<arrOUTID.length; i++) {
+					pd.put("ID", this.get32UUID());
+					pd.put("OID", arrOUTID[i]);
+					pd.put("PID", pid);
+					warehousingService.outstorage_pickingSave(pd);
+					pd1.put("ID", pd.getString("OID"));
+					pd1=moneyService.outmoney(pd1);//查询money
+					pd1.put("ID", pd.getString("OID"));
+					Object money= pd1.get("MONEY");
+					pd1.put("PRODUCT_ID", pd1.getString("PRODUCT_ID"));
+					double moneys=Double.valueOf(""+money)-Double.valueOf(STORAGE[i]);
+					pd1.put("MONEY", moneys);
+					moneyService.maeditU(pd1);//修改物质状态
+					moneyService.OuteditU(pd1);				//修改出货单的money
+					result1=moneyService.moneyeditU(pd1);//修改money
+				}
+			}
+			if(result>0 || result1>0) {
+				mv.addObject("msg","success");
+			}else {
+				mv.addObject("msg","fail");
+			}
 		}catch(Exception e){
 			e.fillInStackTrace();
 			mv.addObject("msg","fail");
@@ -596,6 +641,7 @@ public class OutstorageController extends BaseController{
 		}else {
 			pd.put("TYPE", "1");
 			pd.put("matState", "0");
+			pd.put("STATE", "1");
 		}
 		page.setPd(pd);
 		List<Output_storage> list = warehousingService.findByOutput_storageAll(page);
@@ -637,7 +683,7 @@ public class OutstorageController extends BaseController{
 	
 	/**
 	 * @author Mr.Lin
-	 * 拣货删除操作
+	 * 拣货删除操作 整进整出
 	 * @throws Exception 
 	 * */
 	@RequestMapping(value="/pickingDel")
@@ -646,14 +692,187 @@ public class OutstorageController extends BaseController{
 		if(!Jurisdiction.buttonJurisdiction(pickingmenuUrl, "del")){return;} //校验权限
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		int result = warehousingService.pickingDelete(pd);
+		int result = warehousingService.outstorage_pickingDelete(pd);
 		if(result>0) {
-			warehousingService.outstorage_pickingDelete(pd);
+			warehousingService.pickingDelete(pd);
 			out.write("success");
 		}else {
 			out.write("fail");
 		}
 		out.close();
+	}
+	
+	/**
+	 * @author Mr.Lin
+	 * 拣货删除操作 越库
+	 * @throws Exception 
+	 * */
+	@RequestMapping(value="/picking_exceedDel")
+	public void picking_exceedDel(PrintWriter out) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"拣货删除");
+		if(!Jurisdiction.buttonJurisdiction(picking_exceedmenuUrl, "del")){return;} //校验权限
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		int result = warehousingService.outstorage_pickingDelete(pd);
+		if(result>0) {
+			warehousingService.pickingDelete(pd);
+			out.write("success");
+		}else {
+			out.write("fail");
+		}
+		out.close();
+	}
+	
+	/**
+	 * @author Mr.Lin
+	 * 导出拣货信息到EXCEL 整进整出
+	 * @return
+	 */
+	@RequestMapping(value="/pickingExcel")
+	public ModelAndView pickingExcel(Page page){
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try{
+			if(Jurisdiction.buttonJurisdiction(pickingmenuUrl, "cha")){
+				String keywords = pd.getString("keywords");				//关键词检索条件
+				if(null != keywords && !"".equals(keywords)){
+					pd.put("keywords", keywords.trim());
+				}
+				String lastLoginStart = pd.getString("lastLoginStart");	//开始时间
+				String lastLoginEnd = pd.getString("lastLoginEnd");		//结束时间
+				if(lastLoginStart != null && !"".equals(lastLoginStart)){
+					pd.put("lastLoginStart", lastLoginStart+" 00:00:00");
+				}
+				if(lastLoginEnd != null && !"".equals(lastLoginEnd)){
+					pd.put("lastLoginEnd", lastLoginEnd+" 00:00:00");
+				} 
+				page.setPd(pd);
+				Map<String,Object> dataMap = new HashMap<String,Object>();
+				List<String> titles = new ArrayList<String>();
+				titles.add("序号");
+				titles.add("单据编号"); 		//1
+				titles.add("拣取数量");  	//2
+				titles.add("出库单数");		//3
+				titles.add("拣取时间");		//4
+				titles.add("装车状态");		//5
+				titles.add("操作员");		//6
+				titles.add("越库");			//7
+				titles.add("备注");			//8
+				dataMap.put("titles", titles);
+				List<PageData> userList = warehousingService.findBypickingAll(page);
+				List<PageData> varList = new ArrayList<PageData>();
+				String state = "";
+				String type = "";
+				for(int i=0;i<userList.size();i++){
+					PageData vpd = new PageData();
+					vpd.put("var1", i+1+"");
+					vpd.put("var2", userList.get(i).getString("BIANHAO"));		//1
+					vpd.put("var3", userList.get(i).get("COUNT").toString());		//2
+					vpd.put("var4", userList.get(i).get("MATCOUNT").toString());	//3
+					vpd.put("var5", userList.get(i).getString("TIME"));	//4
+					state = userList.get(i).get("STATE")+"";
+					if(state.equals("1")) {
+						state = "未装车";
+					}else {
+						state = "已装车";
+					}
+					vpd.put("var6", state);		//5
+					vpd.put("var7", userList.get(i).getString("INSPECTOR"));//6
+					type = userList.get(i).get("TYPE")+"";
+					if(type.equals("1")) {
+						type = "整进整出";
+					}else {
+						type = "一般越库";
+					}
+					vpd.put("var8", type);	//7
+					vpd.put("var9", userList.get(i).getString("NOTE"));		//8
+					varList.add(vpd);
+				}
+				dataMap.put("varList", varList);
+				ObjectExcelView erv = new ObjectExcelView();					//执行excel操作
+				mv = new ModelAndView(erv,dataMap);
+			}
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
+	
+	/**
+	 * @author Mr.Lin
+	 * 导出拣货信息到EXCEL 越库
+	 * @return
+	 */
+	@RequestMapping(value="/picking_exceedExcel")
+	public ModelAndView picking_exceedExcel(Page page){
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		try{
+			if(Jurisdiction.buttonJurisdiction(picking_exceedmenuUrl, "cha")){
+				String keywords = pd.getString("keywords");				//关键词检索条件
+				if(null != keywords && !"".equals(keywords)){
+					pd.put("keywords", keywords.trim());
+				}
+				String lastLoginStart = pd.getString("lastLoginStart");	//开始时间
+				String lastLoginEnd = pd.getString("lastLoginEnd");		//结束时间
+				if(lastLoginStart != null && !"".equals(lastLoginStart)){
+					pd.put("lastLoginStart", lastLoginStart+" 00:00:00");
+				}
+				if(lastLoginEnd != null && !"".equals(lastLoginEnd)){
+					pd.put("lastLoginEnd", lastLoginEnd+" 00:00:00");
+				} 
+				page.setPd(pd);
+				Map<String,Object> dataMap = new HashMap<String,Object>();
+				List<String> titles = new ArrayList<String>();
+				titles.add("序号");
+				titles.add("单据编号"); 		//1
+				titles.add("拣取数量");  	//2
+				titles.add("出库单数");		//3
+				titles.add("拣取时间");		//4
+				titles.add("装车状态");		//5
+				titles.add("操作员");		//6
+				titles.add("越库");			//7
+				titles.add("备注");			//8
+				dataMap.put("titles", titles);
+				List<PageData> userList = warehousingService.findBypickingAll(page);
+				List<PageData> varList = new ArrayList<PageData>();
+				String state = "";
+				String type = "";
+				for(int i=0;i<userList.size();i++){
+					PageData vpd = new PageData();
+					vpd.put("var1", i+1+"");
+					vpd.put("var2", userList.get(i).getString("BIANHAO"));		//1
+					vpd.put("var3", userList.get(i).get("COUNT").toString());		//2
+					vpd.put("var4", userList.get(i).get("MATCOUNT").toString());	//3
+					vpd.put("var5", userList.get(i).getString("TIME"));	//4
+					state = userList.get(i).get("STATE")+"";
+					if(state.equals("1")) {
+						state = "未装车";
+					}else {
+						state = "已装车";
+					}
+					vpd.put("var6", state);		//5
+					vpd.put("var7", userList.get(i).getString("INSPECTOR"));//6
+					type = userList.get(i).get("TYPE")+"";
+					if(type.equals("1")) {
+						type = "整进整出";
+					}else {
+						type = "一般越库";
+					}
+					vpd.put("var8", type);	//7
+					vpd.put("var9", userList.get(i).getString("NOTE"));		//8
+					varList.add(vpd);
+				}
+				dataMap.put("varList", varList);
+				ObjectExcelView erv = new ObjectExcelView();					//执行excel操作
+				mv = new ModelAndView(erv,dataMap);
+			}
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		return mv;
 	}
 	
 }

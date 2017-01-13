@@ -34,7 +34,7 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="outstorage/pickingList.do" method="post" name="Form" id="Form">
+						<form action="outstorage/exceedList.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>
@@ -242,7 +242,7 @@ function toExcel(){
 	var lastLoginStart = $("#lastLoginStart").val();
 	var lastLoginEnd = $("#lastLoginEnd").val();
 	var STATE = $("#STATE").val();
-	window.location.href='<%=basePath%>outstorage/pickingExcel.do?keywords='+keywords+'&lastLoginStart='+lastLoginStart+'&lastLoginEnd='+lastLoginEnd+'&STATE='+STATE+'&TYPE=1';
+	window.location.href='<%=basePath%>outstorage/picking_exceedExcel.do?keywords='+keywords+'&lastLoginStart='+lastLoginStart+'&lastLoginEnd='+lastLoginEnd+'&STATE='+STATE+'&TYPE=2';
 }
 
 //新增
@@ -251,7 +251,7 @@ function add(){
 	 var diag = new top.Dialog();
 	 diag.Drag=true;
 	 diag.Title ="新增";
-	 diag.URL = '<%=basePath%>outstorage/pickingAddPage.do?YK=1&TYPE=1';
+	 diag.URL = '<%=basePath%>outstorage/pickingAddPage.do?YK=2&TYPE=2';
 	 diag.Width = 850;
 	 diag.Height = 550;
 	 diag.CancelEvent = function(){ //关闭事件
@@ -286,7 +286,7 @@ function del(Id,state){
 		bootbox.confirm("确定要删除吗?", function(result) {
 			if(result) {
 				top.jzts();
-				var url = '<%=basePath%>outstorage/pickingDel.do?ID='+Id;
+				var url = '<%=basePath%>outstorage/picking_exceedDel.do?ID='+Id;
 				$.get(url,function(data){
 					$(top.hangge());
 					if(data == 'success'){

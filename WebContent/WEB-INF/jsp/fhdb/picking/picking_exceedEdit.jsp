@@ -58,10 +58,10 @@
 			<div class="page-content">
 				<div class="row">
 					<div class="col-xs-12">
-					<c:if test="${msg eq 'pickingAdd'}">
+					<c:if test="${msg eq 'pickingexceedAdd'}">
 						<legend>新增拣货单</legend>
 					</c:if>
-					<c:if test="${msg eq 'pickingEdit'}">
+					<c:if test="${msg eq 'pickingexceedEdit'}">
 						<legend>修改拣货单</legend>
 					</c:if>
 					<form action="outstorage/${msg }.do" name="Form" id="Form" method="post">
@@ -213,6 +213,7 @@
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();
 		}
+		var outputid = '${pd.oid}';  //获取已经选择的入库id
 		/**选择入库单据*/
 		var outname = "";
 		var outid = "";

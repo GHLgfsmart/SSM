@@ -308,4 +308,12 @@ public interface WarehousingManager {
 	 * @throws Exception
 	 */
 	public List<Picking> barChar4()throws Exception;
+	
+	/**
+	 * @author Mr.Lin
+	 * 根据拣货单类型查询所有的拣货数据
+	 * @param pd
+	 * @throws Exception
+	 * */
+	public List<PageData> findoutstorageByPType(PageData pd) throws Exception;
 }

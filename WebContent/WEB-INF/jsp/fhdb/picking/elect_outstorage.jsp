@@ -81,13 +81,16 @@
 											<td class='center'>${var.output_put.OPTNAME}</td>
 											<td class='center'><label><input type='hidden' name='count' value="${var.materials.COUNT}" class="ace" /></label>${var.materials.COUNT}</td>
 											<c:if test="${var.STATE eq 0}">
-												<td class='center'>检验中</td>
+												<td class='center'><span class="label label-default">待检验</span></td>
 											</c:if>
 											<c:if test="${var.STATE eq 1}">
-												<td class='center'>已检验</td>
+												<td class='center'><span class="label label-success">已检验</span></td>
 											</c:if>
 											<c:if test="${var.STATE eq 2}">
-												<td class='center'>不合格</td>
+												<td class='center'><span class="label label-danger">不合格</span></td>
+											</c:if>
+											<c:if test="${var.STATE eq 3}">
+												<td class='center'><span class="label label-info">审核成功</span></td>
 											</c:if>
 										</tr>
 									
@@ -142,14 +145,14 @@ function tosearch(){
 	top.jzts();
 	$("#Form").submit();
 }
-var supp=window.parent.window.outname;
+var supp=window.parent.window.outputid;
 function onloadname(){
 	var strs= new Array(); //定义一数组 
 	strs=supp.split(";"); //字符分割 
 	var fir = document.getElementsByName("ids");
 	for(var i=0;i < fir.length;i++){
 		for(var j=0;j<strs.length ;j++ ){			
-			if(document.getElementsByName('name')[i].value == strs[j]){		
+			if(document.getElementsByName('ids')[i].value == strs[j]){		
 				document.getElementById("t"+(i+1)).style.color="#f00";
 				fir[i].disabled = "disabled";
 			}
