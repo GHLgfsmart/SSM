@@ -16,8 +16,6 @@
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
 <!-- jsp文件头和头部 -->
 <%@ include file="../../system/index/top.jsp"%>
-<!-- 日期框 -->
-<link rel="stylesheet" href="static/ace/css/datepicker.css" />
 </head>
 <body class="no-skin">
 
@@ -43,8 +41,6 @@
 										</span>
 									</div>
 								</td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginStart" id="lastLoginStart"  value="${pd.lastLoginStart}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="开始日期"/></td>
-								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginEnd" name="lastLoginEnd"  value="${pd.lastLoginEnd}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="结束日期"/></td>
 								<td style="vertical-align:top;padding-left:2px;">
 								 	<select class="chosen-select form-control" name="STATUS" id="id" data-placeholder="状态" style="vertical-align:top;width: 68px;">
 									<option value="">全部</option>
@@ -52,9 +48,13 @@
 									<option value="2" <c:if test="${pd.STATUS == '2' }">selected</c:if>>未读</option>
 								  	</select>
 								</td>
+								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginStart" id="lastLoginStart"  value="${pd.lastLoginStart}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期" title="最近登录开始"/></td>
+								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginEnd" id="lastLoginEnd"  value="${pd.lastLoginEnd}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="最近登录结束"/></td>
 								<c:if test="${QX.cha == 1 }">
 								<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
 								</c:if>
+								<td width="10px"></td>
+								<td><button type="button" class="btn btn-default btn-sm" onclick="cl()">重置</button></td>
 								<td style="padding-left:20px;"><a href="fhsms/list.do?TYPE=1"><span class="label label-<c:if test="${pd.TYPE != '2' }">success</c:if> arrowed-right arrowed-in">收信箱</span></a></td>
 								<td><a href="fhsms/list.do?TYPE=2"><span class="label label-<c:if test="${pd.TYPE == '2' }">info</c:if> arrowed-right arrowed-in">发信箱</span></a></td>
 							</tr>
@@ -99,10 +99,11 @@
 											<td class="center">
 												<div class="hidden-sm hidden-xs btn-group">
 													<a class="btn btn-xs btn-success" title="查看" onclick="viewx('STATUS${vs.index+1}','${var.STATUS}','${pd.TYPE == '2'?'2':'1' }','${var.FHSMS_ID}','${var.SANME_ID}');">
-														<i class="ace-icon fa fa-search nav-search-icon"></i>
+														<i class="ace-icon fa fa-file-text nav-search-icon" title="查看站内信"></i>
 													</a>
 													<a class="btn btn-xs btn-info" title='发送站内信' onclick="sendFhsms('${var.TO_USERNAME}');">
 														<i class="ace-icon fa fa-envelope-o bigger-120" title="发送站内信"></i>
+														
 													</a>
 													<a class="btn btn-xs btn-danger" onclick="del('STATUS${vs.index+1}','${var.STATUS}','${pd.TYPE == '2'?'2':'1' }','${var.FHSMS_ID}','${var.SANME_ID}');">
 														<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
@@ -118,7 +119,7 @@
 															<li>
 																<a style="cursor:pointer;" onclick="viewx('STATUS${vs.index+1}','${var.STATUS}','${pd.TYPE == '2'?'2':'1' }','${var.FHSMS_ID}','${var.SANME_ID}');" class="tooltip-success" data-rel="tooltip" title="查看">
 																	<span class="green">
-																		<i class="ace-icon fa fa-search nav-search-icon"></i>
+																		<i class="ace-icon fa fa-file-text bigger-120"></i>
 																	</span>
 																</a>
 															</li>
@@ -202,6 +203,11 @@
 	<script type="text/javascript">
 		$(top.hangge());//关闭加载状态
 		//检索
+		function cl(){
+			$("#nav-search-input").val("");
+			$("#lastLoginStart").val("");
+			$("#lastLoginEnd").val("");
+		}
 		function tosearch(){
 			top.jzts();
 			$("#Form").submit();
@@ -258,7 +264,7 @@
 			 top.jzts();
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
-			 diag.Title ="站内信";
+			 diag.Title ="发送站内信";
 			 diag.URL = '<%=basePath%>fhsms/goAdd.do?username='+username;
 			 diag.Width = 850;
 			 diag.Height = 500;
@@ -295,7 +301,7 @@
 			 top.jzts();
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
-			 diag.Title ="站内信";
+			 diag.Title ="查看站内信";
 			 diag.URL = '<%=basePath%>fhsms/goView.do?FHSMS_ID='+Id+'&TYPE='+type+'&SANME_ID='+SANME_ID+'&STATUS='+STATUS;
 			 diag.Width = 600;
 			 diag.Height = 460;

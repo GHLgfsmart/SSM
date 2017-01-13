@@ -8,9 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -18,10 +16,8 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.ht.controller.base.BaseController;
 import com.ht.entity.Page;
-import com.ht.entity.Role;
 import com.ht.service.system.FhsmsManager;
 import com.ht.service.system.RoleManager;
 import com.ht.service.system.UserManager;
@@ -230,11 +226,11 @@ public class FhsmsController extends BaseController {
 		if(lastLoginEnd != null && !"".equals(lastLoginEnd)){
 			pd.put("lastLoginEnd", lastLoginEnd+" 00:00:00");
 		} 
+		pd.put("loginName", Jurisdiction.getUsername());
 		page.setPd(pd);
-		pd.put("userService", "userService");
-		List<PageData>	userList = userService.listUsers(page);	//列出用户列表
+		List<PageData>	userList = userService.checkUser(page);	//列出用户列表
 		pd.put("ROLE_ID", "1");
-		List<Role> roleList = roleService.listAllRolesByPId(pd);//列出所有系统用户角色
+		List<PageData> roleList =userService.allRolelist("0");
 		mv.setViewName("system/fhsms/user_list");
 		mv.addObject("userList", userList);
 		mv.addObject("roleList", roleList);

@@ -184,6 +184,11 @@ public class UserService implements UserManager{
 	public int WsCount(PageData pd)throws Exception{
 		return (int)dao.findForObject("UserMapper.wsCount", pd);
 	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PageData> checkUser(Page page) throws Exception {
+		return (List<PageData>)dao.findForList("UserMapper.checkUser",page);
+	}
 	/**
 	 * 判断手机号是否唯一
 	 */

@@ -127,6 +127,15 @@ public interface UserManager {
 	 * @throws Exception
 	 */
 	public int WsCount(PageData pd)throws Exception;
+	
+	/**
+	 * @WMF
+	 * 站内信选择收件人
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PageData> checkUser(Page page)throws Exception;
 	/**判断手机号是否唯一
 	 * @param pd
 	 * @return
