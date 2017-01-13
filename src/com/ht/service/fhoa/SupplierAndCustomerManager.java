@@ -35,6 +35,12 @@ public interface SupplierAndCustomerManager {
 	 */
 	public PageData findById(PageData pd)throws Exception;
 	
+	/**通过name获取数据
+	 * @param pd
+	 * @throws Exception
+	 */
+	public PageData findCustomerByName(PageData pd)throws Exception;
+	
 	/**
 	 * 条件查询
 	 * @param pd

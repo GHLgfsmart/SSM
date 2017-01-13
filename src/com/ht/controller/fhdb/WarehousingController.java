@@ -9,14 +9,23 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ht.controller.base.BaseController;
 import com.ht.entity.Materials_information;
 import com.ht.entity.Output_storage;
 import com.ht.entity.Page;
+import com.ht.entity.Role;
+import com.ht.entity.User;
 import com.ht.service.fhdb.Output_typeManager;
 import com.ht.service.fhdb.WarehousingManager;
 import com.ht.service.fhoa.SupplierAndCustomerManager;
@@ -24,10 +33,17 @@ import com.ht.service.fhoa.WSManager;
 import com.ht.service.fhoa.impl.CategoriesService;
 import com.ht.service.system.MoneyManager;
 import com.ht.service.system.PriceManager;
+import com.ht.util.Const;
 import com.ht.util.DateUtil;
+import com.ht.util.FileDownload;
+import com.ht.util.FileUpload;
+import com.ht.util.GetPinyin;
 import com.ht.util.Jurisdiction;
+import com.ht.util.ObjectExcelRead;
 import com.ht.util.ObjectExcelView;
 import com.ht.util.PageData;
+import com.ht.util.PathUtil;
+import com.ht.util.Tools;
 /**
  * 入库控制
  * */
@@ -409,6 +425,84 @@ public class WarehousingController extends BaseController{
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
+		return mv;
+	}
+	
+	/**打开上传EXCEL页面
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/goUploadExcel")
+	public ModelAndView goUploadExcel()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		mv.setViewName("fhdb/materials/uploadexcel");
+		return mv;
+	}
+	
+	/**下载模版
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/downExcel")
+	public void downExcel(HttpServletResponse response)throws Exception{
+		FileDownload.fileDownload(response, PathUtil.getClasspath() + Const.FILEPATHFILE + "Materials.xls", "Materials.xls");
+	}
+	
+	/**从EXCEL导入到数据库
+	 * @param file
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("static-access")
+	@RequestMapping(value="/readExcel")
+	public ModelAndView readExcel(
+			@RequestParam(value="excel",required=false) MultipartFile file, HttpServletRequest request) throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;}
+		if (null != file && !file.isEmpty()) {
+			String filePath = PathUtil.getClasspath() + Const.FILEPATHFILE;								//文件上传路径
+			String fileName =  FileUpload.fileUp(file, filePath, "materialsexcel");							//执行上传
+			List<PageData> listPd = (List)ObjectExcelRead.readExcel(filePath, fileName, 2, 0, 0);		//执行读EXCEL操作,读出的数据导入List 2:从第3行开始；0:从第A列开始；0:第0个sheet
+			HttpSession session = request.getSession();
+			User u = (User)session.getAttribute(Const.SESSION_USER);
+			int result = 0;
+			for(int i=0;i<listPd.size();i++){		
+				if(listPd.get(i).getString("var3") != null && !listPd.get(i).getString("var3").equals("")) {
+					pd.put("ID", this.get32UUID());		//ID
+					pd.put("BIANHAO", "WZ"+new DateUtil().getSdfTimes());	//单据编号
+					pd.put("NAME", listPd.get(i).getString("var0"));	//物资名称
+					pd.put("BAR_CODE", listPd.get(i).getString("var1"));	//条形码
+					pd.put("PINYIN", listPd.get(i).getString("var2"));	//拼音简码
+					
+					pd.put("SUPNAME", listPd.get(i).getString("var3"));
+					PageData pp = service.findCustomerByName(pd);
+					pd.put("CUS_ID", pp.getString("ID"));	//供应商Id
+					
+					pd.put("COUNT", listPd.get(i).getString("var4")); //商品数量
+					pd.put("UNIT", listPd.get(i).getString("var5")); //单位
+					pd.put("ENTRY_TIME", listPd.get(i).getString("var6")); //录入时间
+					pd.put("UPDATE_TIME", listPd.get(i).getString("var7")); //最后修改时间
+					pd.put("NOTE", listPd.get(i).getString("var8")); //备注
+					pd.put("OPERATOR", u.getUSERNAME()); //状态 默认待入库
+					pd.put("STATE", "0"); //状态 默认待入库
+					if(pp.getString("ID")!=null && !pp.getString("ID").equals("")) {
+						result += warehousingService.materialSave(pd);
+					}else {
+						continue;
+					}
+				}
+			}
+			/*存入数据库操作======================================*/
+			System.out.println(result+"/////////////////");
+			if(result>0) {
+				mv.addObject("msg","success");
+			}else {
+				mv.addObject("msg","fail");
+			}
+			
+		}
+		mv.setViewName("save_result");
 		return mv;
 	}
 	

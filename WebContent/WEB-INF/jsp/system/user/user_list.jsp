@@ -478,8 +478,8 @@ function fromExcel(){
 	 diag.Drag=true;
 	 diag.Title ="EXCEL 导入到数据库";
 	 diag.URL = '<%=basePath%>user/goUploadExcel.do';
-	 diag.Width = 300;
-	 diag.Height = 150;
+	 diag.Width = 500;
+	 diag.Height = 350;
 	 diag.CancelEvent = function(){ //关闭事件
 		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
 			 if('${page.currentPage}' == '0'){

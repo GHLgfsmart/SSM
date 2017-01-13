@@ -114,4 +114,8 @@
 	<select id="selectAll" parameterType="pd" resultType="pd">
 		select <include refid="field"></include> from supplier_customer S inner join SYS_USER U inner join customer_categories C where S.CATEGORIES_ID=C.ID AND S.USER_ID=U.USER_ID
 	</select>
+	
+	<select id="findCustomerByName" parameterType="pd" resultType="pd">
+		select ID from supplier_customer where SUPNAME=#{SUPNAME} 
+	</select>
 </mapper>
