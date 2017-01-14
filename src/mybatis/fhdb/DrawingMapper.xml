@@ -136,18 +136,18 @@
 		</select>
 		
 		<!--根据MATERIALS_ID查询出此仓库的物资-->
-		<select id="idlistPage" parameterType="page" resultType="pd"> 
-				SELECT mi.ID,mi.BIANHAO,mi. NAME,mi.COUNT,mi.UNIT,mi.NOTE FROM 
+		<select id="wzidlistPage" parameterType="page" resultType="pd"> 
+				SELECT mi.ID,mi.BIANHAO,mi. NAME,mi.COUNT,mi.UNIT,mi.NOTE,dr.MATERIALS_ID FROM 
 				materials_information mi INNER JOIN drawing dr 
 				ON
 				dr.MATERIALS_ID = mi.ID
-				<if test="pd.MATERIALS_ID==null">
+				<if test="pd.ID==null">
 					AND 
-					dr.MATERIALS_ID='null'
+					dr.ID='null'
 				</if>
-				<if test=" pd.MATERIALS_ID!= null">
+				<if test=" pd.ID!= null">
 					AND
-					dr.MATERIALS_ID=#{pd.MATERIALS_ID}
+					dr.ID=#{pd.ID}
 				</if>
 		</select>
 		
@@ -155,7 +155,17 @@
 		<update id="reduce"  parameterType="pd">
 			update materials_information SET COUNT=(COUNT-#{COUNT}) WHERE ID=#{MATERIALS_ID}
 		</update>
-	
+		
+		<!-- 调拨 -->
+		<update id="allot" parameterType="pd">
+			update output_storage set WAREHOUSE_ID=#{WAREHOUSE_PUT_ID} where ID=#{osID}
+		</update>
+		
+		<select id="allweID" parameterType="pd" resultType="pd">
+			SELECT w.ID FROM warehouse w
+				WHERE 
+				w.ID=#{ckID}
+		</select>
 		
 		<!-- 修改 -->
 		<update id="updateDraeing" parameterType="pd">
