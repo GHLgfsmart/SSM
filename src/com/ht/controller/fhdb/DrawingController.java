@@ -475,6 +475,7 @@ public class DrawingController extends BaseController {
 			if(null != keywords && !"".equals(keywords)){
 				pd.put("keywords", keywords.trim());
 			}
+			
 			Map<String, Object> dataMap = new HashMap<String, Object>();
 			List<String> titles = new ArrayList<String>();
 			titles.add("商品编号");
