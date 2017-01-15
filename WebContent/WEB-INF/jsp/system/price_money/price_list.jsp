@@ -19,6 +19,9 @@
 <%@ include file="../index/top.jsp"%>
 <!-- 日期框 -->
 <link rel="stylesheet" href="static/ace/css/datepicker.css" />
+<!-- 弹出框 -->
+<script type="text/javascript" src="static/ace/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="static/ace/css/sweetalert.css">
 </head>
 <body class="no-skin" onload="prices()">
 	<div class="main-container" id="main-container">
@@ -105,7 +108,7 @@
 											<td class="center">
 												<div class="hidden-sm hidden-xs btn-group">
 												<c:if test="${QX.edit == 1 }">
-													<a class="btn btn-xs btn-success" title="编辑" onclick="editPrice('${price.PRICE_ID}');">
+													<a class="btn btn-xs btn-success" title="编辑" onclick="editPrice('${price.PRICE_ID}','${price.STATE}');">
 														<i class="ace-icon fa fa-pencil-square-o bigger-120" title="编辑"></i>
 													</a>
 												</c:if>
@@ -123,7 +126,7 @@
 														<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
 															<c:if test="${QX.edit == 1 }">
 															<li>
-																<a style="cursor:pointer;" onclick="editPrice('${price.PRICE_ID}');" class="tooltip-success" data-rel="tooltip" title="修改">
+																<a style="cursor:pointer;" onclick="editPrice('${price.PRICE_ID}','${price.STATE}');" class="tooltip-success" data-rel="tooltip" title="修改">
 																	<span class="green">
 																		<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
 																	</span>
@@ -236,7 +239,22 @@ function delPrice(PRICE_ID){
 			top.jzts();
 			var url = "<%=basePath%>price/deleteU.do?PRICE_ID="+PRICE_ID;
 			$.get(url,function(data){
-				nextPage(${page.currentPage});
+				$(top.hangge());
+				if(data == 'success') {
+					swal({   
+						title: "系统提示",
+						text: "删除成功!", 
+						type: "success",
+						confirmButtonText: "OK" },function(){
+							nextPage('${page.currentPage}');
+						});
+				}else {
+					swal({   
+						title: "系统提示",
+						text: "删除失败!", 
+						type: "error",
+						confirmButtonText: "OK" });
+				}
 			});
 		};           
 	});
@@ -266,7 +284,15 @@ function add(){
 }
 
 //修改
-function editPrice(PRICE_ID){
+function editPrice(PRICE_ID,STATE){
+	if(STATE=='1'){
+		swal({   
+			title: "系统提示",
+			text: "不是最新数据，不能修改", 
+			type: "error",
+			confirmButtonText: "OK" });
+		return false;
+	}
 	 top.jzts();
 	 var diag = new top.Dialog();
 	 diag.Drag=true;

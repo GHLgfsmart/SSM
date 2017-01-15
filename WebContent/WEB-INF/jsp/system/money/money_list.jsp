@@ -121,11 +121,7 @@
 			var date=new Date;
 			var year=date.getFullYear();
 			if(year==eval(arr[0])){
-				arr[0]="今年 ";
-			}else if(year==(eval(arr[0])-1)){
-				arr[0]="去年 ";
-			}else if(year==(eval(arr[0])-2)){
-				arr[0]="前年 ";
+				arr[0]="今";
 			}
 			var moneys ='${pd1.MONEYS}';
 			var name=document.getElementsByName('ARTIFICIALS');
@@ -138,26 +134,26 @@
 			if(moneys !=''){
 				if(arr[1]==null){
 					if('${pd.boos}'=='true'){
-						document.getElementById("money").innerHTML =""+arr[0]+"上半年收益为"+money;
+						document.getElementById("money").innerHTML =""+arr[0]+"年 上半年收益为"+money;
 					}else if('${pd.boos}'=='false'){
-						document.getElementById("money").innerHTML =""+arr[0]+"下半年收益为"+money;
+						document.getElementById("money").innerHTML =""+arr[0]+"年 下半年收益为"+money;
 					}else{
-						document.getElementById("money").innerHTML =""+arr[0]+"全年收益为"+money;
+						document.getElementById("money").innerHTML =""+arr[0]+"年 全年收益为"+money;
 					}
 				}else{
-					document.getElementById("money").innerHTML =""+arr[0]+eval(arr[1])+"月份收益为"+money;
+					document.getElementById("money").innerHTML =""+arr[0]+"年 "+eval(arr[1])+"月份收益为"+money;
 				}
 			}else{
 				if(arr[1]==null){
 					if('${pd.boos}'=='true'){
-						document.getElementById("money").innerHTML =""+arr[0]+"上半年收益为0";
+						document.getElementById("money").innerHTML =""+arr[0]+"年 上半年收益为0";
 					}else if('${pd.boos}'=='false'){
-						document.getElementById("money").innerHTML =""+arr[0]+"下半年收益为0";
+						document.getElementById("money").innerHTML =""+arr[0]+"年 下半年收益为0";
 					}else{
-						document.getElementById("money").innerHTML =""+arr[0]+"全年收益为0";
+						document.getElementById("money").innerHTML =""+arr[0]+"年 全年收益为0";
 					}
 				}else{
-					document.getElementById("money").innerHTML =""+arr[0]+eval(arr[1])+"月份收益为0";
+					document.getElementById("money").innerHTML =""+arr[0]+"年 "+eval(arr[1])+"月份收益为0";
 				}
 			}
 		}

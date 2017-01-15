@@ -24,7 +24,11 @@ public class GoodsService implements GoodsManager{
 
 	@Resource(name = "daoSupport")
 	private DaoSupport dao;
-
+	@Override
+	public void checkGoods() throws Exception {
+		System.out.println("执行定时任务====Goods");
+		dao.delete("GoodsMapper.deleteLossGoods", "");
+	}
 	/**
 	 * 保存数据
 	 */
@@ -97,7 +101,7 @@ public class GoodsService implements GoodsManager{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Car> findByCarAll(Page page) throws Exception {
-		return (List<Car>)dao.findForList("CarMapper.datalistPage", page);
+		return (List<Car>)dao.findForList("CarMapper.findCar", page);
 	}
 
 	/**
@@ -122,7 +126,7 @@ public class GoodsService implements GoodsManager{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Driver> findByDriverAll(Page page) throws Exception {
-		return (List<Driver>)dao.findForList("DriverMapper.datalistPage", page);
+		return (List<Driver>)dao.findForList("DriverMapper.findSJ", page);
 	}
 
 	@Override
@@ -134,5 +138,5 @@ public class GoodsService implements GoodsManager{
 	public void edit3(String[] PIDS) throws Exception {
 		dao.update("GoodsMapper.edit3", PIDS);
 	}
-
+	
 }

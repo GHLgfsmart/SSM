@@ -43,7 +43,7 @@
 								<td><input type="text" name="NAME" id="NAME" value="${pd.NAME}" maxlength="50" placeholder="这里输入名称" title="名称" style="width:98%;"/></td>
 							</tr>
 							<tr>
-								<td style="width:70px;text-align: right;padding-top: 13px;">英文: </td>
+								<td style="width:70px;text-align: right;padding-top: 13px;">英文:</td>
 								<td><input type="text" name="NAME_EN" id="NAME_EN" value="${pd.NAME_EN}" maxlength="50" placeholder="这里输入英文" title="英文" style="width:98%;"/></td>
 							</tr>
 							<tr>
