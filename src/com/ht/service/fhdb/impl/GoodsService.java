@@ -97,7 +97,7 @@ public class GoodsService implements GoodsManager{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Car> findByCarAll(Page page) throws Exception {
-		return (List<Car>)dao.findForList("CarMapper.findCar", page);
+		return (List<Car>)dao.findForList("CarMapper.datalistPage", page);
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class GoodsService implements GoodsManager{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Driver> findByDriverAll(Page page) throws Exception {
-		return (List<Driver>)dao.findForList("DriverMapper.findSJ", page);
+		return (List<Driver>)dao.findForList("DriverMapper.datalistPage", page);
 	}
 
 	@Override
@@ -134,5 +134,5 @@ public class GoodsService implements GoodsManager{
 	public void edit3(String[] PIDS) throws Exception {
 		dao.update("GoodsMapper.edit3", PIDS);
 	}
-	
+
 }

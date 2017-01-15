@@ -142,7 +142,7 @@
 														</a>
 													</c:if>
 													<c:if test="${QX.del == 1 }">
-														<a class="btn btn-xs btn-danger" onclick="delGoods('${goods.ID }','${goods.P_ID}');">
+														<a class="btn btn-xs btn-danger" onclick="delGoods('${goods.ID }','${goods.P_ID}','${goods.STATE}');">
 															<i class="ace-icon fa fa-trash-o bigger-120" title="删除"></i>
 														</a>
 													</c:if>
@@ -180,7 +180,7 @@
 														  </c:if>
 														  <c:if test="${QX.del == 1 }">
 															<li>
-																<a style="cursor:pointer;" onclick="delGoods('${goods.ID }','${goods.STATE}');" class="tooltip-error" data-rel="tooltip" title="删除">
+																<a style="cursor:pointer;" onclick="delGoods('${goods.ID }','${goods.P_ID}','${goods.STATE}');" class="tooltip-error" data-rel="tooltip" title="删除">
 																	<span class="red">
 																		<i class="ace-icon fa fa-trash-o bigger-120"></i>
 																	</span>
@@ -285,7 +285,7 @@ $(top.hangge());
 
 //重置
 function cl(){
-	$("select#STATE").val("");
+	$("select#state").val("");
 	$("#nav-search-input").val("");
 	$("#lastStart").val("");
 	$("#lastEnd").val("");
