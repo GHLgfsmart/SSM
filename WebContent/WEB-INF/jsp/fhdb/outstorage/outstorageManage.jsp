@@ -57,6 +57,9 @@
 								</td>
 								<c:if test="${QX.cha == 1 }">
 									<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+									<td width="10px"></td>
+									<td><button type="button" class="btn btn-default btn-sm" onclick="cl()">重置</button></td>
+									<td width="10px"></td>
 									<c:if test="${QX.toExcel == 1 }"><td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-cloud-download bigger-110 nav-search-icon blue"></i>导出</a></td></c:if>
 								</c:if>
 							</tr>
@@ -310,6 +313,13 @@ function particular(ID){
 		diag.close();
 	 };
 	 diag.show();
+}
+
+//重置
+function cl(){
+	$("#keywords").val("");
+	$("#lastLoginStart").val("");
+	$("#lastLoginEnd").val("");
 }
 
 //导出excel

@@ -46,6 +46,9 @@
 								<td style="padding-left:2px;"><input class="span10 date-picker" name="lastLoginEnd" name="lastLoginEnd"  value="${pd.lastLoginEnd}" type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期" title="最近登录结束"/></td>
 								<c:if test="${QX.cha == 1 }">
 									<td style="vertical-align:top;padding-left:2px"><a class="btn btn-light btn-xs" onclick="tosearch();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+									<td width="10px"></td>
+									<td><button type="button" class="btn btn-default btn-sm" onclick="cl()">重置</button></td>
+									<td width="10px"></td>
 								</c:if>
 							</tr>
 						</table>
@@ -195,6 +198,13 @@ $(top.hangge());//关闭加载状态
 function tosearch(){
 	top.jzts();
 	$("#Form").submit();
+}
+
+//重置
+function cl(){
+	$("#keywords").val("");
+	$("#lastLoginStart").val("");
+	$("#lastLoginEnd").val("");
 }
 
 //修改
