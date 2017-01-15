@@ -90,7 +90,7 @@
 									</c:if>
 								</td>
 								<td style="width:79px;text-align: right;padding-top: 13px;">条形码:</td>
-								<td><input type="text" name="BAR_CODE" id="BAR_CODE" value="${pd.BAR_CODE}" maxlength="30" placeholder="这里输入条形码" title="条形码" style="width:98%;"/></td>
+								<td><input type="number" name="BAR_CODE" id="BAR_CODE" value="${pd.BAR_CODE}" maxlength="20" placeholder="这里输入条形码" title="条形码" style="width:98%;"/></td>
 							</tr>
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">物资名称:</td>

@@ -217,6 +217,23 @@ public class WarehousingController extends BaseController{
 	
 	/**
 	 * @author Mr.Lin
+	 * 物资显示详细信息
+	 * @throws Exception 
+	 * @return
+	 * */
+	@RequestMapping(value="/materialsParticular")
+	public ModelAndView materialsParticular()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd = warehousingService.findBymaterialId(pd);
+		mv.setViewName("fhdb/materials/meterialsParticular");
+		mv.addObject("pd", pd);
+		return mv;
+	}
+	
+	/**
+	 * @author Mr.Lin
 	 * 弹出物资修改界面
 	 * @throws Exception 
 	 * @return
@@ -1507,6 +1524,26 @@ public class WarehousingController extends BaseController{
 		}
 		mv.setViewName("save_result");
 		return mv;
+	}
+	
+	/**
+	 * @author Mr.Lin
+	 * 退货单删除操作
+	 * @throws Exception 
+	 * */
+	@RequestMapping(value="/sales_returnDel")
+	public void sales_returnDel(PrintWriter out) throws Exception{
+		logBefore(logger, Jurisdiction.getUsername()+"退货单删除");
+		if(!Jurisdiction.buttonJurisdiction(returnmenuUrl, "del")){return;} //校验权限
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		int result = warehousingService.salesreturnDelete(pd);
+		if(result>0) {
+			out.write("success");
+		}else {
+			out.write("fail");
+		}
+		out.close();
 	}
 	
 	/**
