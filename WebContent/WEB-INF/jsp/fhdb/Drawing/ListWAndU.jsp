@@ -64,10 +64,9 @@
 											<option value="${wa.ID }"<c:if test="${wa.ID == pt.ID}">selected</c:if>>${wa.WARNAME }</option>
 										</c:forEach>
 								   </select>
-								   <c:if test="${QX.cha == 1 }">
 									<a class="btn btn-light btn-xs" onclick="searchs();"  title="搜索此仓库的产品"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i>搜索</a>
-									</c:if>
-								</td>
+							
+									</td>
 								<td style="padding-right: 50px;">
 							调入仓库:<select name="WAREHOUSE_PUT_ID" id="WAREHOUSE_PUT_ID" style="width: 180px;" >
 										<option value=""></option>
@@ -103,43 +102,42 @@
 							<!-- 开始循环 -->	
 							<c:choose>
 								<c:when test="${not empty spList}">
-									<c:if test="${QX.cha == 1 }">	
 										<c:forEach items="${spList}" var="sp" varStatus="vs">
 											
 										<tr>
 											<td class='center' style="width: 30px;">
 												<input type="hidden" name="STATE" id="STATE" value="${sp.STATE }"/>
-												<label><input type='checkbox' name="MATERIALS_ID" id="MATERIALS_ID"  value="${sp.ID }"/><span class="lbl"></span></label>
+												<label>
+													<input type='checkbox' name="MATERIALS_ID" id="MATERIALS_ID"  value="${sp.ID }" alt="${sp.NAME }" title="${sp.COUNT }"/>
+													<span class="lbl"></span>
+												</label>
 												<input type="hidden" id="osID" name="osID" value="${sp.osID}"/>
 											</td>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class="center"><input type="text" name="BIANHAO" id="BIANHAO" value="${sp.BIANHAO}"  readOnly="true"  style="border:none;outline:medium;text-align:center;" /></td>
-											<td class="center"><input type="text" name="NAME" id="NAME" value="${sp.NAME}"  readOnly="true"  style="border:none;outline:medium;text-align:center;" /></td>
-											<td class="center"><input type="text" name="COUNT" id="COUNT" value="${sp.COUNT}"  readOnly="true" style="border:none;outline:medium;text-align:center;width:100px;" /></td>
-											<td class="center"><input type="text" name="UNIT" id="UNIT" value="${sp.UNIT}"  readOnly="true"  style="border:none;outline:medium;text-align:center;" /></td>
-											<td class="center"><input type="text" name="NOTE" id="NOTE" value="${sp.NOTE}"  readOnly="true"  style="border:none;outline:medium;text-align:center;" /></td>
+											<td class="center">${sp.BIANHAO}</td>
+											<td class="center">${sp.NAME}</td>
+											<td class="center">${sp.COUNT}</td>
+											<td class="center">${sp.UNIT}</td>
+											<td class="center">${sp.NOTE}</td>
 										</tr>
 									
 									</c:forEach>
-								</c:if>
-									<c:if test="${QX.cha == 0 }">
-										<tr>
-											<td colspan="10" class="center">您无权查看</td>
-										</tr>
-									</c:if>
+
 								</c:when>
 									<c:otherwise>
 								</c:otherwise>
 							</c:choose>
 							</tbody>
 						</table>
+							<input type="hidden" name="NAME" id="NAME"/>
+							<input type="hidden" name="COUNT" id="COUNT"/>
 							<div class="page-header position-relative">
 						<table style="width:100%;">
 							<tr>
 								<td style="vertical-align:top; padding-right: 60px;">
-									<c:if test="${QX.add == 1 }">
+				
 									<a class="btn btn-mini btn-success" onclick="save();">保存</a>
-									</c:if>
+									
 									<a class="btn btn-mini btn-danger" onclick="top.Dialog.close();">关闭</a>
 							</td>
 								<td style="vertical-align:top;"><div class="pagination" style="float: right;padding-top: 0px;margin-top: 0px;">${page.pageStr}</div></td>
@@ -184,18 +182,20 @@ $(top.hangge());
 
 //保存数据
 function save(msg){
-	var osID="";
 	var MATERIALS_ID = "";
-	var WAREHOUSE_PUT_ID="";
+	var NAME="";
+	var COUNT="";
+	var checkCount = 0;
  	for(var i=0;i < document.getElementsByName('MATERIALS_ID').length;i++)
  		{
  				if(document.getElementsByName('MATERIALS_ID')[i].checked){
  				  if(MATERIALS_ID=='') MATERIALS_ID += document.getElementsByName('MATERIALS_ID')[i].value;
  				  else MATERIALS_ID += ',' + document.getElementsByName('MATERIALS_ID')[i].value;
- 				  if(osID=='') osID += document.getElementsByName('osID')[i].value;
-				  else osID += ',' + document.getElementsByName('osID')[i].value;
- 				  if(WAREHOUSE_PUT_ID=='') WAREHOUSE_PUT_ID += document.getElementsByName('WAREHOUSE_PUT_ID')[i].value;
-				  else WAREHOUSE_PUT_ID += ',' + document.getElementsByName('WAREHOUSE_PUT_ID')[i].value;
+ 				 if(NAME=='') NAME += document.getElementsByName('MATERIALS_ID')[i].alt;
+				  else NAME += ',' + document.getElementsByName('MATERIALS_ID')[i].alt;
+ 				if(COUNT=='') COUNT += document.getElementsByName('MATERIALS_ID')[i].title;
+				  else COUNT += ',' + document.getElementsByName('MATERIALS_ID')[i].title;
+ 				checkCount++;
  				 }
  		 }
  		if(MATERIALS_ID==''){
@@ -206,6 +206,18 @@ function save(msg){
  			});
  			return;
  		}
+ 		if(checkCount>1){
+ 			bootbox.dialog({
+ 				message: "<span class='bigger-110'>只能选择一个内容!</span>",
+ 				buttons: 			
+ 				{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
+ 			});
+ 			return;
+ 		}
+ 	if(checkCount==1){
+ 		$("#NAME").val(NAME);
+ 		$("#COUNT").val(COUNT);
+ 	}
 	if($("#DRAWING_INST").val()==""){
 		$("#DRAWING_INST").tips({
 			side:3,
