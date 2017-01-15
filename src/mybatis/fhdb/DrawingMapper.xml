@@ -75,7 +75,7 @@
 		</select>
 		<!-- 查询仓库名 -->
 		 <select id="warlist" resultType="pd">
-			select w.ID,w.WARNAME from warehouse w
+			select w.ID,w.WARNAME from warehouse w WHERE w.WARNAME!='Stage区'
 		</select>
 		
 		<!-- 保存调拨的数据 -->
@@ -169,8 +169,13 @@
 		<update id="updateDraeing" parameterType="pd">
 			update drawing 
 			SET BusinessDate=#{BusinessDate},DRAWING_INST=#{DRAWING_INST},UPDATE_TIME=#{UPDATE_TIME},WAREHOUSE_OUT_ID=#{WAREHOUSE_OUT_ID},WAREHOUSE_PUT_ID=#{WAREHOUSE_PUT_ID},MATERIALS_ID=#{MATERIALS_ID},JINGSHUO_ID=#{JINGSHUO_ID}
-			,WzNAME=#{NAME},NUMBER_OF=#{COUNT}
-			WHERE ID=#{ID}
+			<if test="NAME!='' ">
+				,WzNAME=#{NAME}
+			</if>
+			<if test="COUNT!='' ">
+				,NUMBER_OF=#{COUNT}
+			</if>
+				WHERE ID=#{ID}
 		</update>
 		
 	</mapper>

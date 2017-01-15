@@ -150,11 +150,11 @@
 														<i class="ace-icon fa fa-check-circle bigger-120" title="审核"></i>
 													</a>
 													</c:if>
-													<c:if test="${QX.edit == 1 }">
+													<%-- <c:if test="${QX.edit == 1 }">
 													<a class="btn btn-xs btn-info" onclick="abolish('${dar.ID}','${dar.STATE}');">
 														<i class="ace-icon fa fa-times-circle bigger-120" title="去审"></i>
 													</a>
-													</c:if>
+													</c:if> --%>
 												</div>
 												<div class="hidden-md hidden-lg">
 													<div class="inline pos-rel">
