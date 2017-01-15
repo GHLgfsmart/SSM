@@ -24,6 +24,7 @@ public class Drawing {
 	private int NUMBER_OF;//单据数量		
 	private String ZHAIYAO_INST;//摘要说明(目的、方法、结果(应给出主要数据)及结论四部分,各部分冠以相应的标题)
 	private String BusinessDate;
+	private String WzNAME;
 	private User user;
 	private Materials_information materials_information;
 	private Warehouse warehouse;
@@ -34,8 +35,8 @@ public class Drawing {
 
 	public Drawing(String iD, String bIANHAO, String jINGSHUO_ID, String dRAWING_INST, int sTATE, String mATERIALS_ID,
 			String wAREHOUSE_OUT_ID, String wAREHOUSE_PUT_ID, String iNSPECTOR, String aUDITOR, String eNTRY_TIME,
-			String uPDATE_TIME, BigDecimal mONEY, int nUMBER_OF, String zHAIYAO_INST, String businessDate, User user,
-			Materials_information materials_information, Warehouse warehouse) {
+			String uPDATE_TIME, BigDecimal mONEY, int nUMBER_OF, String zHAIYAO_INST, String businessDate,
+			String wzNAME, User user, Materials_information materials_information, Warehouse warehouse) {
 		ID = iD;
 		BIANHAO = bIANHAO;
 		JINGSHUO_ID = jINGSHUO_ID;
@@ -52,6 +53,7 @@ public class Drawing {
 		NUMBER_OF = nUMBER_OF;
 		ZHAIYAO_INST = zHAIYAO_INST;
 		BusinessDate = businessDate;
+		WzNAME = wzNAME;
 		this.user = user;
 		this.materials_information = materials_information;
 		this.warehouse = warehouse;
@@ -185,6 +187,14 @@ public class Drawing {
 		BusinessDate = businessDate;
 	}
 
+	public String getWzNAME() {
+		return WzNAME;
+	}
+
+	public void setWzNAME(String wzNAME) {
+		WzNAME = wzNAME;
+	}
+
 	public User getUser() {
 		return user;
 	}
@@ -216,8 +226,8 @@ public class Drawing {
 				+ WAREHOUSE_OUT_ID + ", WAREHOUSE_PUT_ID=" + WAREHOUSE_PUT_ID + ", INSPECTOR=" + INSPECTOR
 				+ ", AUDITOR=" + AUDITOR + ", ENTRY_TIME=" + ENTRY_TIME + ", UPDATE_TIME=" + UPDATE_TIME + ", MONEY="
 				+ MONEY + ", NUMBER_OF=" + NUMBER_OF + ", ZHAIYAO_INST=" + ZHAIYAO_INST + ", BusinessDate="
-				+ BusinessDate + ", user=" + user + ", materials_information=" + materials_information + ", warehouse="
-				+ warehouse + "]";
+				+ BusinessDate + ", WzNAME=" + WzNAME + ", user=" + user + ", materials_information="
+				+ materials_information + ", warehouse=" + warehouse + "]";
 	}
 	
 	

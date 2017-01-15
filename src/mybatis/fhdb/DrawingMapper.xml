@@ -19,6 +19,8 @@
 			<result column="NUMBER_OF" property="NUMBER_OF"/>
 			<result column="ZHAIYAO_INST" property="ZHAIYAO_INST"/>
 			<result column="BusinessDate" property="BusinessDate"/>
+			<result column="WzNAME" property="WzNAME"/>
+			
 			
 			
 			<!-- 经手人(关联sys_user)多对一关系 -->
@@ -78,13 +80,13 @@
 		
 		<!-- 保存调拨的数据 -->
 		<insert id="DrwingSave" parameterType="pd">
-			insert into drawing(ID,INSPECTOR,BIANHAO,BusinessDate,ENTRY_TIME,JINGSHUO_ID,WAREHOUSE_OUT_ID,WAREHOUSE_PUT_ID,DRAWING_INST,MATERIALS_ID,NUMBER_OF)
-			values(#{ID},#{INSPECTOR},#{DBbIANHAO},#{BusinessDate},#{ENTRY_TIME},#{JINGSHUO_ID},#{WAREHOUSE_OUT_ID},#{WAREHOUSE_PUT_ID},#{DRAWING_INST},#{MATERIALS_ID},#{COUNT})
+			insert into drawing(ID,INSPECTOR,BIANHAO,BusinessDate,ENTRY_TIME,JINGSHUO_ID,WAREHOUSE_OUT_ID,WAREHOUSE_PUT_ID,DRAWING_INST,MATERIALS_ID,NUMBER_OF,WzNAME)
+			values(#{ID},#{INSPECTOR},#{DBbIANHAO},#{BusinessDate},#{ENTRY_TIME},#{JINGSHUO_ID},#{WAREHOUSE_OUT_ID},#{WAREHOUSE_PUT_ID},#{DRAWING_INST},#{MATERIALS_ID},#{COUNT},#{NAME})
 		</insert>
 		
 		<!-- 查询调拨单 -->
 		<select id="datalistPage" parameterType="page" resultType="pd">
-			select dr.ID,dr.MATERIALS_ID,dr.BusinessDate,dr.BIANHAO,dr.ENTRY_TIME,dr.UPDATE_TIME,dr.DRAWING_INST,dr.INSPECTOR,dr.WAREHOUSE_PUT_ID,dr.WAREHOUSE_OUT_ID,ws.WARNAME as ru,dr.AUDITOR,dr.STATE,dr.NUMBER_OF,w.WARNAME as chu,u.USERNAME from drawing dr ,warehouse ws ,warehouse w ,sys_user u  
+			select dr.ID,dr.WzNAME,dr.MATERIALS_ID,dr.BusinessDate,dr.BIANHAO,dr.ENTRY_TIME,dr.UPDATE_TIME,dr.DRAWING_INST,dr.INSPECTOR,dr.WAREHOUSE_PUT_ID,dr.WAREHOUSE_OUT_ID,ws.WARNAME as ru,dr.AUDITOR,dr.STATE,dr.NUMBER_OF,w.WARNAME as chu,u.USERNAME from drawing dr ,warehouse ws ,warehouse w ,sys_user u  
 			where
 				dr.WAREHOUSE_OUT_ID=w.ID AND dr.JINGSHUO_ID=u.USER_ID and dr.WAREHOUSE_PUT_ID=ws.ID
 				<if test="pd.keywords!= null and pd.keywords != ''"><!-- 根据编号查询 -->
@@ -171,7 +173,7 @@
 		<update id="updateDraeing" parameterType="pd">
 			update drawing 
 			SET BusinessDate=#{BusinessDate},DRAWING_INST=#{DRAWING_INST},UPDATE_TIME=#{UPDATE_TIME},WAREHOUSE_OUT_ID=#{WAREHOUSE_OUT_ID},WAREHOUSE_PUT_ID=#{WAREHOUSE_PUT_ID},MATERIALS_ID=#{MATERIALS_ID},JINGSHUO_ID=#{JINGSHUO_ID}
-			,NUMBER_OF=#{COUNT}
+			,WzNAME=#{NAME},NUMBER_OF=#{COUNT}
 			WHERE ID=#{ID}
 		</update>
 		

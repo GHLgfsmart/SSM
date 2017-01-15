@@ -104,6 +104,7 @@ public class DrawingController extends BaseController {
 		pd = this.getPageData();
 		pd.put("ID", this.get32UUID());	//主键
 		pd.get("ENTRY_TIME");
+		pd.getString("NAME");
 		pd.get("COUNT");
 		pd.getString("INSPECTOR");
 		pd.getString("DBbIANHAO");
@@ -336,6 +337,7 @@ public class DrawingController extends BaseController {
 		pd.getString("UPDATE_TIME");
 		pd.getString("WAREHOUSE_OUT_ID");
 		pd.getString("WAREHOUSE_PUT_ID");
+		pd.getString("NAME");
 		pd.get("COUNT");
 		pd.getString("MATERIALS_ID");
 		pd.getString("JINGSHUO_ID");

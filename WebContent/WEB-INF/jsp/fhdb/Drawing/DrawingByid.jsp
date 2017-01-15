@@ -127,7 +127,7 @@
 												</td>
 												<td class='center' style="width: 30px;">${vs.index+1}</td>
 												<td class="center">${pdID.BIANHAO }</td>
-												<td class="center">${pdID.NAME }</td>
+												<td class="center"><input type="text" name="NAME" id="NAME" value="${pdID.NAME}"  readOnly="true" style="border:none;outline:medium;text-align:center;width:100px;" /></td>
 												<td class="center"><input type="text" name="COUNT" id="COUNT" value="${pdID.COUNT}"  readOnly="true" style="border:none;outline:medium;text-align:center;width:100px;" /></td>
 												<td class="center">${pdID.UNIT}</td>
 												<td class="center">${pdID.NOTE}</td>
