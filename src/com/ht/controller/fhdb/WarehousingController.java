@@ -535,6 +535,23 @@ public class WarehousingController extends BaseController{
 	
 	/**
 	 * @author Mr.Lin
+	 * 入库显示详细信息
+	 * @throws Exception 
+	 * @return
+	 * */
+	@RequestMapping(value="/output_storageParticular")
+	public ModelAndView output_storageParticular()throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd = warehousingService.findByOutput_storageId(pd);
+		mv.setViewName("fhdb/output_storage/outputParticular");
+		mv.addObject("pd", pd);
+		return mv;
+	}
+	
+	/**
+	 * @author Mr.Lin
 	 * 入库弹出新增界面
 	 * @throws Exception
 	 * @return
@@ -569,6 +586,7 @@ public class WarehousingController extends BaseController{
 		pd.put("ID", this.get32UUID());	//主键
 		int result = warehousingService.output_storageSave(pd);
 		if(result>0) {
+			// TODO stage区需要增加库存
 			mv.addObject("msg","success");
 		}else {
 			mv.addObject("msg","fail");
@@ -1160,6 +1178,7 @@ public class WarehousingController extends BaseController{
 			pd.put("ID", pd.get("WAREHOUSE_ID"));
 			wSService.editWarehouseCountadd(pd);	//仓库库存增加
 			System.out.println(pd.get("ID")+"**************");
+			// TODO stage区仓库需减去存放库存
 			pd.put("ID", pd.get("MATERIALS_ID"));
 			System.out.println(pd.get("ID")+"////////////");
 			warehousingService.materialUpdate(pd);  //物资改为已入库

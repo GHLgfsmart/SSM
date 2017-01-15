@@ -396,7 +396,7 @@ function fromExcel(){
 				 top.jzts();
 				 setTimeout("self.location.reload()",100);
 			 }else{
-				 nextPage(${page.currentPage});
+				 nextPage('${page.currentPage}');
 			 }
 		}
 		diag.close();
