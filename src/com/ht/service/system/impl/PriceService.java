@@ -38,6 +38,22 @@ public class PriceService implements PriceManager{
 	public PageData findById(PageData pd)throws Exception{
 		return (PageData)dao.findForObject("PriceMapper.findById", pd);
 	}
+	/**通过id获取数据
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData moneytoo(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("PriceMapper.moneytoo", pd);
+	}
+	/**通过id获取数据
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData moneytoos(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("PriceMapper.moneytoos", pd);
+	}
 	
 	/**保存单表
 	 * @param pd

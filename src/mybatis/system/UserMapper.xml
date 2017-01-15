@@ -190,6 +190,9 @@
 				r.ROLE_NAME
 		from <include refid="tableName"></include> u, <include refid="roleTableName"></include> r 
 		where u.ROLE_ID = r.ROLE_ID 
+		<if test="pd.roles == 'roles'">
+		and r.ROLE_NAME='仓管'
+		</if>
 		<if test="pd.userService != 'userService'">
 		and u.USERNAME != 'admin'
 		</if>

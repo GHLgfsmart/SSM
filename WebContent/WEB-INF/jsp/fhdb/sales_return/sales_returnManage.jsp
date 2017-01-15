@@ -138,7 +138,7 @@
 													</a>
 													</c:if>
 													<c:if test="${QX.email == 1 }">
-													<a class="btn btn-xs btn-info" onclick="auditing('${var.ID}','${var.STATE}','${var.WAREHOUSE_PUT_ID}','${var.COUNT}');">
+													<a class="btn btn-xs btn-info" onclick="auditing('${var.ID}','${var.STATE}','${var.WAREHOUSE_PUT_ID}','${var.COUNT}','${var.OUT_CODE}');">
 														<i class="ace-icon fa fa-check-circle bigger-120" title="审核"></i>
 													</a>
 													<%-- <a class="btn btn-xs btn-info" onclick="auditing('${var.ID}','${var.STATE}');">
@@ -182,7 +182,7 @@
 															</c:if>
 															<c:if test="${QX.email == 1 }">
 															<li>
-																<a style="cursor:pointer;" onclick="auditing('${var.ID}','${var.STATE}','${var.WAREHOUSE_PUT_ID}','${var.COUNT}');" class="tooltip-error" data-rel="tooltip" title="审核">
+																<a style="cursor:pointer;" onclick="auditing('${var.ID}','${var.STATE}','${var.WAREHOUSE_PUT_ID}','${var.COUNT}','${var.OUT_CODE}');" class="tooltip-error" data-rel="tooltip" title="审核">
 																	<span class="blue">
 																		<i class="ace-icon fa fa-check-circle bigger-120"></i>
 																	</span>
@@ -332,7 +332,7 @@ function examine(Id,state){
 }
 
 //审核
-function auditing(Id,state,warid,count){
+function auditing(Id,state,warid,count,OUT_CODE){
 	if(state==0){
 		bootbox.dialog({
 			message: "<span class='bigger-110'>商品未检验，暂时无法审核!</span>",
@@ -347,6 +347,7 @@ function auditing(Id,state,warid,count){
 				$.get(url,function(data){
 					$(top.hangge());//关闭加载状态
 					if(data == 'success'){
+						moneytool(Id,OUT_CODE);
 						swal({   
 							title: "系统提示",
 							text: "审核成功!", 
@@ -370,6 +371,7 @@ function auditing(Id,state,warid,count){
 					$.get(url,function(data){
 						$(top.hangge());//关闭加载状态
 						if(data == 'success'){
+							moneytool(Id,OUT_CODE);
 							swal({   
 								title: "系统提示",
 								text: "审核成功!", 
@@ -397,7 +399,12 @@ function auditing(Id,state,warid,count){
 		}
 	}
 }
-
+function moneytool(Id,OUT_CODE){
+	var url = '<%=basePath%>warehousing/moneytool.do?STATE=3&ID='+Id+'&OUT_CODE='+OUT_CODE;
+	$.get(url,function(data){
+		
+	});
+}
 //删除
 function del(Id,STATE){
 	if(STATE==3) {

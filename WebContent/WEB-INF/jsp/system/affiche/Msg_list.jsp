@@ -225,6 +225,7 @@ function delmsg(MSGID,MSGTITLE){
 			top.jzts();
 			var url = "<%=basePath%>msg/deleteU.do?MSGID="+MSGID
 			$.get(url,function(data){
+				$(top.hangge());
 				if(data == 'success') {
 					swal({   
 						title: "系统提示",

@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ht.controller.base.BaseController;
 import com.ht.entity.Page;
 import com.ht.service.fhoa.DepartmentManager;
+import com.ht.service.system.UserManager;
 import com.ht.util.AppUtil;
 import com.ht.util.Jurisdiction;
 import com.ht.util.PageData;
@@ -38,7 +39,27 @@ public class DepartmentController extends BaseController {
 	String menuUrl = "department/list.do"; //菜单地址(权限用)
 	@Resource(name="departmentService")
 	private DepartmentManager departmentService;
-	
+	@Resource(name="userService")
+	private UserManager userService;
+	/**
+	 * 弹出负责人界面
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/testPage")
+	public ModelAndView testPage(Page page) throws Exception{
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();//hqq
+		page.setPd(pd);
+		List<PageData> list = userService.listUsers(page);//----
+		mv.setViewName("fhoa/department/user_list");
+		mv.addObject("userList", list);
+		mv.addObject("pd", pd);
+		return mv;
+		
+	}
 	/**保存
 	 * @param
 	 * @throws Exception

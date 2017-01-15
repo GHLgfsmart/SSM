@@ -205,6 +205,8 @@ public class WSController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();//hqq
+		pd.put("roles", "roles");
+		page.setPd(pd);
 		List<PageData> list = userService.listUsers(page);//----
 		mv.setViewName("fhoa/warehouse/user_list");
 		mv.addObject("userList", list);

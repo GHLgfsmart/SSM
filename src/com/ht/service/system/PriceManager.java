@@ -9,6 +9,13 @@ import com.ht.util.PageData;
 /** 单表接口类
  */
 public interface PriceManager {
+	/**通过id获取数据
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData moneytoos(PageData pd)throws Exception;
+	public PageData moneytoo(PageData pd)throws Exception;
 	/**单表列表
 	 * @param page
 	 * @return

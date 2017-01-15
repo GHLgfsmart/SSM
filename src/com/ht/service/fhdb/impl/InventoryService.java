@@ -39,7 +39,11 @@ public class InventoryService implements InventoryManager{
 	public List<PageData> listInventory(Page page) throws Exception {
 		return (List<PageData>) dao.findForList("InventoryMapper.datalistPage", page);
 	}
-
+	@Override
+	public void checkInventory() throws Exception {
+		System.out.println("执行定时任务=====Inventory");
+		dao.delete("InventoryMapper.deleteInventory", "");
+	}
 	/**
 	 * 删除数据
 	 */

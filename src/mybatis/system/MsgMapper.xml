@@ -47,11 +47,11 @@
 			<include refid="tableName"></include>   
 		<where>
 			MSGID = #{MSGID}
-			<if test="msgs!=null and msgs!=''">
-			or
-			MSGTIME=(select max(MSGTIME) from <include refid="tableName"></include>)
-			</if>
 		</where> 
+	</select> 
+	<!-- 获取最新数据 -->
+	<select id="descname" parameterType="pd" resultType="pd" >
+		SELECT * from sys_msg where MSGTIME=(select max(MSGTIME) from sys_msg);
 	</select> 
 	<!-- 列表 -->
 	<select id="mlistPage" parameterType="page" resultType="pd" >

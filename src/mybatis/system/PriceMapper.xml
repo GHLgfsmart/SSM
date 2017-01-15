@@ -6,6 +6,10 @@
 	<sql id="tableName">
 		price_money
 	</sql>
+	<!-- 	表名 -->
+	<sql id="moneytableName">
+		money
+	</sql>
 <!-- 	字段 -->
 	<sql id="Field">
 		PRICE_ID,
@@ -63,6 +67,42 @@
 		</choose>  
 		</where>
 	</select> 
+	<!-- 通过PRICE_ID获取数据 -->
+	<select id="moneytoo" parameterType="pd" resultType="pd" >
+		select 
+			pr.PRICE_ID,
+			pr.STORAGE,
+			pr.RICHARD,
+			pr.LOADING,
+			pr.UNLOADING,
+			pr.MONEYTIME,
+			pr.ARTIFICIAL,
+			pr.STATE,
+			pr.SURCHARGE,
+			pr.DAYS,
+			pr.EVERY_DAYS,
+			pr.WHY
+		from 
+			<include refid="tableName"></include> pr, <include refid="moneytableName"></include> m
+		where pr.PRICE_ID=m.PRICE_ID and m.PRICE_ID=#{PRICE_ID} and m.ID=#{moneyID}
+		
+	</select>
+	<!-- 通过PRICE_ID获取数据 -->
+	<select id="moneytoos" parameterType="pd" resultType="pd" >
+		select pr.PRICE_ID,
+			pr.STORAGE,
+			pr.RICHARD,
+			pr.LOADING,
+			pr.UNLOADING,
+			pr.MONEYTIME,
+			pr.ARTIFICIAL,
+			pr.STATE,
+			pr.SURCHARGE,
+			pr.DAYS,
+			pr.EVERY_DAYS,
+			pr.WHY from output_storage ou,materials_information ma,money m,price_money pr where ou.BIANHAO=#{OUT_CODE} AND
+			ou.MATERIALS_ID=ma.ID and ma.ID=m.PRODUCT_ID and m.PRICE_ID=pr.PRICE_ID
+	</select>
 	<!-- 列表 -->
 	<select id="mlistPage" parameterType="page" resultType="pd" >
 		select  <include refid="Field"></include>
@@ -76,7 +116,11 @@
 				RICHARD 				= #{RICHARD},
 				LOADING 				= #{LOADING},
 				UNLOADING 				= #{UNLOADING},
-				ARTIFICIAL 				= #{ARTIFICIAL}
+				ARTIFICIAL 				= #{ARTIFICIAL},
+				SURCHARGE				= #{SURCHARGE},
+				DAYS					= #{DAYS},
+				EVERY_DAYS				= #{EVERY_DAYS},
+				WHY						=#{WHY}
 				where PRICE_ID      =#{PRICE_ID}
 	</update>
 	

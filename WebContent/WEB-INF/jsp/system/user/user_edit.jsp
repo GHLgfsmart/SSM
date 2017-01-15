@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="static/ace/css/chosen.css" />
 <!-- jsp文件头和头部 -->
 <%@ include file="../index/top.jsp"%>
+<script type="text/javascript" src="static/js/common/brief_code.js"></script><!-- 引用拼音方法JS -->
 </head>
 <body class="no-skin">
 	<!-- /section:basics/navbar.layout -->
@@ -34,7 +35,8 @@
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">角色:</td>
 											<td id="juese">
-											<select class="chosen-select form-control" name="ROLE_ID" id="role_id" data-placeholder="请选择角色" style="vertical-align:top;" style="width:98%;" >
+											<input type="hidden" id="NUMBER" name="NUMBER" value="${pd.NUMBER }" />
+											<select class="chosen-select form-control" name="ROLE_ID" id="role_id" onchange="numberName();" data-placeholder="请选择角色" style="vertical-align:top;" style="width:98%;" >
 											<option value=""></option>
 											<c:forEach items="${roleList}" var="role">
 												<option value="${role.ROLE_ID }" <c:if test="${role.ROLE_ID == pd.ROLE_ID }">selected</c:if>>${role.ROLE_NAME }</option>
@@ -50,25 +52,19 @@
 											<td style="width:79px;text-align: right;padding-top: 13px;">用户名:</td>
 											<td><input type="text" name="USERNAME" id="loginname" value="${pd.USERNAME }" maxlength="32" placeholder="这里输入用户名" title="用户名" style="width:98%;"/></td>
 										</tr>
+									<c:if test="${msg == 'editU'}">
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">编号:</td>
-											<td><input type="text" name="NUMBER" id="NUMBER" value="${pd.NUMBER }" maxlength="32" placeholder="这里输入编号" title="编号" onblur="hasN('${pd.USERNAME }')" style="width:98%;"/></td>
+											<td><input type="text" name="NUMBER" id="NUMBER" readonly="readonly" value="${pd.NUMBER }" maxlength="32" placeholder="这里输入编号" title="编号" onblur="hasN('${pd.USERNAME }')" style="width:98%;"/></td>
 										</tr>
-										<tr>
-											<td style="width:79px;text-align: right;padding-top: 13px;">密码:</td>
-											<td><input type="password" name="PASSWORD" id="password"  maxlength="32" placeholder="输入密码" title="密码" style="width:98%;"/></td>
-										</tr>
-										<tr>
-											<td style="width:79px;text-align: right;padding-top: 13px;">确认密码:</td>
-											<td><input type="password" name="chkpwd" id="chkpwd"  maxlength="32" placeholder="确认密码" title="确认密码" style="width:98%;"/></td>
-										</tr>
+									</c:if>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">姓名:</td>
 											<td><input type="text" name="NAME" id="name"  value="${pd.NAME }"  maxlength="32" placeholder="这里输入姓名" title="姓名" style="width:98%;"/></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">手机号:</td>
-											<td><input type="number" name="PHONE" id="PHONE"  value="${pd.PHONE }"  maxlength="32" placeholder="这里输入手机号" title="手机号" onblur="hasP('${pd.USERNAME }')" style="width:98%;"/></td>
+											<td><input type="number" name="PHONE" id="PHONE"  value="${pd.PHONE }"  maxlength="32" placeholder="这里输入手机号" title="手机号" style="width:98%;"/></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">邮箱:</td>
@@ -113,11 +109,22 @@
 <script type="text/javascript">
 	$(top.hangge());
 	$(document).ready(function(){
+		$("#NUMBER").val(getDate());
 		if($("#user_id").val()!=""){
 			$("#loginname").attr("readonly","readonly");
 			$("#loginname").css("color","gray");
 		}
 	});
+	
+	function numberName(){
+		var select=document.getElementById("role_id");  
+		var lastIndex = select.selectedIndex; 
+		var str = select.options[lastIndex].text;
+	    if(str == "") return;
+	    var arrRslt = ''+makePy(str);
+	    arrRslt=arrRslt.substr(0, 2)+'${pd.NUMBER}';
+		document.getElementById("NUMBER").value=arrRslt;
+	}
 	//保存
 	function save(){
 		if($("#role_id").val()==""){
@@ -308,30 +315,6 @@
 			}
 		});
 	}
-	
-	//判断手机号是否存在
-	function hasP(USERNAME){
-		var PHONE = $.trim($("#PHONE").val());
-		$.ajax({
-			type: "POST",
-			url: '<%=basePath%>user/hasP.do',
-	    	data: {PHONE:PHONE,USERNAME:USERNAME,tm:new Date().getTime()},
-			dataType:'json',
-			cache: false,
-			success: function(data){
-				 if("success" != data.result){
-					 $("#PHONE").tips({
-							side:3,
-				            msg:'手机号 '+PHONE+' 已存在',
-				            bg:'#AE81FF',
-				            time:3
-				        });
-					 $("#PHONE").val('');
-				 }
-			}
-		});
-	}
-	
 	$(function() {
 		//下拉框
 		if(!ace.vars['touch']) {

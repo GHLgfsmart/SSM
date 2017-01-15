@@ -72,7 +72,7 @@
 												
 										<tr id="t${vs.index+1}">
 											<td class='center' style="width: 30px;">
-												<label><input type='checkbox' name='ids' value="${user.USER_ID }" id="${user.EMAIL }" alt="${user.PHONE }" title="${user.USERNAME }" class="ace"/><span class="lbl"></span></label>
+												<label><input type='checkbox' name='ids' value="${user.USER_ID }" id="${user.EMAIL }" alt="${user.PHONE }" title="${user.NAME }" class="ace"/><span class="lbl"></span></label>
 											</td>
 											<td class='center' style="width: 30px;" >${vs.index+1}</td>
 											<td class="center">${user.NUMBER }</td>
@@ -155,7 +155,7 @@ function elect(msg){
 	for(var i=0;i < document.getElementsByName('ids').length;i++){
 	  if(document.getElementsByName('ids')[i].checked){
 	  	if(xid=='') xid += document.getElementsByName('ids')[i].value;
-	  	if(xname=='') xname += document.getElementsByName('name')[i].value;
+	  	if(xname=='') xname += document.getElementsByName('ids')[i].title;
 	 	c=c+1;
 	  }
 	}
@@ -175,7 +175,6 @@ function elect(msg){
 		return;
 	}else {
 		window.parent.window.supplier = xname;
-		window.parent.window.supid = xid;
 		window.parent.window.jBox.close();
 	}
 }

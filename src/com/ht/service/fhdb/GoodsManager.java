@@ -14,7 +14,7 @@ import com.ht.util.PageData;
  *
  */
 public interface GoodsManager {
-	
+	public void checkGoods() throws Exception ;
 	/**
 	 * 新增数据
 	 * @param pd

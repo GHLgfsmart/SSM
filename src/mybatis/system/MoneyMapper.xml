@@ -44,7 +44,8 @@
 		STORAGE_STATE,
 		RICHARD_STATE,
 		LOADING_STATE,
-		UNLOADING_STATE
+		UNLOADING_STATE,
+		PRICE_ID
 	</sql>
 	<!-- 	费用字段值 -->
 	<sql id="FieldValue">
@@ -55,7 +56,8 @@
 		#{STORAGE_STATE},
 		#{RICHARD_STATE},
 		#{LOADING_STATE},
-		#{UNLOADING_STATE}
+		#{UNLOADING_STATE},
+		#{PRICE_ID}
 		
 	</sql>
 	<!-- 修改money -->
@@ -84,6 +86,10 @@
 			<include refid="FieldValue"></include>,#{STATE}
 		)
 	</insert>
+	<!-- 查询临时费用 -->
+	<select id="moneytool" parameterType="pd" resultType="pd" >
+		select m.MONEY from <include refid="moneytotal_TableName"></include> m,<include refid="s_TableName"></include> s where s.ID=m.PRODUCT_ID and s.ID=#{ID}
+	</select> 
 	<!-- 修改 退货费用表-->
 	<update id="totaleditU" parameterType="pd" >
 		update  <include refid="moneytotal_TableName"></include>
@@ -100,7 +106,16 @@
 	</select> 
 	<!-- 查询费用 -->
 	<select id="outmoney" parameterType="pd" resultType="pd" >
-		select m.MONEY,m.PRODUCT_ID from <include refid="moneyTableName"></include> m,<include refid="O_TableName"></include> ou where ou.MATERIALS_ID=m.PRODUCT_ID and ou.ID=#{ID}
+		select m.MONEY,m.PRODUCT_ID from <include refid="moneyTableName"></include> m,<include refid="O_TableName"></include> ou 
+		where ou.MATERIALS_ID=m.PRODUCT_ID 
+		<choose>
+			<when test="boos=='boos'">
+			and ou.BIANHAO=#{OUT_CODE}
+			</when>
+			<otherwise>
+			and ou.ID=#{ID}
+			</otherwise>
+		</choose>
 	</select> 
 	<!--出入库查询实际库存 -->
 	<select id="numbers" parameterType="pd" resultType="int" >
@@ -207,5 +222,13 @@
   			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                   #{item}
              </foreach>
+	</delete>
+	<delete id="deleteMoney" parameterType="pd" flushCache="false">
+		DELETE FROM 
+			<include refid="moneyTableName"></include>
+		WHERE 
+			MO_TIME &gt;= date_format(DATE_SUB(DATE_SUB(NOW(),INTERVAL DAYOFMONTH(NOW()) -1 DAY ),INTERVAL 3 year ),'%Y-%m-%d 00:00:00') 
+		and 
+			MO_TIME &lt; date_format(DATE_SUB(CURDATE(),INTERVAL dayofyear(now())-1 DAY),'%Y-%m-%d 00:00:00')
 	</delete>
 </mapper>

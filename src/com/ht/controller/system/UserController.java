@@ -142,6 +142,7 @@ public class UserController extends BaseController {
 		pd = this.getPageData();
 		List<PageData> roleList =userService.allRolelist("0");//列出所有用户角色
 		String numberMax=userService.numberMax();
+		numberMax=numberMax.substring(2, numberMax.length());
 		int num=Integer.valueOf(numberMax)+1;
 		int num1=num;
 		int a = 0;

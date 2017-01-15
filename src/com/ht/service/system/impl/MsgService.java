@@ -40,6 +40,14 @@ public class MsgService implements MsgManager{
 	public PageData findById(PageData pd)throws Exception{
 		return (PageData)dao.findForObject("MsgMapper.findById", pd);
 	}
+	/**最新数据
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData descname(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("MsgMapper.descname", pd);
+	}
 	
 	/**保存公告栏
 	 * @param pd

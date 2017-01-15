@@ -206,5 +206,13 @@
                   #{item}
              </foreach>
 	</delete>
-	
+	<!-- 删除过期拣货单 -->
+	<delete id="deleteLossGoods" parameterType="pd" flushCache="false">
+		DELETE FROM 
+			<include refid="tableName"></include>
+		WHERE 
+			END_TIME &gt;= date_format(DATE_SUB(DATE_SUB(NOW(),INTERVAL DAYOFMONTH(NOW()) -1 DAY ),INTERVAL 3 year ),'%Y-%m-%d 00:00:00') 
+		and 
+			END_TIME &lt; date_format(DATE_SUB(CURDATE(),INTERVAL dayofyear(now())-1 DAY),'%Y-%m-%d 00:00:00') and STATE=2
+	</delete>
 	</mapper>

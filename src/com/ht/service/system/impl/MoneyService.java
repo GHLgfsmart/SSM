@@ -22,6 +22,11 @@ public class MoneyService implements MoneyManager{
 
 	@Resource(name = "daoSupport")
 	private DaoSupport dao;
+	@Override
+	public void checkMoney() throws Exception {
+		System.out.println("执行定时任务=====Money");
+		dao.delete("MoneyMapper.deleteMoney", "");
+	}
 	/**列表
 	 * @param page
 	 * @return
@@ -52,8 +57,8 @@ public class MoneyService implements MoneyManager{
 	 * @param pd
 	 * @throws Exception
 	 */
-	public void saveU(PageData pd)throws Exception{
-		dao.save("MoneyMapper.saveU", pd);
+	public int saveU(PageData pd)throws Exception{
+		return(Integer)dao.save("MoneyMapper.saveU", pd);
 	}
 	/**保存退货费用
 	 * @param pd
@@ -127,6 +132,13 @@ public class MoneyService implements MoneyManager{
 	@Override
 	public PageData countsum(PageData pd) throws Exception{
 		return (PageData)dao.findForObject("MoneyMapper.countsum",pd);
+	}/**查询退货个数和数量
+	 * @param USER_IDS
+	 * @throws Exception
+	 */
+	@Override
+	public PageData moneytool(PageData pd) throws Exception{
+		return (PageData)dao.findForObject("MoneyMapper.moneytool",pd);
 	}
 	/**费用查询
 	 * @param USER_IDS

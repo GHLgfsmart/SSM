@@ -106,7 +106,6 @@
 		}
 			$("#msgForm").submit();
 			top.msgMSGTITLEandMSGCON();
-			top.Msgname();
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();
 	}

@@ -93,7 +93,7 @@
 									<input type="hidden" id="OUTPUT_TYPE_ID" name="OUTPUT_TYPE_ID" value="${pd.OUTPUT_TYPE_ID }"/>
 									<input type="text" name="OPTNAME" id="OPTNAME" value="${pd.OPTNAME}" readonly maxlength="30" placeholder="这里选择出入库类型" title="出入库类型" style="width:80%;"/>
 									<button class="btn btn-mini radius" onclick="optelect();" type="button">选择</button>
-									<input type="hidden" id="WAREHOUSE_ID" name="WAREHOUSE_ID" value="23702a39949744679b4ad0d09eb3f7f2"/>
+									<input type="hidden" id="WAREHOUSE_ID" name="WAREHOUSE_ID" value="67b5995eebf84dda9832a68c70cc2739"/>
 									<input type="hidden" value="0" id="STATE" name="STATE"/>
 									<input type="hidden" value="1" id="TYPE" name="TYPE"/>
 								</td>
@@ -101,7 +101,7 @@
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">单据金额:</td>
 								<td>
- 									<input type="number" name="MONEY" id="MONEY" value="${pd.MONEY}" maxlength="30" placeholder="这里输入单据金额" title="单据金额" style="width:98%;"/>
+ 									<input type="number" name="MONEY" id="MONEY" readonly="readonly" value="${pd.MONEY}" maxlength="30" placeholder="这里输入单据金额" title="单据金额" style="width:98%;"/>
 								</td>
 								<td style="width:79px;text-align: right;padding-top: 13px;">单据数量:</td>
 								<td><input type="number" name="NUMBER_OF" id="NUMBER_OF" value="${pd.NUMBER_OF}" maxlength="30" placeholder="这里输入单据数量" title="单据数量" style="width:98%;"/></td>
@@ -253,6 +253,14 @@
 		            closed:function (){
 		                $("#NAME").val(materials);
 		                $("#MATERIALS_ID").val(matid);
+		                var url = "<%=basePath%>warehousing/moneys.do?ID="+matid;
+		    			$.get(url,function(data){
+		    				if(data == 'fall') {
+		    					$("#MONEY").val('0');
+		    				}else {
+				        		$("#MONEY").val(data);
+		    				}
+		    			});
 		            }
 		        }
 		    );

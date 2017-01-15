@@ -139,7 +139,7 @@
 								<td colspan="3">
 								<fieldset style="float: left; padding-right: 25px;">
 								<div class="checkbox checkbox-success">
-									<input type="hidden" name="ID1" id="ID1" value="${pd1.ID }" />
+									<input type="hidden" name="PRICE_ID" id="PRICE_ID" value="${pd1.PRICE_ID }" />
 									<input class="styled styled" id="STORAGE" name="STORAGE" value="${pd1.STORAGE}" type="checkbox" onclick="return false;" checked>
 									<label for="checkbox10">
 										存储费（<span style="color: #438EB9;">每<span style="color: red;" id="money">${pd1.STORAGE }</span>  &nbsp;共<span style="color: red;" id="moneys">0</span> </span>）/<i class="ace-icon fa fa-cny red"></i>

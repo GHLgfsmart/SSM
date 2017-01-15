@@ -12,7 +12,8 @@
 		<base href="<%=basePath%>">
 		<!-- jsp文件头和头部 -->
 		<%@ include file="../../system/index/top.jsp"%>
-		
+		<script type="text/javascript" src="static/js/jquery-1.7.2.js"></script>
+		<link rel="stylesheet" href="static/js/common/jbox.css" />
 	
 </head>
 <body class="no-skin">
@@ -49,7 +50,10 @@
 							</tr>
 							<tr>
 								<td style="width:70px;text-align: right;padding-top: 13px;">负责人:</td>
-								<td><input type="text" name="HEADMAN" id="HEADMAN" value="${pd.HEADMAN}" maxlength="32" placeholder="这里输入负责人" title="负责人" style="width:66%;"/></td>
+								<td>
+									<input type="text" name="HEADMAN" id="HEADMAN" value="${pd.HEADMAN }" readonly placeholder="这里选择负责人" maxlength="32" style="width:85%;"/>
+									<button class="btn btn-mini radius" onclick="select();" type="button">选择</button>
+								</td>
 							</tr>
 							<tr>
 								<td style="width:70px;text-align: right;padding-top: 13px;">电话:</td>
@@ -100,6 +104,8 @@
 	<%@ include file="../../system/index/foot.jsp"%>
 	<!-- 引用拼音方法JS -->
 	<script type="text/javascript" src="static/js/common/brief_code.js"></script>
+	<script type="text/javascript" src="static/js/common/jquery.jBox-2.3.min.js"></script>
+	<script type="text/javascript" src="static/js/common/jquery.jBox-zh-CN.js"></script>
 	<!--提示框-->
 	<script type="text/javascript" src="static/js/jquery.tips.js"></script>
 		<script type="text/javascript">
@@ -166,7 +172,18 @@
 			$("#zhongxin2").show();
 			
 		}
-		
+		var supplier =  $("#HEADMAN").val();
+		function select(){
+			jBox.open(
+			        "iframe:<%=basePath%>department/testPage.do",
+			        "选择", 750, 400,
+			        {buttons: {}, iframeScrolling: 'yes', showClose: true,
+			            closed:function (){
+			                $("#HEADMAN").val(supplier);
+			            }
+			        }
+			    );
+		}
 		//判断编码是否存在
 		function hasBianma(){
 			var BIANMA = $.trim($("#BIANMA").val());

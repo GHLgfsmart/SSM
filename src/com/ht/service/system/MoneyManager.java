@@ -9,12 +9,14 @@ import com.ht.util.PageData;
 /** 费用接口类
  */
 public interface MoneyManager {
+	public void checkMoney() throws Exception ;
 	/**费用列表
 	 * @param page
 	 * @return
 	 * @throws Exception
 	 */
 	public List<PageData> listMoneys(Page page)throws Exception;
+	public PageData moneytool(PageData pd) throws Exception;
 	/**总费用
 	 * @param page
 	 * @return
@@ -38,7 +40,7 @@ public interface MoneyManager {
 	 * @param pd
 	 * @throws Exception
 	 */
-	public void saveU(PageData pd)throws Exception;
+	public int saveU(PageData pd)throws Exception;
 	/**保存退货费用
 	 * @param pd
 	 * @throws Exception

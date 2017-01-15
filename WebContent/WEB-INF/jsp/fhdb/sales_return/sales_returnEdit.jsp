@@ -102,7 +102,7 @@
 							<tr>
 								<td style="width:79px;text-align: right;padding-top: 13px;">制单时间:</td>
 								<td>
- 									<input type="text" name="MAKETIME" id="MAKETIME" value="${pd.MAKETIME}" maxlength="30" title="制单时间" style="width:98%;"/>
+ 									<input type="text" name="MAKETIME" readonly="readonly" id="MAKETIME" value="${pd.MAKETIME}" maxlength="30" title="制单时间" style="width:98%;"/>
 								</td>
 								<td style="width:79px;text-align: right;padding-top: 13px;">退货数量:</td>
 								<td><input type="number" name="COUNT"  onblur="moneytoo()" id="COUNT" value="${pd.COUNT}" maxlength="30" placeholder="这里输入退货数量" title="退货数量" style="width:98%;"/></td>
@@ -130,29 +130,33 @@
 								<td colspan="3">
 								<fieldset style="float: left; padding-right: 25px;">
 								<div class="checkbox checkbox-success">
+									<input type="hidden" name="STORAGES" id="STORAGES" value="${pd1.STORAGE }"/>
 									<input type="hidden" name="ID1" id="ID1" value="${pd1.ID }" />
 									<input class="styled styled" id="STORAGE" name="STORAGE" value="${pd1.STORAGE}" type="checkbox" onclick="return false;" checked>
 									<label for="checkbox10">
-										存储费（<span style="color: #438EB9;">每<span style="color: red;" id="money">${pd1.STORAGE }</span>  &nbsp;共&nbsp;<span style="color: red;" id="moneys">0</span> </span>）/<i class="ace-icon fa fa-cny red"></i>
+										存储费（<span style="color: #438EB9;">每<span style="color: red;" id="money1">${pd1.STORAGE }</span>  &nbsp;共&nbsp;<span style="color: red;" id="moneys">0</span> </span>）/<i class="ace-icon fa fa-cny red"></i>
 									</label>
 								</div>
 								</fieldset>
 								<fieldset style="padding-right: 25px;">
 								<div class="checkbox checkbox-success">
+									<input type="hidden" name="RICHARDS" id="RICHARDS" value="${pd1.RICHARD }"/>
 									<input type="checkbox" class="styled" id="RICHARD" name="RICHARD" value="${pd1.RICHARD}" checked>
-									<label for="inlineCheckbox2"> 理货费（<span style="color: #438EB9;">每<span style="color: red;" id="money">${pd1.RICHARD }</span>  &nbsp;共&nbsp;<span style="color: red;" id="moneys1">0</span> </span>）/<i class="ace-icon fa fa-cny red"></i></label>
+									<label for="inlineCheckbox2"> 理货费（<span style="color: #438EB9;">每<span style="color: red;" id="money2">${pd1.RICHARD }</span>  &nbsp;共&nbsp;<span style="color: red;" id="moneys1">0</span> </span>）/<i class="ace-icon fa fa-cny red"></i></label>
 								</div> 
 								</fieldset>
 								<fieldset style="float: left; padding-right: 25px;">
 								<div class="checkbox checkbox-success">
+									<input type="hidden" name="LOADING" id="LOADINGS" value="${pd1.LOADING }"/>
 									<input type="checkbox" class="styled" id="LOADING" name="LOADING" value="${pd1.LOADING}" checked>
-									<label for="inlineCheckbox2"> 装车费 （<span style="color: #438EB9;">每<span style="color: red;" id="money">${pd1.LOADING }</span>  &nbsp;共&nbsp;<span style="color: red;" id="moneys2">0</span> </span>）/<i class="ace-icon fa fa-cny red"></i></label>
+									<label for="inlineCheckbox2"> 装车费 （<span style="color: #438EB9;">每<span style="color: red;" id="money3">${pd1.LOADING }</span>  &nbsp;共&nbsp;<span style="color: red;" id="moneys2">0</span> </span>）/<i class="ace-icon fa fa-cny red"></i></label>
 								</div> 
 								</fieldset>
 								<fieldset style="float: left;">
 								<div class="checkbox checkbox-success">
+									<input type="hidden" name="UNLOADINGG" id="UNLOADINGS" value="${pd1.UNLOADING }"/>
 									<input type="checkbox" class="styled" id="UNLOADING" name="UNLOADING" value="${pd1.UNLOADING}" checked>
-									<label for="inlineCheckbox2"> 卸车费 （<span style="color: #438EB9;">每<span style="color: red;" id="money">${pd1.UNLOADING }</span>  &nbsp;共<span style="color: red;" id="moneys3">0</span> </span>）/<i class="ace-icon fa fa-cny red"></i></label>
+									<label for="inlineCheckbox2"> 卸车费 （<span style="color: #438EB9;">每<span style="color: red;" id="money4">${pd1.UNLOADING }</span>  &nbsp;共<span style="color: red;" id="moneys3">0</span> </span>）/<i class="ace-icon fa fa-cny red"></i></label>
 								</div> 
 								</fieldset>
 								</td>
@@ -207,14 +211,18 @@
 					var url = '<%=basePath%>warehousing/numbers.do?OUT_CODE='+OUT_CODE;
 					$.get(url,function(data){
 						$(top.hangge());//关闭加载状态
-						var data1=data+'';
 						if(data == 'fall') {
 							swal({   
 								title: "系统提示",
 								text: "没有此订单!", 
 								type: "error",
 								confirmButtonText: "OK" });
-						}else if(COUNT < parseInt(data)){
+							return false;
+						}
+						var data1=data+'';
+						var strs= new Array(); //定义一数组 
+						strs=data1.split(";"); //字符分割 
+						if(COUNT < parseInt(strs[0])){
 							swal({   
 								title: "系统提示",
 								text: "操作成功，请继续!", 
@@ -222,10 +230,9 @@
 								confirmButtonText: "OK" },function(){
 									
 								});
-						}else if(COUNT > parseInt(data)){
-							var strs= new Array(); //定义一数组 
-							strs=data1.split(";"); //字符分割 
+						}else if(COUNT > parseInt(strs[0])){
 							var name='';
+							
 							if(strs[1]!=null && strs[2]!=null){
 								name=(parseInt(strs[0])-parseInt(strs[2]))+"件,已退货"+strs[1]+'次';
 							}else{
@@ -245,10 +252,14 @@
 			var COUNT=$("#COUNT").val();
 			var name=parseInt(COUNT);
 			if(!isNaN(name)){
-			 var STORAGE =parseFloat('${pd1.STORAGE}') * name;//存储费
-			 var RICHARD =parseFloat('${pd1.RICHARD}') * name;//理货费
-			 var LOADING =parseFloat('${pd1.LOADING}') * name;//装车费
-			 var UNLOADING =parseFloat('${pd1.UNLOADING}') * name;//卸车费
+			STORAGES=	$("#STORAGES").val();
+			RICHARDS=$("#RICHARDS").val();
+			LOADINGS=$("#LOADINGS").val();
+			UNLOADINGS=$("#UNLOADINGS").val();
+			 var STORAGE =parseFloat(STORAGES) * name;//存储费
+			 var RICHARD =parseFloat(RICHARDS) * name;//理货费
+			 var LOADING =parseFloat(LOADINGS) * name;//装车费
+			 var UNLOADING =parseFloat(UNLOADINGS) * name;//卸车费
 			 $("#STORAGE").val(STORAGE.toFixed(2));
 			 $("#RICHARD").val(RICHARD.toFixed(2));
 			 $("#LOADING").val(LOADING.toFixed(2));
@@ -353,6 +364,16 @@
 				$("#COUNT").focus();
 			return false;
 			}
+			if($("#OPTNAME").val()==""){
+				$("#OPTNAME").tips({
+					side:3,
+		            msg:'请输入出入库类型',
+		            bg:'#AE81FF',
+		            time:2
+		        });
+				$("#OPTNAME").focus();
+			return false;
+			}
 			
 			if($("#NOTE").val()==""){
 				$("#NOTE").tips({
@@ -398,6 +419,21 @@
 		                $("#OUT_CODE").val(supplier);
 		                $("#WAREHOUSE_OUT_ID").val(otwarid);
 		                $("#OTNAME").val(otwarname);
+		                var url = '<%=basePath%>warehousing/price_money.do?OUT_CODE='+supplier;
+						$.get(url,function(data){
+							var data1=data+'';
+							var strs= new Array(); //定义一数组 
+							strs=data1.split(";"); //字符分割 
+							$("#STORAGES").val(strs[0]);
+							$("#RICHARDS").val(strs[1]);
+							$("#LOADINGS").val(strs[2]);
+							$("#UNLOADINGS").val(strs[3]);
+							$("#ID1").val(strs[4]);
+							window.document .getElementById ("money1").innerHTML=strs[0];
+							window.document .getElementById ("money2").innerHTML=strs[1];
+							window.document .getElementById ("money3").innerHTML=strs[2];
+							window.document .getElementById ("money4").innerHTML=strs[3];
+						});
 		            }
 		        }
 		    );

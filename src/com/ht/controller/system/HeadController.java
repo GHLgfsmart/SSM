@@ -106,7 +106,8 @@ public class HeadController extends BaseController {
 		Map<String,Object> map = new HashMap<String,Object>();
 		try {
 			pd.put("msgs", "msgs");
-			pd = msgService.findById(pd);	//列出用户列表
+			pd = msgService.descname(pd);	//列出用户列表
+			System.out.println("============"+pd);
 			map.put("msgMSGTITLE",pd.getString("MSGTITLE"));	//公告栏标题
 			map.put("msgMSGCON",pd.getString("MSGCON"));    	//公告栏内容
 		} catch (Exception e) {

@@ -46,5 +46,10 @@ public interface MsgManager {
 	 * @throws Exception
 	 */
 	public void deleteAllU(String[] MSGID)throws Exception;
-	
+	/**最新数据
+	 * @param pd
+	 * @return
+	 * @throws Exception
+	 */
+	public PageData descname(PageData pd)throws Exception;
 }
