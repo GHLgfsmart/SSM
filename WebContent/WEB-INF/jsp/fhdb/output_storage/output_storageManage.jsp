@@ -80,7 +80,7 @@
 									<!-- <th class="center">最后修改时间</th> -->
 									<th class="center">状态</th>
 									<th class="center">操作员</th>
-									<th class="center">备注</th>
+									<!-- <th class="center">备注</th> -->
 									<th class="center">操作</th>
 								</tr>
 							</thead>
@@ -97,7 +97,9 @@
 												<label class="pos-rel"><input type='checkbox' name='ids' value="${var.ID}" class="ace" /><span class="lbl"></span></label>
 											</td>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td class='center'>${var.BIANHAO}</td>
+											<td class='center'>
+												<a title="详细信息" style="text-decoration:none;cursor:pointer;" onclick="particular('${var.ID}');">${var.BIANHAO}</a>
+											</td>
 											<td class='center'>${var.RAW_NUMBER}</td>
 											<td class='center'>${var.materials.NAME}</td>
 											<td class='center'>${var.warehouse.WARNAME}</td>
@@ -116,7 +118,7 @@
 												<td class='center'><span class="label label-danger">不合格</span></td>
 											</c:if>
 											<td class='center'>${var.user.USERNAME}</td>
-											<td class='center'>${var.NOTE}</td>
+											<%-- <td class='center'>${var.NOTE}</td> --%>
 											<td class="center">
 												<c:if test="${QX.edit != 1 && QX.del != 1 }">
 												<span class="label label-large label-grey arrowed-in-right arrowed-in"><i class="ace-icon fa fa-lock" title="无权限"></i></span>
@@ -243,6 +245,21 @@ $(top.hangge());//关闭加载状态
 function tosearch(){
 	top.jzts();
 	$("#Form").submit();
+}
+
+//查看详细信息
+function particular(ID){
+	top.jzts();
+	 var diag = new top.Dialog();
+	 diag.Drag=true;
+	/*  diag.Title ="详细资料"; */
+	 diag.URL = '<%=basePath%>warehousing/output_storageParticular.do?ID='+ID;
+	 diag.Width = 1200;
+	 diag.Height = 360;
+	 diag.CancelEvent = function(){ //关闭事件
+		diag.close();
+	 };
+	 diag.show();
 }
 
 //导出excel

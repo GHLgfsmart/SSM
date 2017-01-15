@@ -60,7 +60,7 @@
 								<td style="padding-right: 50px;">
 							调出仓库:<select  name="WAREHOUSE_OUT_ID" id="WAREHOUSE_OUT_ID" style="width: 140px;">
 										<c:forEach items="${ListWA}" var="wa">
-											<option value="${wa.ID }"<c:if test="${wa.ID == pds.WAREHOUSE_OUT_ID}">selected</c:if>>${wa.WARNAME }</option>
+											<option value="${wa.ID }"<c:if test="${wa.ID == pds.WAREHOUSE_OUT_ID}">selected</c:if><c:if test="${wa.ID == pt.ID}">selected</c:if>>${wa.WARNAME }</option>
 										</c:forEach>
 								   </select>
 								   <c:if test="${QX.cha == 1 }">
@@ -106,11 +106,12 @@
 												<tr>
 													<td class='center' style="width: 30px;">
 														<label><input type='checkbox' name="MATERIALS_ID" id="MATERIALS_ID"  value="${sp.ID }"/><span class="lbl"></span></label>
+														<input type="hidden" id="osID" name="osID" value="${sp.osID}"/>
 													</td>
 													<td class='center' style="width: 30px;">${vs.index+1}</td>
 													<td class="center">${sp.BIANHAO }</td>
 													<td class="center">${sp.NAME }</td>
-													<td style="text-align:center;"><input type="text" name="COUNT" id="COUNT" value="${sp.COUNT}" style="border:none;outline:medium;text-align:center;width:100px;" /></td>
+													<td class="center"><input type="text" name="COUNT" id="COUNT" value="${sp.COUNT}"  readOnly="true" style="border:none;outline:medium;text-align:center;width:100px;" /></td>
 													<td class="center">${sp.UNIT}</td>
 													<td class="center">${sp.NOTE}</td>
 												</tr>
@@ -121,12 +122,13 @@
 									<c:if test="${QX.cha == 1 }">
 											<tr>
 												<td class='center' style="width: 30px;">
-													<label><input type='checkbox' name="MATERIALS_ID" id="MATERIALS_ID"  value="${pdID.ID }"/><span class="lbl"></span></label>
+													<input type="hidden" name="MATERIALS_ID" id="MATERIALS_ID"  value="${pdID.MATERIALS_ID}"/>
+													<label><input type='checkbox' name="MATERIALS_ID" id="MATERIALS_ID"  value="${pdID.ID}"/><span class="lbl"></span></label>
 												</td>
 												<td class='center' style="width: 30px;">${vs.index+1}</td>
 												<td class="center">${pdID.BIANHAO }</td>
-												<td class="center">${pdID.NAME }</td>
-												<td style="text-align:center;"><input type="text" name="COUNT" id="COUNT" value="${pdID.COUNT}" style="border:none;outline:medium;text-align:center;width:100px;" /></td>
+												<td class="center"><input type="text" name="NAME" id="NAME" value="${pdID.NAME}"  readOnly="true" style="border:none;outline:medium;text-align:center;width:100px;" /></td>
+												<td class="center"><input type="text" name="COUNT" id="COUNT" value="${pdID.COUNT}"  readOnly="true" style="border:none;outline:medium;text-align:center;width:100px;" /></td>
 												<td class="center">${pdID.UNIT}</td>
 												<td class="center">${pdID.NOTE}</td>
 											</tr>
@@ -186,22 +188,32 @@ $(top.hangge());
 
 //修改数据
 function update(msg){
+
+	var osID="";
 	var MATERIALS_ID = "";
+	var WAREHOUSE_PUT_ID="";
+	var ID="";
  	for(var i=0;i < document.getElementsByName('MATERIALS_ID').length;i++)
  		{
  				if(document.getElementsByName('MATERIALS_ID')[i].checked){
  				  if(MATERIALS_ID=='') MATERIALS_ID += document.getElementsByName('MATERIALS_ID')[i].value;
  				  else MATERIALS_ID += ',' + document.getElementsByName('MATERIALS_ID')[i].value;
+ 				  if(osID=='') osID += document.getElementsByName('osID')[i].value;
+				  else osID += ',' + document.getElementsByName('osID')[i].value;
+ 				  if(WAREHOUSE_PUT_ID=='') WAREHOUSE_PUT_ID += document.getElementsByName('WAREHOUSE_PUT_ID')[i].value;
+				  else WAREHOUSE_PUT_ID += ',' + document.getElementsByName('WAREHOUSE_PUT_ID')[i].value;
+ 				 if(ID=='') ID += document.getElementsByName('ID')[i].value;
+				  else ID += ',' + document.getElementsByName('ID')[i].value;
  				 }
  		 }
- 		if(MATERIALS_ID==''){
+ 		/* if(MATERIALS_ID==''){
  			bootbox.dialog({
  				message: "<span class='bigger-110'>您没有选择任何内容!</span>",
  				buttons: 			
  				{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
  			});
  			return;
- 		}
+ 		} */
 	if($("#DRAWING_INST").val()==""){
 		$("#DRAWING_INST").tips({
 			side:3,
@@ -210,7 +222,7 @@ function update(msg){
             time:2
         });
 		$("#DRAWING_INST").focus();
-	return false;
+	return ;
 	}
 	if($("#WAREHOUSE_PUT_ID").val()==""){
 		$("#WAREHOUSE_PUT_ID").tips({
@@ -220,7 +232,7 @@ function update(msg){
             time:2
         });
 		$("#WAREHOUSE_PUT_ID").focus();
-	return false;
+	return ;
 	}
 	if($("#BusinessDate").val()==""){
 		$("#BusinessDate").tips({
@@ -230,7 +242,7 @@ function update(msg){
             time:2
         });
 		$("#BusinessDate").focus();
-	return false;
+	return ;
 	}
 	if($("#WAREHOUSE_OUT_ID").val() == $("#WAREHOUSE_PUT_ID").val()){
 		$("#WAREHOUSE_PUT_ID").tips({
@@ -240,13 +252,13 @@ function update(msg){
             time:2
         });
 		$("#WAREHOUSE_PUT_ID").focus();
-	return false;
+	return ;
 	}
 	else{
  			$("#Form").submit();
  			$("#zhongxin").hide();
  			$("#zhongxin2").show();
- 		}
+ 	}
  }
 //搜索此仓库下的产品
 function searchs(){

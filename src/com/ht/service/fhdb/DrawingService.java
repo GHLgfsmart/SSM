@@ -30,14 +30,11 @@ public interface DrawingService {
 
 	public int updateDraeing(PageData pd) throws Exception;
 	
-	public List<PageData> notSuppliesList(PageData pd) throws Exception;
-	
-	public void reduce(PageData pd) throws Exception;
-	
-	public void  SaveWz(PageData pd)throws Exception;
-	
-	public void SaveCk(PageData pd)throws Exception;
+	public List<PageData> notSuppliesList(PageData pd) throws Exception;	
 	
 	public List<PageData> listWarning(Page page)throws Exception;
 	
+	public void allot(PageData pd)throws Exception;
+	
+	public PageData allweID(PageData pd);
 }

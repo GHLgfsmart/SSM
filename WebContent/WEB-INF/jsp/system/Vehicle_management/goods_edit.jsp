@@ -289,7 +289,7 @@
 	function elect3(){
 	    jBox.open(
 	        "iframe:<%=basePath%>goods/testPage3.do",
-	        "选择", 680, 360,
+	        "选择", 760, 360,
 	        {buttons: {}, iframeScrolling: 'yes', showClose: true,
 	            closed:function (){
 	                $("#P_COUNT").val(m_count);

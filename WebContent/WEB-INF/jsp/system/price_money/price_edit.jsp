@@ -63,7 +63,7 @@
 											<td><input type="number" name="ARTIFICIAL" id="ARTIFICIAL"value="${pd.ARTIFICIAL }" placeholder="这里输入每件人工费" maxlength="64" title="人工费" style="width:98%;"/></td>
 										</tr>
 										<tr>
-											<td style="width:79px;text-align: right;padding-top: 13px;">原因:</td>
+											<td style="width:79px;text-align: right;padding-top: 13px;">备注:</td>
 											<td><textarea style='resize: none;width: 98%;' name="WHY" id="WHY" >${pd.WHY }</textarea></td>
 										</tr>
 										<tr>

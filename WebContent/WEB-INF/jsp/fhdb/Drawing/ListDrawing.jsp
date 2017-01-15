@@ -61,12 +61,12 @@
 								  	</select>
 								</td>
 								<c:if test="${QX.cha == 1 }">
-									<td style="padding-left:2px;"><input type="reset" id="cz" value="刷新"></td>
-									<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a></td>
+									<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="searchs();"  title="检索"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i>搜索</a></td>
+									<td style="padding-left:2px;"><input type="reset" id="cz" value="重置"></td>
 									<c:if test="${QX.toExcel == 1 }">
-										<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="ExcelData();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i></a></td></c:if>
+										<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="ExcelData();" title="导出到EXCEL"><i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i>导出</a></td></c:if>
 									<c:if test="${QX.toExcel == 1 }">
-										<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="printls();" title="打印"><i id="nav-search-icon" class="ace-icon fa fa-print bigger-150 nav-search-icon blue "></i></a></td>
+										<td style="vertical-align:top;padding-left:2px;"><a class="btn btn-light btn-xs" onclick="printls();" title="打印"><i id="nav-search-icon" class="ace-icon fa fa-print bigger-150 nav-search-icon blue "></i>打印</a></td>
 									</c:if>
 										
 								</c:if>
@@ -94,6 +94,7 @@
 									<th class="center">审核人</th>
 									<th class="center">调出仓库</th>
 									<th class="center">调入仓库</th>
+									<th class="center">物资名称</th>
 									<th class="center">单据数量</th>
 									<th class="center">操作</th>
 								</tr>
@@ -127,6 +128,7 @@
 											<td class="center">${dar.AUDITOR}</td>
 											<td class="center">${dar.chu}</td>
 											<td class="center">${dar.ru}</td>
+											<td class="center">${dar.WzNAME}</td>
 											<td class="center">${dar.NUMBER_OF}</td>
 												<td class="center">
 												<c:if test="${QX.edit != 1}">
@@ -408,8 +410,17 @@ function auditing(ID,STATE) {
 	}
 	
 //删除
- function singleDel(ID){
+ function singleDel(ID,STATE){
  	bootbox.confirm("确定要删除吗?", function(result) {
+ 		if(STATE==1){
+				bootbox.dialog({
+					message: "<span class='bigger-110'>单据已审核,请去审核后删除!</span>",
+					buttons: 			
+					{ "button":{"className":"btn-sm btn-success","label":"确定"}}
+				});
+				
+				return;
+			}
  		if(result) {
  			top.jzts();
  			var url = '<%=basePath%>Drawing/singleDel.do?ID='+ID;
@@ -448,21 +459,21 @@ function auditing(ID,STATE) {
 			  	if(STATE=='') STATE += document.getElementsByName('ID')[i].alt;
 			  	else STATE += ',' + document.getElementsByName('ID')[i].alt;
 			  }
+			  if(STATE==1){
+	  				bootbox.dialog({
+	  					message: "<span class='bigger-110'>您选中的单据中有已审核的,请去审核后删除!</span>",
+	  					buttons: 			
+	  					{ "button":{"className":"btn-sm btn-success","label":"确定"}}
+	  				});
+	  				
+	  				return;
+	  			}
 		}if(ID==''){
   				bootbox.dialog({
   					message: "<span class='bigger-110'>您没有选择任何内容!</span>",
   					buttons: 			
   					{ "button":{ "label":"确定", "className":"btn-sm btn-success"}}
   				});
-  				return;
-  			}
-  			if(STATE==1){
-  				bootbox.dialog({
-  					message: "<span class='bigger-110'>您选中的单据已审核,请去审核后删除!</span>",
-  					buttons: 			
-  					{ "button":{"className":"btn-sm btn-success","label":"确定"}}
-  				});
-  				
   				return;
   			}else {
  			bootbox.confirm(msg, function(result) {

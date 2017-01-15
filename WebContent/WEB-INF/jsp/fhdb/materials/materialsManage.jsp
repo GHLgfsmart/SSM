@@ -381,6 +381,29 @@ function toExcel(){
 	window.location.href='<%=basePath%>warehousing/materialsexcel.do?keywords='+keywords+'&lastLoginStart='+lastLoginStart+'&lastLoginEnd='+lastLoginEnd+'&STATE='+STATE;
 }
 
+//打开上传excel页面
+function fromExcel(){
+	 top.jzts();
+	 var diag = new top.Dialog();
+	 diag.Drag=true;
+	 diag.Title ="EXCEL 导入到数据库";
+	 diag.URL = '<%=basePath%>warehousing/goUploadExcel.do';
+	 diag.Width = 500;
+	 diag.Height = 350;
+	 diag.CancelEvent = function(){ //关闭事件
+		 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
+			 if('${page.currentPage}' == '0'){
+				 top.jzts();
+				 setTimeout("self.location.reload()",100);
+			 }else{
+				 nextPage('${page.currentPage}');
+			 }
+		}
+		diag.close();
+	 };
+	 diag.show();
+}	
+
 $(function() {
 	//日期框
 	$('.date-picker').datepicker({autoclose: true,todayHighlight: true});

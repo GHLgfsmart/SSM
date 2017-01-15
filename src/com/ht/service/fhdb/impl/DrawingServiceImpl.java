@@ -94,29 +94,33 @@ public class DrawingServiceImpl implements DrawingService{
 	}
 	
 	public PageData byIDPage(Page page)throws Exception{
-		return (PageData)ds.findForObject("DrawingMapper.idlistPage", page);
+		return (PageData)ds.findForObject("DrawingMapper.wzidlistPage", page);
 		
 	}
 	
-	@Override
-	public void reduce(PageData pd) throws Exception {
-		ds.update("DrawingMapper.reduce", pd);
-	}
-	
-	@Override
-	public void SaveWz(PageData pd) throws Exception {
-		ds.save("ProductMapper.SaveWz", pd);
-	}
-	
-	@Override
-	public void SaveCk(PageData pd) throws Exception {
-		ds.save("ProductMapper.SaveCk", pd);
-	};
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PageData> listWarning(Page page) throws Exception {
 		
 		return	(List<PageData>) ds.findForList("ProductMapper.datalistPage", page);
+	}
+
+	@Override
+	public void allot(PageData pd) throws Exception {
+		
+		ds.save("DrawingMapper.allot", pd);
+	}
+
+	@Override
+	public PageData allweID(PageData pd){
+	
+		try {
+			return(PageData)ds.findForObject("DrawingMapper.allweID", pd);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pd;
+		
 	}
 }

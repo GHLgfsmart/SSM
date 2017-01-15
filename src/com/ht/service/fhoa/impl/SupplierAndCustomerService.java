@@ -64,6 +64,11 @@ public class SupplierAndCustomerService implements SupplierAndCustomerManager{
 	public int findByName(PageData pd) throws Exception {
 		return (Integer)dao.findForObject("SupplierAndCustomerMapper.findByName", pd);
 	}
+
+	@Override
+	public PageData findCustomerByName(PageData pd) throws Exception {
+		return (PageData) dao.findForObject("SupplierAndCustomerMapper.findCustomerByName", pd);
+	}
 	
 	
 

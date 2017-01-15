@@ -316,4 +316,5 @@ public interface WarehousingManager {
 	 * @throws Exception
 	 * */
 	public List<PageData> findoutstorageByPType(PageData pd) throws Exception;
+	
 }

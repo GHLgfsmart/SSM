@@ -303,34 +303,12 @@ function delInventory(ID,STATE){
 		sweetAlert("系统提示", "不能删除已审核的单据！请去审后在删除！", "error");
 		return false;
 	}else {
-		<%-- swal({
-			title: "系统提示", 
-			text: "您确定要删除这条数据？", 
-			type: "warning",
-			showCancelButton: true,
-			closeOnConfirm: false,
-			timer: 9544400,
-			confirmButtonText: "是的，我要删除！",
-			cancelButtonText:"让我再考虑一下…", 
-			confirmButtonColor: "#DD6B55"
-		}, function() {
-			$.ajax({
-				url: "<%=basePath%>inventory/deleteU.do?ID="+ID,
-				type: "DELETE"
-			}).done(function(data) {
-				sweetAlert("操作成功!", "已成功删除数据！", "success");
-				$("#inventoryForm").submit();
-				/* window.location.reload(); */
-			}).error(function(data) {
-				swal("OMG", "删除操作失败了!", "error");
-			});
-		}); --%>
 		bootbox.confirm("确定要删除该单据吗?", function(result) {
 			if(result) {
 				top.jzts();
 				var url = "<%=basePath%>inventory/deleteU.do?ID="+ID;
 				$.get(url,function(data){
-					nextPage(${page.currentPage});
+					nextPage('${page.currentPage}');
 				});
 			};
 		});
@@ -343,7 +321,17 @@ function quShen(ID,STATE) {
 		return false;
 	}else {
 		$.post("<%=basePath%>inventory/quShen.do",{ID:ID,AUDITOR:'${pd.username }'},function(msg){
-			sweetAlert("操作成功!", "修改成功！", "success");
+			//sweetAlert("操作成功!", "修改成功！", "success");
+			
+			/* swal({   
+				title: "系统提示",
+				text: "修改成功!", 
+				type: "success",
+				confirmButtonText: "OK" },function(){
+					document.getElementById('zhongxin').style.display = 'none';
+					top.Dialog.close();
+				}); */
+			
 			$("#inventoryForm").submit();
 		});
 	}
@@ -355,7 +343,17 @@ function shenHe(ID,STATE) {
 		return false;
 	}else {
 		$.post("<%=basePath%>inventory/yes.do",{ID:ID,AUDITOR:'${pd.username }'},function(msg){
-			sweetAlert("操作成功!", "修改成功！", "success");
+			/* //sweetAlert("操作成功!", "修改成功！", "success");
+			
+			swal({   
+				title: "系统提示",
+				text: "修改成功!", 
+				type: "success",
+				confirmButtonText: "OK" },function(){
+					document.getElementById('zhongxin').style.display = 'none';
+					top.Dialog.close();
+				}); */
+			
 			$("#inventoryForm").submit();
 		});
 	}
@@ -383,7 +381,7 @@ function add(){
 				 top.jzts();
 				 setTimeout("self.location=self.location",100);
 			 }else{
-				 nextPage(${page.currentPage});
+				 nextPage('${page.currentPage}');
 			 }
 		}
 		diag.close();

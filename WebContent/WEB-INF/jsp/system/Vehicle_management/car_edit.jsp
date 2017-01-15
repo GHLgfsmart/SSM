@@ -28,7 +28,7 @@
 <%-- 	session：${pd.USERNAME}
 	session:<%=session.getAttribute("user")%> --%>
 	<!-- /section:basics/navbar.layout -->
-	<div class="main-container" id="main-container">
+	<div class="main-container" id="main-container" style="margin-top:25px;">
 		<!-- /section:basics/sidebar -->
 		<div class="main-content">
 			<div class="main-content-inner">
@@ -41,17 +41,17 @@
 									<table id="table_report" class="table table-striped table-bordered table-hover">
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">车牌号:</td>
-											<td><input type="text" name="BRAND" id="BRAND" onblur="check1('${pd.ID }')" value="${pd.BRAND }"/></td>
+											<td><input type="text" name="BRAND" id="BRAND" onblur="check1('${pd.ID }')" value="${pd.BRAND }" style="width:100%" /></td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">购买时间:</td>
 											<td>
-												<input class="span10 date-picker" data-date-format="yyyy-mm-dd" type="text" name="TIMES" id="TIMES" value="${pd.TIMES }" readonly/>
+												<input class="span10 date-picker" data-date-format="yyyy-mm-dd" type="text" name="TIMES" id="TIMES" value="${pd.TIMES }" style="width:100%" readonly/>
 											</td>
 										</tr>
 										<tr>
 											<td style="width:79px;text-align: right;padding-top: 13px;">载重:</td>
-											<td><input type="text" name="WEIGHT" id="WEIGHT" onblur="check()" value="${pd.WEIGHT }" style="width:98%;"/></td>
+											<td><input type="text" name="WEIGHT" id="WEIGHT" onblur="check()" value="${pd.WEIGHT }" style="width:100%" /></td>
 										</tr>
 										<tr>
 											<td style="text-align: center;" colspan="10">

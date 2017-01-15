@@ -19,6 +19,8 @@
 			<result column="NUMBER_OF" property="NUMBER_OF"/>
 			<result column="ZHAIYAO_INST" property="ZHAIYAO_INST"/>
 			<result column="BusinessDate" property="BusinessDate"/>
+			<result column="WzNAME" property="WzNAME"/>
+			
 			
 			
 			<!-- 经手人(关联sys_user)多对一关系 -->
@@ -78,13 +80,13 @@
 		
 		<!-- 保存调拨的数据 -->
 		<insert id="DrwingSave" parameterType="pd">
-			insert into drawing(ID,INSPECTOR,BIANHAO,BusinessDate,ENTRY_TIME,JINGSHUO_ID,WAREHOUSE_OUT_ID,WAREHOUSE_PUT_ID,DRAWING_INST,MATERIALS_ID,NUMBER_OF)
-			values(#{ID},#{INSPECTOR},#{DBbIANHAO},#{BusinessDate},#{ENTRY_TIME},#{JINGSHUO_ID},#{WAREHOUSE_OUT_ID},#{WAREHOUSE_PUT_ID},#{DRAWING_INST},#{MATERIALS_ID},#{COUNT})
+			insert into drawing(ID,INSPECTOR,BIANHAO,BusinessDate,ENTRY_TIME,JINGSHUO_ID,WAREHOUSE_OUT_ID,WAREHOUSE_PUT_ID,DRAWING_INST,MATERIALS_ID,NUMBER_OF,WzNAME)
+			values(#{ID},#{INSPECTOR},#{DBbIANHAO},#{BusinessDate},#{ENTRY_TIME},#{JINGSHUO_ID},#{WAREHOUSE_OUT_ID},#{WAREHOUSE_PUT_ID},#{DRAWING_INST},#{MATERIALS_ID},#{COUNT},#{NAME})
 		</insert>
 		
 		<!-- 查询调拨单 -->
 		<select id="datalistPage" parameterType="page" resultType="pd">
-			select dr.ID,dr.MATERIALS_ID,dr.BusinessDate,dr.BIANHAO,dr.ENTRY_TIME,dr.UPDATE_TIME,dr.DRAWING_INST,dr.INSPECTOR,dr.WAREHOUSE_PUT_ID,dr.WAREHOUSE_OUT_ID,ws.WARNAME as ru,dr.AUDITOR,dr.STATE,dr.NUMBER_OF,w.WARNAME as chu,u.USERNAME from drawing dr ,warehouse ws ,warehouse w ,sys_user u  
+			select dr.ID,dr.WzNAME,dr.MATERIALS_ID,dr.BusinessDate,dr.BIANHAO,dr.ENTRY_TIME,dr.UPDATE_TIME,dr.DRAWING_INST,dr.INSPECTOR,dr.WAREHOUSE_PUT_ID,dr.WAREHOUSE_OUT_ID,ws.WARNAME as ru,dr.AUDITOR,dr.STATE,dr.NUMBER_OF,w.WARNAME as chu,u.USERNAME from drawing dr ,warehouse ws ,warehouse w ,sys_user u  
 			where
 				dr.WAREHOUSE_OUT_ID=w.ID AND dr.JINGSHUO_ID=u.USER_ID and dr.WAREHOUSE_PUT_ID=ws.ID
 				<if test="pd.keywords!= null and pd.keywords != ''"><!-- 根据编号查询 -->
@@ -136,18 +138,18 @@
 		</select>
 		
 		<!--根据MATERIALS_ID查询出此仓库的物资-->
-		<select id="idlistPage" parameterType="page" resultType="pd"> 
-				SELECT mi.ID,mi.BIANHAO,mi. NAME,mi.COUNT,mi.UNIT,mi.NOTE FROM 
+		<select id="wzidlistPage" parameterType="page" resultType="pd"> 
+				SELECT mi.ID,mi.BIANHAO,mi. NAME,mi.COUNT,mi.UNIT,mi.NOTE,dr.MATERIALS_ID FROM 
 				materials_information mi INNER JOIN drawing dr 
 				ON
 				dr.MATERIALS_ID = mi.ID
-				<if test="pd.MATERIALS_ID==null">
+				<if test="pd.ID==null">
 					AND 
-					dr.MATERIALS_ID='null'
+					dr.ID='null'
 				</if>
-				<if test=" pd.MATERIALS_ID!= null">
+				<if test=" pd.ID!= null">
 					AND
-					dr.MATERIALS_ID=#{pd.MATERIALS_ID}
+					dr.ID=#{pd.ID}
 				</if>
 		</select>
 		
@@ -155,13 +157,23 @@
 		<update id="reduce"  parameterType="pd">
 			update materials_information SET COUNT=(COUNT-#{COUNT}) WHERE ID=#{MATERIALS_ID}
 		</update>
-	
+		
+		<!-- 调拨 -->
+		<update id="allot" parameterType="pd">
+			update output_storage set WAREHOUSE_ID=#{WAREHOUSE_PUT_ID} where ID=#{osID}
+		</update>
+		
+		<select id="allweID" parameterType="pd" resultType="pd">
+			SELECT w.ID FROM warehouse w
+				WHERE 
+				w.ID=#{ckID}
+		</select>
 		
 		<!-- 修改 -->
 		<update id="updateDraeing" parameterType="pd">
 			update drawing 
 			SET BusinessDate=#{BusinessDate},DRAWING_INST=#{DRAWING_INST},UPDATE_TIME=#{UPDATE_TIME},WAREHOUSE_OUT_ID=#{WAREHOUSE_OUT_ID},WAREHOUSE_PUT_ID=#{WAREHOUSE_PUT_ID},MATERIALS_ID=#{MATERIALS_ID},JINGSHUO_ID=#{JINGSHUO_ID}
-			,NUMBER_OF=#{COUNT}
+			,WzNAME=#{NAME},NUMBER_OF=#{COUNT}
 			WHERE ID=#{ID}
 		</update>
 		
