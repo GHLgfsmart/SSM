@@ -132,16 +132,7 @@
 				$("#NAME_EN").focus();
 			return false;
 		}
-			if($("#BIANMA").val()==""){
-				$("#BIANMA").tips({
-					side:3,
-		            msg:'请输入编码',
-		            bg:'#AE81FF',
-		            time:2
-		        });
-				$("#BIANMA").focus();
-			return false;
-		}
+			
 		var myreg = /^(((13[0-9]{1})|159)+\d{8})$/;
 		if($("#TEL").val()==""){
 			
@@ -164,8 +155,9 @@
 			return false;
 		}
 		var str = $("#NAME").val(); 
-	    var arrRslt = makePy(str);
-	    $("#JM").val(arrRslt);
+	    var arrRslt = makePy(str)+"";
+	    var num=arrRslt.substring(0,3);
+	    $("#JM").val(num);
 	    
 			$("#Form").submit();
 			$("#zhongxin").hide();

@@ -31,6 +31,7 @@ import com.ht.service.system.RoleManager;
 import com.ht.service.system.UserManager;
 import com.ht.util.AppUtil;
 import com.ht.util.Const;
+import com.ht.util.DateUtil;
 import com.ht.util.FileDownload;
 import com.ht.util.FileUpload;
 import com.ht.util.GetPinyin;
@@ -163,6 +164,7 @@ public class UserController extends BaseController {
 			nums+=""+num;
 		}
 		pd.put("NUMBER", nums);
+		pd.put("ENTRY_TIME", DateUtil.getTime().toString());
 		mv.setViewName("system/user/user_edit");
 		mv.addObject("msg", "saveU");
 		mv.addObject("pd", pd);

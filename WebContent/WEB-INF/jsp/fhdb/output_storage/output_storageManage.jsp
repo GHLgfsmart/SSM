@@ -33,7 +33,7 @@
 						<div class="col-xs-12">
 							
 						<!-- 检索  -->
-						<form action="warehousing/output_storageList.do" method="post" name="Form" id="Form">
+						<form action="warehousing/outputstorageList.do" method="post" name="Form" id="Form">
 						<table style="margin-top:5px;">
 							<tr>
 								<td>

@@ -33,48 +33,6 @@
 						
 						<!-- 检索  -->
 						<form action="msg/list.do" method="post" name="msgForm" id="msgForm">
-						<table style="margin-top:5px;">
-							<tr>
-								<td>
-									<div class="nav-search">
-									<span class="input-icon">
-										<input class="nav-search-input" autocomplete="off" id="nav-search-input" type="text" 
-											name="keywords" value="${pd.keywords }" placeholder="这里输入关键词" />
-										<i class="ace-icon fa fa-search nav-search-icon"></i>
-									</span>
-									</div>
-								</td>
-								<td style="padding-left:2px;">
-									<input class="span10 date-picker" name="lastLoginStart" id="lastLoginStart"  value="${pd.lastLoginStart}" 
-										type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="开始日期"/>
-								</td>
-								<td style="padding-left:2px;">
-									<input class="span10 date-picker" name="lastLoginEnd" name="lastLoginEnd"  value="${pd.lastLoginEnd}" 
-										type="text" data-date-format="yyyy-mm-dd" readonly="readonly" style="width:88px;" placeholder="结束日期"/>
-								</td>
-								<c:if test="${QX.cha == 1 }">
-								<td style="vertical-align:top;padding-left:2px;">
-									<a class="btn btn-light btn-xs" onclick="searchs();"  title="检索">
-										<i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i>
-									</a>
-								</td>
-								<c:if test="${QX.toExcel == 1 }">
-									<td style="vertical-align:top;padding-left:2px;">
-										<a class="btn btn-light btn-xs" onclick="toExcel();" title="导出到EXCEL">
-											<i id="nav-search-icon" class="ace-icon fa fa-download bigger-110 nav-search-icon blue"></i>
-										</a>
-									</td>
-								</c:if>
-								<c:if test="${QX.FromExcel == 1 }">
-									<td style="vertical-align:top;padding-left:2px;">
-										<a class="btn btn-light btn-xs" onclick="fromExcel();" title="从EXCEL导入">
-											<i id="nav-search-icon" class="ace-icon fa fa-cloud-upload bigger-110 nav-search-icon blue"></i>
-										</a>
-									</td>
-								</c:if>
-								</c:if>
-							</tr>
-						</table>
 						<!-- 检索  -->
 					
 						<table id="simple-table" class="table table-striped table-bordered table-hover"  style="margin-top:5px;">

@@ -105,7 +105,6 @@
 			return false;
 		}
 			$("#msgForm").submit();
-			top.msgMSGTITLEandMSGCON();
 			$("#zhongxin").hide();
 			$("#zhongxin2").show();
 	}

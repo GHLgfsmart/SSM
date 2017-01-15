@@ -46,9 +46,9 @@
 		insert into 
 	<include refid="tableName"></include>
 		(
-	<include refid="Field"></include>
+	<include refid="Field"></include>,ENTRY_TIME
 		) values (
-	<include refid="FieldValue"></include>
+	<include refid="FieldValue"></include>,#{ENTRY_TIME}
 		)
 	</insert>
 	
@@ -79,7 +79,7 @@
 	
 	<!-- 编号最大列表 -->
 	<select id="numberMax" resultType="string">
-		select max(BIANMA) from <include refid="tableName"></include>
+		select BIANMA from <include refid="tableName"></include> order by ENTRY_TIME desc limit 1
 	</select>	
 	
 	<!-- 通过ID获取数据 -->

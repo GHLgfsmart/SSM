@@ -51,7 +51,7 @@
 	</select> 
 	<!-- 获取最新数据 -->
 	<select id="descname" parameterType="pd" resultType="pd" >
-		SELECT * from sys_msg where MSGTIME=(select max(MSGTIME) from sys_msg);
+		select * from sys_msg order by MSGTIME desc limit 1
 	</select> 
 	<!-- 列表 -->
 	<select id="mlistPage" parameterType="page" resultType="pd" >

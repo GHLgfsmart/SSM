@@ -102,7 +102,7 @@
 	</select>	
 	<!-- 编号最大列表 -->
 	<select id="numberMax" resultType="string">
-		select max(NUMBER) from <include refid="tableName"></include> where USERNAME != 'admin'
+		select NUMBER from <include refid="tableName"></include> order by ENTRY_TIME desc limit 1
 	</select>	
 	<!-- 判断用户名和密码 -->
 	<select id="getUserInfo" parameterType="pd" resultType="pd">

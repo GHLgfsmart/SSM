@@ -180,7 +180,7 @@
 		DELETE FROM 
 			<include refid="tableName"></include>
 		WHERE 
-			TIME &gt;= date_format(DATE_SUB(DATE_SUB(NOW(),INTERVAL DAYOFMONTH(NOW()) -1 DAY ),INTERVAL 3 year ),'%Y-%m-%d 00:00:00') 
+			TIME &lt;= date_format(DATE_SUB(DATE_SUB(NOW(),INTERVAL DAYOFMONTH(NOW()) -1 DAY ),INTERVAL 3 year ),'%Y-%m-%d 00:00:00') 
 		and 
 			TIME &lt; date_format(DATE_SUB(CURDATE(),INTERVAL dayofyear(now())-1 DAY),'%Y-%m-%d 00:00:00') and STATE=2
 	</delete>

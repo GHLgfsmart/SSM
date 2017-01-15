@@ -144,14 +144,11 @@
 			CO.TIME,
 			SUM(co.QUANTITY) as QUANTITY,
 			SUM(co.DAMAGEDQTY) as DAMAGEDQTY,
-			SUM(co.SHORTQTY) as SHORTQTY,
-			O.OPTNAME
+			SUM(co.SHORTQTY) as SHORTQTY
 		FROM
 			<include refid="tableName" /> CO
-		LEFT JOIN 
-		<include refid="tableName2" /> O ON CO.OUTPUT_TYPE_ID = O.ID
 		WHERE
-		O.ID LIKE 'RK%'
+		CO.SOURCECODE LIKE 'RK%'
 		AND 
 			CO.TIME &gt;= DATE_SUB(NOW(),interval 30 day)
 		AND
@@ -163,14 +160,11 @@
 			CO.TIME,
 			SUM(co.QUANTITY) as QUANTITY,
 			SUM(co.DAMAGEDQTY) as DAMAGEDQTY,
-			SUM(co.SHORTQTY) as SHORTQTY,
-			O.OPTNAME
+			SUM(co.SHORTQTY) as SHORTQTY
 		FROM
 			<include refid="tableName" /> CO
-		LEFT JOIN 
-		<include refid="tableName2" /> O ON CO.OUTPUT_TYPE_ID = O.ID
 		WHERE
-		O.ID LIKE 'RK%'
+		CO.SOURCECODE LIKE 'RK%'
 		AND CO.TIME &gt;= DATE_SUB(NOW(),interval 15 day)
 	</select>
 </mapper>

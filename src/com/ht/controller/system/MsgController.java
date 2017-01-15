@@ -111,6 +111,7 @@ public class MsgController extends BaseController{
 		pd.put("MSGTIME", DateUtil.getTime().toString());
 		msgService.saveU(pd); 
 		mv.addObject("msg","success");
+		mv.addObject("admin","admin");
 		mv.setViewName("save_result");
 		return mv;
 	}

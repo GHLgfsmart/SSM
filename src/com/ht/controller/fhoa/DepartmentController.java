@@ -26,6 +26,7 @@ import com.ht.entity.Page;
 import com.ht.service.fhoa.DepartmentManager;
 import com.ht.service.system.UserManager;
 import com.ht.util.AppUtil;
+import com.ht.util.DateUtil;
 import com.ht.util.Jurisdiction;
 import com.ht.util.PageData;
 
@@ -73,6 +74,8 @@ public class DepartmentController extends BaseController {
 		pd = this.getPageData();
 		pd.put("DEPARTMENT_ID", this.get32UUID());	//主键
 		String numberMax=departmentService.numberMax();
+		numberMax=numberMax.substring(2, numberMax.length());
+		
 		int num=Integer.valueOf(numberMax)+1;
 		int num1=num;
 		int a = 0;
@@ -93,6 +96,7 @@ public class DepartmentController extends BaseController {
 			nums+=""+num;
 		}
 		pd.put("BIANMA", nums);
+		pd.put("ENTRY_TIME", DateUtil.getTime().toString());
 		departmentService.save(pd);
 		mv.addObject("msg","success");
 		mv.setViewName("save_result");

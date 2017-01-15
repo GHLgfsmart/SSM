@@ -107,7 +107,6 @@ public class HeadController extends BaseController {
 		try {
 			pd.put("msgs", "msgs");
 			pd = msgService.descname(pd);	//列出用户列表
-			System.out.println("============"+pd);
 			map.put("msgMSGTITLE",pd.getString("MSGTITLE"));	//公告栏标题
 			map.put("msgMSGCON",pd.getString("MSGCON"));    	//公告栏内容
 		} catch (Exception e) {

@@ -22,6 +22,7 @@
 	<div id="zhongxin"></div>
 	<script type="text/javascript">
 		var msg = "${msg}";
+		 var admin="${admin}";
 		if(msg=="success" || msg==""){
 			swal({   
 				title: "系统提示",
@@ -31,6 +32,9 @@
 					document.getElementById('zhongxin').style.display = 'none';
 					top.Dialog.close();
 				});
+				 if(admin=="admin"){
+					top.msgMSGTITLEandMSGCON();
+				} 
 		}else{
 			swal({   
 				title: "系统提示",
