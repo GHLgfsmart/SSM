@@ -55,21 +55,16 @@
 		
 		<!-- 查询出产品 -->
 		<select id="matlistPage" parameterType="page" resultType="pd">
-				SELECT wa.ID as wID, os.ID as osID,os.WAREHOUSE_ID,mi.ID,mi.BIANHAO,mi.NAME,mi.COUNT,mi.UNIT,mi.NOTE,mi.STATE,os.MATERIALS_ID from  output_storage os,materials_information mi,warehouse wa 
-				WHERE
-				os.WAREHOUSE_ID=wa.ID 
-				AND 
-				os.MATERIALS_ID=mi.ID
-				AND
-				mi.STATE=1
-				AND
-				wa.STATE=0
+				SELECT 
+					wa.ID as wID, os.ID as osID,os.WAREHOUSE_ID,mi.ID,mi.BIANHAO,mi.NAME,mi.COUNT,mi.UNIT,mi.NOTE,mi.STATE,os.MATERIALS_ID
+					FROM output_storage os LEFT JOIN materials_information mi on (os.MATERIALS_ID=mi.ID) 
+				LEFT JOIN warehouse wa ON (os.WAREHOUSE_ID=wa.ID)
 				<if test="pd.ckID==null">
-					AND 
+					where 
 					wa.ID='null'
 				</if>
 				<if test=" pd.ckID!= null">
-					AND
+					where
 					wa.ID= #{pd.ckID}
 				</if>
 		</select> 

@@ -105,13 +105,18 @@
 											<c:forEach items="${walist}" var="sp" varStatus="vs">
 												<tr>
 													<td class='center' style="width: 30px;">
-														<label><input type='checkbox' name="MATERIALS_ID" id="MATERIALS_ID"  value="${sp.ID }"/><span class="lbl"></span></label>
+														<label>
+														<input type='checkbox' name="MATERIALS_ID" id="MATERIALS_ID"  value="${sp.ID }"/>
+														<input type="hidden" name="NAME" id="NAME"  value="${sp.NAME }"/>
+														<input type="hidden" name="COUNT" id="COUNT"  value="${sp.COUNT }"/>
+														<span class="lbl"></span>
+														</label>
 														<input type="hidden" id="osID" name="osID" value="${sp.osID}"/>
 													</td>
 													<td class='center' style="width: 30px;">${vs.index+1}</td>
 													<td class="center">${sp.BIANHAO }</td>
 													<td class="center">${sp.NAME }</td>
-													<td class="center"><input type="text" name="COUNT" id="COUNT" value="${sp.COUNT}"  readOnly="true" style="border:none;outline:medium;text-align:center;width:100px;" /></td>
+													<td class="center">${sp.COUNT}</td>
 													<td class="center">${sp.UNIT}</td>
 													<td class="center">${sp.NOTE}</td>
 												</tr>
@@ -188,22 +193,18 @@ $(top.hangge());
 
 //修改数据
 function update(msg){
-
-	var osID="";
 	var MATERIALS_ID = "";
-	var WAREHOUSE_PUT_ID="";
-	var ID="";
+	var NAME="";
+	var COUNT="";
  	for(var i=0;i < document.getElementsByName('MATERIALS_ID').length;i++)
  		{
  				if(document.getElementsByName('MATERIALS_ID')[i].checked){
  				  if(MATERIALS_ID=='') MATERIALS_ID += document.getElementsByName('MATERIALS_ID')[i].value;
  				  else MATERIALS_ID += ',' + document.getElementsByName('MATERIALS_ID')[i].value;
- 				  if(osID=='') osID += document.getElementsByName('osID')[i].value;
-				  else osID += ',' + document.getElementsByName('osID')[i].value;
- 				  if(WAREHOUSE_PUT_ID=='') WAREHOUSE_PUT_ID += document.getElementsByName('WAREHOUSE_PUT_ID')[i].value;
-				  else WAREHOUSE_PUT_ID += ',' + document.getElementsByName('WAREHOUSE_PUT_ID')[i].value;
- 				 if(ID=='') ID += document.getElementsByName('ID')[i].value;
-				  else ID += ',' + document.getElementsByName('ID')[i].value;
+ 				 if(NAME=='') NAME += document.getElementsByName('NAME')[i].value;
+				  else NAME += ',' + document.getElementsByName('NAME')[i].value;
+				if(COUNT=='') COUNT += document.getElementsByName('COUNT')[i].value;
+				  else COUNT += ',' + document.getElementsByName('COUNT')[i].value;
  				 }
  		 }
  		/* if(MATERIALS_ID==''){

@@ -153,11 +153,7 @@
 				</if>
 		</select>
 		
-		<!-- 减去调出仓库的物资数量 -->
-		<update id="reduce"  parameterType="pd">
-			update materials_information SET COUNT=(COUNT-#{COUNT}) WHERE ID=#{MATERIALS_ID}
-		</update>
-		
+
 		<!-- 调拨 -->
 		<update id="allot" parameterType="pd">
 			update output_storage set WAREHOUSE_ID=#{WAREHOUSE_PUT_ID} where ID=#{osID}
