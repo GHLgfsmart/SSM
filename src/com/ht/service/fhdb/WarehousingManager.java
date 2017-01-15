@@ -317,4 +317,10 @@ public interface WarehousingManager {
 	 * */
 	public List<PageData> findoutstorageByPType(PageData pd) throws Exception;
 	
+	public void checkPicking() throws Exception;
+	
+	public void checkOutput_Storage() throws Exception;
+	
+	public void checkMaterial() throws Exception;
+	
 }

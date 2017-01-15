@@ -52,7 +52,7 @@ import com.ht.util.Tools;
 public class WarehousingController extends BaseController{
 		
 	String menuUrl = "warehousing/materialsList.do"; //菜单地址(权限用)
-	String menuUrls = "warehousing/output_storageList.do"; //菜单地址(权限用)
+	String menuUrls = "warehousing/outputstorageList.do"; //菜单地址(权限用)
 	String checkmenuUrl = "warehousing/findcheckListAll.do"; //菜单地址(权限用)
 	String returnmenuUrl = "warehousing/findsales_returnListAll.do"; //菜单地址(权限用)
 	@Resource(name="warehousingService")
@@ -202,8 +202,10 @@ public class WarehousingController extends BaseController{
 		pd1.put("MO_TIME", DateUtil.getTime().toString());
 		int result = warehousingService.materialSave(pd);
 		pd1.put("PRODUCT_ID", pd.getString("ID"));
+		pd1.put("PRICE_ID", pd1.getString("PRICE_ID"));
+		int result1=moneyService.saveU(pd1);
 		//--------
-		if(result>0) {
+		if(result>0|| result1>0) {
 			moneyService.saveU(pd1);
 			mv.addObject("msg","success");
 		}else {
@@ -226,11 +228,12 @@ public class WarehousingController extends BaseController{
 		pd = this.getPageData();
 		pd = warehousingService.findBymaterialId(pd);
 		//洪青青修改
-		PageData pd1=Moneytoo();
 		PageData pd2 = new PageData();
 		pd2.put("PRODUCT_ID", pd.getString("ID"));
-		System.out.println("--------"+pd.getString("ID"));
 		pd2=moneyService.findById(pd2);
+		pd2.put("PRICE_ID", pd2.getString("PRICE_ID"));
+		pd2.put("moneyID", pd2.getString("ID"));
+		PageData pd1=priceService.moneytoo(pd2);
 		mv.addObject("pd1", pd1);
 		mv.addObject("pd2", pd2);
 		//--------
@@ -513,7 +516,7 @@ public class WarehousingController extends BaseController{
 	 * @return
 	 * @throws Exception 
 	 * */
-	@RequestMapping(value="/output_storageList")
+	@RequestMapping(value="/outputstorageList")
 	private ModelAndView findoutput_storageListAll(Page page) throws Exception {
 		logBefore(logger, Jurisdiction.getUsername()+"列表output_storageList");
 		ModelAndView mv = this.getModelAndView();
@@ -531,6 +534,26 @@ public class WarehousingController extends BaseController{
 		mv.addObject("pd", pd);
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
+	}
+	
+	/**
+	 * @author 洪青青修改
+	 * 入库弹出 费用
+	 * @throws Exception
+	 * @return
+	 */
+	@RequestMapping(value="/moneys")
+	public void moneys(PrintWriter out)throws Exception{
+		try{
+			PageData pd = new PageData();
+			pd = this.getPageData();
+			pd=moneyService.moneys(pd);
+			out.write(""+pd.get("MONEY"));
+			}catch(Exception e){
+				out.write("fall");
+				e.getStackTrace();
+			}
+			out.close();
 	}
 	
 	/**
@@ -1228,19 +1251,71 @@ public class WarehousingController extends BaseController{
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		int numbers=moneyService.numbers(pd);
+		String writes="";
 		pd=moneyService.countsum(pd);
 		int number=Integer.valueOf(pd.get("ID").toString());
 		if(number!=0){
-			out.write(""+numbers+";"+pd.get("ID")+";"+pd.get("COUNT"));
+			writes+=""+numbers+";"+pd.get("ID")+";"+pd.get("COUNT");
 		}else{
-			out.write(""+numbers);
+			writes=numbers+"";
 		}
+		out.write(writes);
 		}catch(Exception e){
 			out.write("fall");
 			e.getStackTrace();
 		}
 		out.close();
 	}
+	
+	/**
+	 * @author 洪青青
+	 * 查询当前出库的费用
+	 * @throws Exception
+	 * @return
+	 */
+	@RequestMapping(value="/price_money")
+	public void price_money(PrintWriter out) throws Exception{
+		try{
+			PageData pd = new PageData();
+			pd = this.getPageData();
+			String name=pd.getString("OUT_CODE");
+			pd.put("OUT_CODE", name);
+			pd=priceService.moneytoos(pd);
+			out.write(pd.get("STORAGE")+";"+pd.get("RICHARD")+";"+pd.get("LOADING")+";"+pd.get("UNLOADING")+";"+pd.getString("PRICE_ID"));
+			}catch(Exception e){
+				out.write("fall");
+				e.getStackTrace();
+			}
+			out.close();
+	}
+	
+	/**
+	 * @author 洪青青
+	 * 把临时费用添加的费用表里去
+	 * @throws Exception
+	 * @return
+	 */
+	@RequestMapping(value="/moneytool")
+	public void moneytool(PrintWriter out) throws Exception{
+		try{
+			PageData pd = new PageData();
+			pd = this.getPageData();
+			String OUT_CODE=pd.getString("OUT_CODE");
+			pd=moneyService.moneytool(pd);
+			Object moneytool=pd.get("MONEY");
+			pd.put("boos", "boos");
+			pd.put("OUT_CODE", OUT_CODE);
+			pd=moneyService.outmoney(pd);
+			Object money=pd.get("MONEY");
+			double moneys=Double.valueOf(money+"")+Double.valueOf(moneytool+"");
+			pd.put("MONEY", moneys);
+			moneyService.moneyeditU(pd);
+			}catch(Exception e){
+				e.getStackTrace();
+			}
+			out.close();
+	}
+	
 	/**
 	 * @author 洪青青
 	 * 查询所有出库信息
@@ -1336,6 +1411,7 @@ public class WarehousingController extends BaseController{
 		pd1.put("MONEY", MONEY);
 		pd1.put("MO_TIME", DateUtil.getTime().toString());
 		int result = warehousingService.salesreturnSave(pd);
+		pd1.put("PRICE_ID", pd1.getString("ID1"));
 		pd1.put("PRODUCT_ID", pd.getString("ID"));
 		int result1=moneyService.totalsaveU(pd1);
 		//--------
@@ -1359,9 +1435,14 @@ public class WarehousingController extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		PageData pd1 = new PageData();
+		pd1 = this.getPageData();
 		pd = warehousingService.findBysalesreturnId(pd);
 		//洪青青修改
-		PageData pd1=Moneytoo();
+		String name=pd.getString("OUT_CODE");
+		pd1.put("OUT_CODE", name);
+		pd1=priceService.moneytoos(pd);
+		
 		PageData pd2 = new PageData();
 		pd2.put("PRODUCT_ID", pd.getString("ID"));
 		pd2=moneyService.findById(pd2);

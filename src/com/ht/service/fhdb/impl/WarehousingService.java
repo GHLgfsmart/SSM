@@ -230,4 +230,21 @@ public class WarehousingService implements WarehousingManager{
 	public List<PageData> findoutstorageByPType(PageData pd) throws Exception {
 		return (List<PageData>) dao.findForList("PickingMapper.outstorageByPType", pd);
 	}
+	@Override
+	public void checkPicking() throws Exception {
+		System.out.println("执行定时任务====Picking");
+		dao.delete("PickingMapper.deleteLossPicking", "");
+	}
+
+	@Override
+	public void checkOutput_Storage() throws Exception {
+		System.out.println("执行定时任务====Output_Storage");
+		dao.delete("Output_storageMapper.deleteLossOutput_Storage", "");
+	}
+
+	@Override
+	public void checkMaterial() throws Exception {
+		System.out.println("执行定时任务====Material");
+		dao.delete("MaterialMapper.deleteLossMaterial", "");
+	}
 }
