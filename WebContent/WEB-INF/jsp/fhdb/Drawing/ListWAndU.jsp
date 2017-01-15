@@ -61,11 +61,11 @@
 								<td style="padding-right: 50px;">
 							调出仓库:<select  name="WAREHOUSE_OUT_ID" id="WAREHOUSE_OUT_ID" style="width: 140px;">
 										<c:forEach items="${ListWA}" var="wa">
-											<option value="${wa.ID }">${wa.WARNAME }</option>
+											<option value="${wa.ID }"<c:if test="${wa.ID == pt.ID}">selected</c:if>>${wa.WARNAME }</option>
 										</c:forEach>
 								   </select>
 								   <c:if test="${QX.cha == 1 }">
-									<a class="btn btn-light btn-xs" onclick="searchs();"  title="搜索此仓库的产品"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i></a>
+									<a class="btn btn-light btn-xs" onclick="searchs();"  title="搜索此仓库的产品"><i id="nav-search-icon" class="ace-icon fa fa-search bigger-110 nav-search-icon blue"></i>搜索</a>
 									</c:if>
 								</td>
 								<td style="padding-right: 50px;">
@@ -110,18 +110,26 @@
 											<td class='center' style="width: 30px;">
 												<input type="hidden" name="STATE" id="STATE" value="${sp.STATE }"/>
 												<label><input type='checkbox' name="MATERIALS_ID" id="MATERIALS_ID"  value="${sp.ID }"/><span class="lbl"></span></label>
+												<input type="hidden" id="osID" name="osID" value="${sp.osID}"/>
 											</td>
 											<td class='center' style="width: 30px;">${vs.index+1}</td>
-											<td style="text-align:center;"><input type="text" name="BIANHAO" id="BIANHAO" value="${sp.BIANHAO}"  readOnly="true"  style="border:none;outline:medium;text-align:center;" /></td>
-											<td style="text-align:center;"><input type="text" name="NAME" id="NAME" value="${sp.NAME}"  readOnly="true"  style="border:none;outline:medium;text-align:center;" /></td>
-											<td style="text-align:center;"><input type="text" name="COUNT" id="COUNT" value="${sp.COUNT}" style="border:none;outline:medium;text-align:center;width:100px;" /></td>
-											<td style="text-align:center;"><input type="text" name="UNIT" id="UNIT" value="${sp.UNIT}"  readOnly="true"  style="border:none;outline:medium;text-align:center;" /></td>
-											<td style="text-align:center;"><input type="text" name="NOTE" id="NOTE" value="${sp.NOTE}"  readOnly="true"  style="border:none;outline:medium;text-align:center;" /></td>
+											<td class="center"><input type="text" name="BIANHAO" id="BIANHAO" value="${sp.BIANHAO}"  readOnly="true"  style="border:none;outline:medium;text-align:center;" /></td>
+											<td class="center"><input type="text" name="NAME" id="NAME" value="${sp.NAME}"  readOnly="true"  style="border:none;outline:medium;text-align:center;" /></td>
+											<td class="center"><input type="text" name="COUNT" id="COUNT" value="${sp.COUNT}"  readOnly="true" style="border:none;outline:medium;text-align:center;width:100px;" /></td>
+											<td class="center"><input type="text" name="UNIT" id="UNIT" value="${sp.UNIT}"  readOnly="true"  style="border:none;outline:medium;text-align:center;" /></td>
+											<td class="center"><input type="text" name="NOTE" id="NOTE" value="${sp.NOTE}"  readOnly="true"  style="border:none;outline:medium;text-align:center;" /></td>
 										</tr>
 									
 									</c:forEach>
 								</c:if>
+									<c:if test="${QX.cha == 0 }">
+										<tr>
+											<td colspan="10" class="center">您无权查看</td>
+										</tr>
+									</c:if>
 								</c:when>
+									<c:otherwise>
+								</c:otherwise>
 							</c:choose>
 							</tbody>
 						</table>
@@ -176,12 +184,18 @@ $(top.hangge());
 
 //保存数据
 function save(msg){
+	var osID="";
 	var MATERIALS_ID = "";
+	var WAREHOUSE_PUT_ID="";
  	for(var i=0;i < document.getElementsByName('MATERIALS_ID').length;i++)
  		{
  				if(document.getElementsByName('MATERIALS_ID')[i].checked){
  				  if(MATERIALS_ID=='') MATERIALS_ID += document.getElementsByName('MATERIALS_ID')[i].value;
  				  else MATERIALS_ID += ',' + document.getElementsByName('MATERIALS_ID')[i].value;
+ 				  if(osID=='') osID += document.getElementsByName('osID')[i].value;
+				  else osID += ',' + document.getElementsByName('osID')[i].value;
+ 				  if(WAREHOUSE_PUT_ID=='') WAREHOUSE_PUT_ID += document.getElementsByName('WAREHOUSE_PUT_ID')[i].value;
+				  else WAREHOUSE_PUT_ID += ',' + document.getElementsByName('WAREHOUSE_PUT_ID')[i].value;
  				 }
  		 }
  		if(MATERIALS_ID==''){
@@ -200,7 +214,7 @@ function save(msg){
             time:2
         });
 		$("#DRAWING_INST").focus();
-	return false;
+	return ;
 	}
 	if($("#WAREHOUSE_PUT_ID").val()==""){
 		$("#WAREHOUSE_PUT_ID").tips({
@@ -210,7 +224,7 @@ function save(msg){
             time:2
         });
 		$("#WAREHOUSE_PUT_ID").focus();
-	return false;
+	return;
 	}
 	if($("#BusinessDate").val()==""){
 		$("#BusinessDate").tips({
@@ -220,7 +234,7 @@ function save(msg){
             time:2
         });
 		$("#BusinessDate").focus();
-	return false;
+	return;
 	}
 	if($("#WAREHOUSE_OUT_ID").val() == $("#WAREHOUSE_PUT_ID").val()){
 		$("#WAREHOUSE_PUT_ID").tips({
@@ -230,7 +244,7 @@ function save(msg){
             time:2
         });
 		$("#WAREHOUSE_PUT_ID").focus();
-	return false;
+	return;
 	}
 	else{
  			$("#Form").submit();

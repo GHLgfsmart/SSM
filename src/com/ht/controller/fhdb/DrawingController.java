@@ -25,7 +25,7 @@ import com.ht.util.PageData;
 @RequestMapping(value = "/Drawing")
 public class DrawingController extends BaseController {
 	String menuUrl = "Drawing/ListDrawing.do"; // 菜单地址(权限用)
-	String AlertUrl="Drawing/ListWarehouse";// 菜单地址(权限用)
+	String AlertUrl="Drawing/ListWarehouse.do";// 菜单地址(权限用)
 
 	@Resource(name = "drawingServiceImpl")
 	private DrawingServiceImpl drawingServiceImpl;
@@ -53,6 +53,12 @@ public class DrawingController extends BaseController {
 		String ywrq = rq.format(new Date());
 		//查询经手人
 		List<PageData> goAddPage = drawingServiceImpl.ListWAndU(page);
+		
+		PageData pageData=new PageData();
+		pageData=this.getPageData();
+		pageData.getString("ckID");
+		PageData pt=drawingServiceImpl.allweID(pageData);
+		
 		//查询仓库名
 		List<PageData> ListWA = drawingServiceImpl.ListWA(page);
 		PageData pd = new PageData();
@@ -68,7 +74,7 @@ public class DrawingController extends BaseController {
 		mv.addObject("goAddPage", goAddPage);
 		mv.addObject("ListWA", ListWA);
 		mv.addObject("spList",sp);
-		mv.addObject("pd", pd);
+		mv.addObject("pt",pt);
 		mv.addObject("addtime",addtime);
 		mv.addObject("ywrq", ywrq);
 		mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
@@ -87,39 +93,13 @@ public class DrawingController extends BaseController {
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;} //校验权限
 		logBefore(logger, Jurisdiction.getUsername()+"新增调拨单");
 		ModelAndView mv = this.getModelAndView();
-		//修改数量
-		PageData pds = new PageData();
-		pds = this.getPageData();
-		pds.get("COUNT");
-		pds.getString("MATERIALS_ID");
-		drawingServiceImpl.reduce(pds);
+		//修改要调拨的物资所在的仓库ID
+		 PageData pada = new PageData();
+		 pada = this.getPageData();
+		 pada.getString("osID");
+		 pada.getString("WAREHOUSE_PUT_ID");
+		 drawingServiceImpl.allot(pada);
 		
-		//把调出的物资调入到另一个仓库
-		PageData pad = new PageData();
-		pad = this.getPageData();
-		pad.put("ID", this.get32UUID());	//主键
-		pad.getString("BIANHAO");
-		pad.getString("NAME");
-		pad.get("COUNT");
-		pad.getString("UNIT");
-		pad.getString("NOTE");
-		pad.get("STATE");
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String addtime = df.format(new Date());
-		pad.put("ENTRY_TIME", addtime);
-		drawingServiceImpl.SaveWz(pad);
-		//调入到另一个仓库
-	    PageData pada = new PageData();
-	    pada = this.getPageData();
-	    pada.put("ID", this.get32UUID());	//主键
-	    pada.put("MATERIALS_ID", pad.getString("ID"));
-	    pada.put("STATE", 4);
-	    SimpleDateFormat sj = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String time = sj.format(new Date());
-	 	pad.put("ENTRY_TIME", time);
-	    pada.getString("WAREHOUSE_PUT_ID");
-	    drawingServiceImpl.SaveCk(pada);
-
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.put("ID", this.get32UUID());	//主键
@@ -273,7 +253,7 @@ public class DrawingController extends BaseController {
 	 * @return
 	 * */
 	@RequestMapping(value="/DrawingByid")
-	public ModelAndView DrawingByid(Page page)throws Exception{
+	public ModelAndView DrawingByid(Page page,Page page2)throws Exception{
 		if(!Jurisdiction.buttonJurisdiction(menuUrl, "edit")){return null;} //校验权限
 		ModelAndView mv = this.getModelAndView();
 		PageData pdda = new PageData();
@@ -290,6 +270,10 @@ public class DrawingController extends BaseController {
 		PageData pds=drawingServiceImpl.DraeingBywname(ID);
 		//查询出所有的仓库名
 		List<PageData> ListWA = drawingServiceImpl.ListWA(pa);
+		PageData pageData=new PageData();
+		pageData=this.getPageData();
+		pageData.getString("ckID");
+		PageData pt=drawingServiceImpl.allweID(pageData);
 		
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -297,13 +281,18 @@ public class DrawingController extends BaseController {
 		if(null != ckID && !"".equals(ckID)){
 			pd.put("ckID", ckID.trim());
 		}
-		String mi=pd.getString("MATERIALS_ID");
-		if(null != mi && !"".equals(mi)){
-			pd.put("MATERIALS_ID", mi.trim());
-		}
 		page.setPd(pd);
+		
+		PageData paeta=new PageData();
+		paeta = this.getPageData();
+		String mi=paeta.getString("ID");
+		if(null != mi && !"".equals(mi)){
+			paeta.put("ID", mi.trim());
+		}
+		page2.setPd(paeta);
+		
 		//根据MATERIALS_ID查询出所在仓库里的物资
-		PageData pdID=drawingServiceImpl.byIDPage(page);
+		PageData pdID=drawingServiceImpl.byIDPage(page2);
 		
 		//根据ID查询出所在仓库里的所有已入库的物资
 		List<PageData> walist = drawingServiceImpl.ListProduct(page);
@@ -311,6 +300,7 @@ public class DrawingController extends BaseController {
 		mv.addObject("QX", Jurisdiction.getHC()); // 按钮权限
 		mv.addObject("updatetime",updatetime);
 		mv.addObject("pd", paa);
+		mv.addObject("pt",pt);
 		mv.addObject("pds", pds);
 		mv.addObject("ListWA", ListWA);
 		mv.addObject("goAddPage", goAddPage);
@@ -332,12 +322,12 @@ public class DrawingController extends BaseController {
 	public ModelAndView update() throws Exception{
 		ModelAndView mv = this.getModelAndView();
 		logBefore(logger, Jurisdiction.getUsername()+"编辑单据");
-		//修改数量
-		PageData pds = new PageData();
-		pds = this.getPageData();
-		pds.get("COUNT");
-		pds.getString("MATERIALS_ID");
-		drawingServiceImpl.reduce(pds);
+		 PageData pada = new PageData();
+		 pada = this.getPageData();
+		 pada.getString("osID");
+		 pada.getString("WAREHOUSE_PUT_ID");
+		 drawingServiceImpl.allot(pada);
+		
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.getString("ID");
@@ -346,9 +336,9 @@ public class DrawingController extends BaseController {
 		pd.getString("UPDATE_TIME");
 		pd.getString("WAREHOUSE_OUT_ID");
 		pd.getString("WAREHOUSE_PUT_ID");
+		pd.get("COUNT");
 		pd.getString("MATERIALS_ID");
 		pd.getString("JINGSHUO_ID");
-		pd.get("COUNT");
 		int result=  drawingServiceImpl.updateDraeing(pd); 
 		if(result>0) {
 			mv.addObject("msg","success");
